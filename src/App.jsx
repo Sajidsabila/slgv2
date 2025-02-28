@@ -1,5 +1,7 @@
 import Navbar from './components/Navbar'
 import './App.css'
+import Footer from './components/Footer'
+import Header from './components/Header'
 
 function App() {
   
@@ -7,6 +9,8 @@ function App() {
   return (
     <>
     <Navbar />
+    <Header  title="Selamat Datang di Sinegi"/>
+    <Footer />
     </>
   )
 }
