@@ -4,7 +4,9 @@ import building from "../assets/smibuilding-1.png";
 const Index = () => {
     return (
         <LandingPageLayout title="Welcome to SMI">
-            <img src={building} width="200px"></img>
+          <div className="flex justify-center py-4">
+  <img src={building} alt="Building" className="w-[500px] h-auto mx-auto" />
+</div>
         </LandingPageLayout>
     );
 };

@@ -6,6 +6,7 @@ import Index from './pages/index.jsx'
 import {createBrowserRouter,  RouterProvider } from 'react-router-dom'
 import Saxophone from './pages/saxophone.jsx'
 import Violin from './pages/violin.jsx'
+import Cfk1Piano from './pages/Piano/PrivateClass/cfk1piano.jsx'
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   }, {
     path: "/violin",
     element: <Violin />
+  }, 
+  {
+    path: '/cfk-1-piano',
+    element: <Cfk1Piano />
   }
  
 ])
