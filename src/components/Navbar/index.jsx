@@ -168,7 +168,7 @@ const Navbar = () => {
                   Harmoni Class ▾
                   {activeSubmenu === "harmoni" && (
                     <ul className="absolute left-full top-0 mt-0 w-48 bg-[#454545] border-t-4 border-orange-500 text-white rounded-md shadow-lg">
-                      <li className="px-4 py-2 hover:bg-black border-b border-gray-100">CFK 1 PIANO</li>
+                      <li className="px-4 py-2 hover:bg-black border-b border-gray-100">HC Piano Beginner</li>
                     </ul>
                   )}
                 </li>
@@ -303,16 +303,9 @@ const Navbar = () => {
                 </li>
                 <li
                   className="px-4 py-2 cursor-pointer hover:bg-black border-b border-gray-100 relative"
-                  onMouseEnter={() => handleMouseEnterSubmenu("harmonivocal")}
-                  onMouseLeave={handleMouseLeaveSubmenu}
                 >
-                  Harmoni Class ▾
-                  {activeSubmenu === "harmonivocal" && (
-                    <ul className="absolute left-full top-0 mt-0 w-50 bg-[#454545] border-t-4 border-orange-500 text-white rounded-md shadow-lg">
-                     
-                    
-                    </ul>
-                  )}
+                  <Link>Group Class</Link>
+                 
                 </li>
               </motion.ul>
             )}
@@ -377,7 +370,13 @@ const Navbar = () => {
           </li>
           {activeSubmenu === "private" && (
             <ul className="mt-1 w-full bg-white text-black rounded-md shadow-lg">
-              <li className="px-4 py-2 hover:bg-gray-200 text-l border-b border-gray-300">CFK 1 PIANO</li>
+          <li className="px-4 py-2 hover:bg-gray-200 active:bg-gray-300 transition duration-300 ease-in-out text-lg border-b border-gray-300">
+    <Link to="/cfk-1-piano" className="block w-full h-full focus:outline-none">
+        CFK 1 PIANO
+    </Link>
+</li>
+
+
               <li className="px-4 py-2 hover:bg-gray-200 border-b border-gray-300">CFK 2 PIANO</li>
               <li className="px-4 py-2 hover:bg-gray-200 border-b border-gray-300">JC PIANO</li>
             </ul>
@@ -393,7 +392,9 @@ const Navbar = () => {
           </li>
           {activeSubmenu === "harmoni" && (
             <ul className="mt-1 w-full bg-white text-black  rounded-md shadow-lg">
-              <li className="px-4 py-2 hover:bg-gray-200 border-b border-gray-300">CFK 1 PIANO</li>
+              <li className="px-4 py-2 hover:bg-gray-200 border-b border-gray-300">
+                <Link to="/cfk-1-piano">CFK 1 PIANO</Link>
+              </li>
             </ul>
           )}
         </motion.ul>
