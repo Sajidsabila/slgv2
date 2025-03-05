@@ -1,61 +1,99 @@
+"use client";
 import AdminLayout from "../../layout/admin-layout";
+import { Pencil } from "lucide-react";
+import { useState, useEffect } from "react";
+import Modal from "../../components/Modal/modal";
 
 const AdminPiano = () => {
+ const [isOpen, setIsOpen] = useState(false);
+//  const [userData, setUserData] = useState(null);
+//   const [error, setError] = useState(null);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       const api_key = localStorage.getItem("api_key");
+//       const api_secret = localStorage.getItem("api_secret");
+//       try {
+//         const response = await fetch(`${import.meta.env.VITE_SISTER_URL}/api/resource/Designation`, {
+//           method: "GET",
+//           credentials: "include",
+//           headers: {
+//             "Content-Type": "application/json",
+          
+//           },
+
+//           mode: "cors",
+//         });
+    
+//         if (!response.ok) {
+//           throw new Error("Gagal mengambil data");
+//         }
+
+//         const data = await response.json();
+//         console.log(data);
+//         setUserData(data);
+//       } catch (err) {
+//        console.log(err.message);
+//       }
+//     };
+
+//     fetchData();
+//   }, []);
+
   return (
     <AdminLayout>
- 
-      <div className="flex flex-col md:flex-row md:justify-between items-center pt-4 pb-1">
-        <h3 className="font-bold">List Piano</h3>
-        <form>
-          <input
-            type="text"
-            className="border border-gray-300 rounded-lg px-3 mt-3 md:mt-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Cari..."
-          />
-        </form>
-      </div>
-      
-      <button className="bg-blue-800 hover:bg-blue-700 text-white  py-1 px-4 border border-blue-700 rounded my-3">
+      <h3 className="font-bold py-7 text-lg">List Data</h3>
+
+      <div className="flex flex-col w-full p-4 bg-white rounded-xl shadow-lg">
+      <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center mb-4 gap-2">
+      <button
+        onClick={() => setIsOpen(true)}
+        className="bg-blue-800 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow"
+      >
         Tambah Data
-        </button>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">Product Name</th>
-              <th scope="col" className="px-6 py-3">Color</th>
-              <th scope="col" className="px-6 py-3">Category</th>
-              <th scope="col" className="px-6 py-3">Price</th>
-              <th scope="col" className="px-6 py-3">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              { name: 'Apple MacBook Pro 17"', color: "Silver", category: "Laptop", price: "$2999" },
-              { name: "Microsoft Surface Pro", color: "White", category: "Laptop PC", price: "$1999" },
-              { name: "Magic Mouse 2", color: "Black", category: "Accessories", price: "$99" },
-              { name: "Google Pixel Phone", color: "Gray", category: "Phone", price: "$799" },
-              { name: "Apple Watch 5", color: "Red", category: "Wearables", price: "$999" },
-            ].map((item, index) => (
-              <tr
-                key={index}
-                className="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-900 dark:even:bg-gray-800 border-b dark:border-gray-700 border-gray-200"
-              >
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {item.name}
-                </th>
-                <td className="px-6 py-4">{item.color}</td>
-                <td className="px-6 py-4">{item.category}</td>
-                <td className="px-6 py-4">{item.price}</td>
-                <td className="px-6 py-4">
-                  <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                    Edit
-                  </a>
-                </td>
+      </button>
+      <form >
+        <input type="text" placeholder="Search" className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </form>
+
+    
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} >
+        <form>
+          <label className="text-bold mb-2">Title</label>
+          <input type="text" placeholder="Search" className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </form>
+      </Modal>
+    </div>
+
+
+        <div className="relative overflow-x-auto rounded-xl shadow-md">
+          <table className="w-full text-sm text-left text-gray-600">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100">
+              <tr>
+                <th className="px-6 py-3">Product Name</th>
+                <th className="px-6 py-3">Color</th>
+                <th className="px-6 py-3">Category</th>
+                <th className="px-6 py-3">Price</th>
+                <th className="px-6 py-3 text-center">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+             
+                <tr className="odd:bg-gray-50 even:bg-gray-100 border-b border-gray-300">
+                  <th className="px-6 py-4 font-medium text-gray-900">1</th>
+                  <td className="px-6 py-4">test</td>
+                  <td className="px-6 py-4">itme</td>
+                  <td className="px-6 py-4">item</td>
+                  <td className="px-6 py-4 text-center">
+                    <button className="text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                      <Pencil size={16} /> Edit
+                    </button>
+                  </td>
+                </tr>
+           
+            </tbody>
+          </table>
+        </div>
       </div>
     </AdminLayout>
   );

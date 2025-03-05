@@ -17,6 +17,8 @@ const Footer = () => {
       <img 
         src={logo_simfoni} 
         alt="Logo Simfoni" 
+        width="200px"
+        height="200px"
         className="w-[200px] h-auto py-5 md:mx-7 mx-9" 
         style={{ filter: "brightness(0) invert(1)" }} 
       />

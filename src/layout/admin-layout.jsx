@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import Logout from "../pages/Auth/logout";
 
 const AdminLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -134,7 +135,8 @@ const AdminLayout = ({ children }) => {
                 >
                   Profile
                 </Link>
-                <button className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
+                <button className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                onClick={Logout}>
                   Logout
                 </button>
               </div>

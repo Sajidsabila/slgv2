@@ -1,6 +1,6 @@
-import Header from "../components/Header";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Header from "../components/Header/index";
+import Navbar from "../components/Navbar/index";
+import Footer from "../components/Footer/index";
 
 const LandingPageLayout = ({ title, children }) => {
     return (
