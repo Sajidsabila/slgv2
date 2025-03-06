@@ -87,14 +87,26 @@ const AdminLayout = ({ children }) => {
 
           <li className="border-b border-gray-700">
             <Link
-              to="/admin/piano"
+              to="/admin/course"
               className="block py-3 px-6 hover:bg-slate-700 hover:text-gray-300 transition duration-300"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsSidebarOpen(false);
               }}
             >
-              Piano
+              Course
+            </Link>
+          </li>
+          <li className="border-b border-gray-700">
+            <Link
+              to="/admin/class-format"
+              className="block py-3 px-6 hover:bg-slate-700 hover:text-gray-300 transition duration-300"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsSidebarOpen(false);
+              }}
+            >
+              Class Format
             </Link>
           </li>
         </ul>
@@ -136,7 +148,10 @@ const AdminLayout = ({ children }) => {
                   Profile
                 </Link>
                 <button className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                onClick={Logout}>
+                onClick={ () => {
+                  if(window.confirm('Apakah anda yakin ingin logout?'))
+                  {Logout()}}}
+              >
                   Logout
                 </button>
               </div>

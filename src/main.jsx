@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 
 import Index from "./pages/index.jsx";
+import ClassFormat from "./pages/Admin/classFormat.jsx";
 const Saxophone = lazy(() => import("./pages/saxophone.jsx"));
 const Violin = lazy(() => import("./pages/violin.jsx"));
 const Cfk1Piano = lazy(() => import("./pages/Piano/PrivateClass/cfk1piano.jsx"));
@@ -43,8 +44,9 @@ const router = createBrowserRouter([
     element: <Middleware />, 
     children: [
       { path: "", element: <Dashboard /> },
-      { path: "piano", element: <AdminPiano /> },
-      { path: "profile", element: <Profile /> }
+      { path: "course", element: <AdminPiano /> },
+      { path: "profile", element: <Profile /> }, 
+      {path: "class-format", element: <ClassFormat />}
     ]
   }
 ]);
