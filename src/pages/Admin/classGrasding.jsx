@@ -5,9 +5,9 @@ import AdminLayout from "../../layout/admin-layout";
 import { Pencil, Trash } from "lucide-react";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
-import { getClassFormat } from "../../api/apiClassFormat";
+import { getClassGrading } from "../../api/apiClassGrade";
 
-const ClassFormat = () => {
+const ClassGrading = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [formData, setFormData] = useState({ name: "", email: "" });
     const [courseData, setCourseData] = useState([]); 
@@ -16,8 +16,8 @@ const ClassFormat = () => {
   
     useEffect(() => {
       const fetchCourses = async () => {
-        const courses = await getClassFormat(); // Ambil data
-        setCourseData(courses); // Simpan ke state
+        const courses = await getClassGrading();
+        setCourseData(courses); 
       };
   
       fetchCourses();
@@ -51,7 +51,7 @@ const ClassFormat = () => {
   
     return (
       <AdminLayout>
-        <h3 className="font-bold py-7 text-lg">Class Format List</h3>
+        <h3 className="font-bold py-7 text-lg">Class Grading List</h3>
   
         <div className="flex flex-col w-full p-4 bg-white rounded-xl shadow-lg">
           <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center mb-4 gap-2">
@@ -69,7 +69,7 @@ const ClassFormat = () => {
             />
           </div>
   
-          {/* Modal Insert Data */}
+          {/* Modal */}
           <Modal
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
@@ -199,4 +199,4 @@ const ClassFormat = () => {
       </AdminLayout>
     );
   };
-export default ClassFormat  
+export default ClassGrading 

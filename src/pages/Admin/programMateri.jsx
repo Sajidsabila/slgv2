@@ -5,29 +5,72 @@ import AdminLayout from "../../layout/admin-layout";
 import { Pencil, Trash } from "lucide-react";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
-import { getClassFormat } from "../../api/apiClassFormat";
+import { getProgramMateri } from "../../api/apiProgramMateri";
+import { uploadFileProgramMateri } from "../../api/apiProgramMateri";
 
-const ClassFormat = () => {
+const ProgramMateri = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [formData, setFormData] = useState({ name: "", email: "" });
-    const [courseData, setCourseData] = useState([]); 
+    const [formData, setFormData] = useState({ file: null, name: "" });
+    const [courseData, setCourseData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [Error, setError] = useState(null);
     const itemsPerPage = 5;
-  
+    
+    const handleChange = (e) => {
+      if (e.target.name === "file") {
+        console.log("File yang dipilih:", e.target.files[0]); // Cek apakah file terbaca
+        setFormData((prevForm) => ({
+          ...prevForm,
+          file: e.target.files[0]
+        }));
+      } else {
+        setFormData((prevForm) => ({
+          ...prevForm,
+          [e.target.name]: e.target.value
+        }));
+      }
+    };
+    
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+    
+      if (!formData.file) {
+        console.error("Tidak ada file yang dipilih!");
+        return;
+      }
+    
+      console.log("Mengirim file:", formData.file); // 🔍 Debugging
+    
+      const result = await uploadFileProgramMateri(formData.file, "test-folder");
+      console.log("Upload berhasil:", result);
+      
+      setFormData({ file: null, name: "" });
+      setIsOpen(false);
+    };
+    
+    
+
+    const handleClose = () => {
+      setFormData({
+        name: "",
+        file: null,
+      });
+      setIsOpen(false);
+    };
+
     useEffect(() => {
       const fetchCourses = async () => {
-        const courses = await getClassFormat(); // Ambil data
-        setCourseData(courses); // Simpan ke state
+        const courses = await getProgramMateri();
+        setCourseData(courses); 
       };
   
       fetchCourses();
        
     }, []);
-  
-    // Hitung total halaman
+
     const totalPages = Math.ceil(courseData.length / itemsPerPage) || 1;
   
-    // Ambil data sesuai halaman yang dipilih
+
     const coursePaginatedData = courseData.slice(
       (currentPage - 1) * itemsPerPage,
       currentPage * itemsPerPage
@@ -39,19 +82,11 @@ const ClassFormat = () => {
       }
     };
   
-    const handleChange = (e) =>
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      alert(`Form Submitted: ${JSON.stringify(formData)}`);
-      setFormData({ name: "", email: "" });
-      setIsOpen(false);
-    };
+   
   
     return (
       <AdminLayout>
-        <h3 className="font-bold py-7 text-lg">Class Format List</h3>
+        <h3 className="font-bold py-7 text-lg">Class Grading List</h3>
   
         <div className="flex flex-col w-full p-4 bg-white rounded-xl shadow-lg">
           <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center mb-4 gap-2">
@@ -72,7 +107,7 @@ const ClassFormat = () => {
           {/* Modal Insert Data */}
           <Modal
             isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
+            onClose={handleClose}
             titleModal="Form Insert Data"
             onSubmit={handleSubmit}
           >
@@ -85,12 +120,10 @@ const ClassFormat = () => {
               placeholder="Enter your name"
             />
             <InputModal
-              label="Email"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
+             label="File"
+             type="file"
+             name="file"
+             onChange={handleChange}
             />
           </Modal>
   
@@ -100,7 +133,8 @@ const ClassFormat = () => {
               <thead className="text-xs text-gray-700 uppercase bg-gray-100">
                 <tr>
                   <th className="px-6 py-3">No</th>
-                  <th className="px-6 py-3">Course</th>
+                  <th className="px-6 py-3">Name</th>
+                  <th className="px-6 py-3">File URL</th>
                   <th className="px-6 py-3">Action</th>
                 </tr>
               </thead>
@@ -115,6 +149,8 @@ const ClassFormat = () => {
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </th>
                       <td className="px-6 py-4">{item.name}</td>
+                      <td className="px-6 py-4">{item.file  ?? 'File Kosong'}</td>
+
                       <td className="px-6 py-4 text-center flex gap-4">
                         <button className="text-blue-600 hover:text-blue-800 flex items-center gap-1">
                           <Pencil size={16} /> Edit
@@ -199,4 +235,4 @@ const ClassFormat = () => {
       </AdminLayout>
     );
   };
-export default ClassFormat  
+export default ProgramMateri

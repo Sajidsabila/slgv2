@@ -7,13 +7,10 @@ const Guest = ({ children }) => {
     useEffect(() => {
         const api_key = localStorage.getItem("api_key"); 
         const api_secret = localStorage.getItem("api_secret");
-
-      
         if (!api_key && !api_secret) {
             setIsGuest(true);
             return;
         }
-
         const checkGuest = async () => {
             try {
                 const response = await fetch(`${import.meta.env.VITE_SISTER_URL}/api/method/frappe.auth.get_logged_user`, {
@@ -26,7 +23,6 @@ const Guest = ({ children }) => {
                 });
 
                 if (!response.ok) throw new Error("Invalid token");
-
                 setIsGuest(false);
             } catch (error) {
                 console.error("Auth Error:", error);
@@ -37,8 +33,6 @@ const Guest = ({ children }) => {
 
         checkGuest();
     }, []);
-
-    // Jika isGuest masih null, langsung redirect ke login
     if (isGuest === null) return <Navigate to="/login" replace />;
 
     return isGuest ? children : <Navigate to="/admin" replace />;

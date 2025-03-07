@@ -5,6 +5,7 @@ import "./index.css";
 
 import Index from "./pages/index.jsx";
 import ClassFormat from "./pages/Admin/classFormat.jsx";
+
 const Saxophone = lazy(() => import("./pages/saxophone.jsx"));
 const Violin = lazy(() => import("./pages/violin.jsx"));
 const Cfk1Piano = lazy(() => import("./pages/Piano/PrivateClass/cfk1piano.jsx"));
@@ -15,6 +16,8 @@ const Middleware = lazy(() => import("./pages/middelware.jsx"));
 const Guest = lazy(() => import("./pages/isGuest.jsx"));
 const Profile = lazy(() => import("./pages/Admin/profile.jsx"));
 const Page404 = lazy(() => import("./pages/404.jsx"));
+const ClassGrading = lazy(() => import("./pages/Admin/classGrasding.jsx"));
+const ProgramMateri = lazy(() => import("./pages/Admin/programMateri.jsx"));
 
 const router = createBrowserRouter([
   { 
@@ -46,7 +49,10 @@ const router = createBrowserRouter([
       { path: "", element: <Dashboard /> },
       { path: "course", element: <AdminPiano /> },
       { path: "profile", element: <Profile /> }, 
-      {path: "class-format", element: <ClassFormat />}
+      {path: "class-format", element: <ClassFormat />},
+      { path: "*", element: <Page404 /> },
+      {path: "class-grading", element: <ClassGrading />},
+      {path: "program-materi", element: <ProgramMateri />},
     ]
   }
 ]);

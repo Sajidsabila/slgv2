@@ -5,6 +5,7 @@ import AdminLayout from "../../layout/admin-layout";
 import { Pencil, Trash } from "lucide-react";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
+import { getCourse } from "../../api/apiCourse";
 
 const AdminPiano = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,40 +15,15 @@ const AdminPiano = () => {
   const itemsPerPage = 5;
 
   useEffect(() => {
-    const fetchData = async () => {
-      const api_key = localStorage.getItem("api_key");
-      const api_secret = localStorage.getItem("api_secret");
-      const authorization = `token ${api_key}:${api_secret}`;
-
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_SISTER_URL}/api/resource/Course`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              authorization,
-            },
-            mode: "cors",
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Gagal mengambil data");
-        }
-
-        const data = await response.json();
-        setCourseData(data.data || []);
-      } catch (err) {
-        console.log(err.message);
-      }
+    const fetchCourses = async () => {
+      const courses = await getCourse(); 
+      setCourseData(courses); 
     };
 
-    fetchData();
+    fetchCourses();
   }, []);
 
-  // Hitung total halaman
+
   const totalPages = Math.ceil(courseData.length / itemsPerPage) || 1;
 
   // Ambil data sesuai halaman yang dipilih

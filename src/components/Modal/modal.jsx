@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-const Modal = ({ isOpen, onClose, children, titleMOdal, onSubmit}) => {
+const Modal = ({ isOpen, onClose, children, titleModal, onSubmit}) => {
    if (!isOpen) return null;
 
   return (
@@ -7,7 +7,7 @@ const Modal = ({ isOpen, onClose, children, titleMOdal, onSubmit}) => {
       <div className="relative p-4 w-full max-w-2xl bg-white rounded-lg shadow-md mx-5 md:m-0">
 
         <div className="flex items-center justify-between p-4 border-b-3 border-blue-700 rounded-b">
-          <h3 className=" text-lg md:text-xl font-semibold text-gray-900">{titleMOdal}</h3>
+          <h3 className=" text-lg md:text-xl font-semibold text-gray-900">{titleModal}</h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-900"

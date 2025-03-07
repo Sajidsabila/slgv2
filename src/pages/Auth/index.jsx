@@ -28,7 +28,6 @@ const Login = () => {
         }
 
         try {
-      
             const response = await fetch(`${import.meta.env.VITE_SISTER_URL}/api/method/login`, {
                 method: "POST",
                 headers: headers,
@@ -44,6 +43,7 @@ const Login = () => {
            const getLoggedUser = await fetch(`${import.meta.env.VITE_SISTER_URL}/api/method/frappe.auth.get_logged_user`, {
                  method: "POST",
                  credentials: "include",
+
                  headers: headers,
                  mode: "cors",
            });
@@ -56,7 +56,7 @@ const Login = () => {
                  });
                  const dataUser = await userData.json();
                  const roles = Array.isArray(dataUser.data.roles) ? dataUser.data.roles : [];
-                 const isInstructor = roles.some(roleObj => roleObj.role === "Blogger");
+                 const isInstructor = roles.some(roleObj => roleObj.role === "Instructor");
                  if (!isInstructor) {
                      localStorage.clear();
                      setIsLoading(false)

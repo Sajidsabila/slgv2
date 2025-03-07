@@ -25,7 +25,6 @@ const Middleware = ({ children }) => {
                 });
 
                 if (!response.ok) throw new Error("Invalid token");
-
                 setIsAuthenticated(true);
             } catch (error) {
                 console.error("Auth Error:", error);
@@ -39,8 +38,6 @@ const Middleware = ({ children }) => {
 
   
     if (isAuthenticated === null) return null;
-
-
     if (!isAuthenticated) return <Navigate to="/login" replace />;
 
     return <Outlet />;

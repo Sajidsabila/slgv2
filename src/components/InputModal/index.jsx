@@ -15,4 +15,4 @@ const InputModal = ({label, type, name, value, onChange, placeholder}) => {
     )
 }
 
-export default InputModal
+export default InputModal;

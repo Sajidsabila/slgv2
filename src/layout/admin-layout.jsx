@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import Logout from "../pages/Auth/logout";
 
@@ -20,7 +20,7 @@ const AdminLayout = ({ children }) => {
     };
   }, [isSidebarOpen]);
 
-  // Menutup sidebar saat klik di luar
+
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (
@@ -62,7 +62,7 @@ const AdminLayout = ({ children }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden" />
       )}
 
-      {/* Sidebar */}
+ 
       <aside
         className={`fixed md:relative bg-slate-900 text-white h-full md:w-[15%] w-64 transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -73,41 +73,86 @@ const AdminLayout = ({ children }) => {
         </h2>
         <ul className="mt-4">
           <li className="border-b border-gray-700">
-            <Link
+            <NavLink
               to="/admin"
-              className="block py-3 px-6 hover:bg-slate-700 hover:text-gray-300 transition duration-300"
+              end
+              className={({ isActive }) =>
+                `block py-3 px-6 transition duration-300 ${
+                  isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
+                }`
+              }
               onClick={(e) => {
                 e.stopPropagation();
                 setIsSidebarOpen(false);
               }}
             >
               Home
-            </Link>
+            </NavLink>
           </li>
 
           <li className="border-b border-gray-700">
-            <Link
+            <NavLink
               to="/admin/course"
-              className="block py-3 px-6 hover:bg-slate-700 hover:text-gray-300 transition duration-300"
+              className={({ isActive }) =>
+                `block py-3 px-6 transition duration-300 ${
+                  isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
+                }`
+              }
               onClick={(e) => {
                 e.stopPropagation();
                 setIsSidebarOpen(false);
               }}
             >
               Course
-            </Link>
+            </NavLink>
           </li>
           <li className="border-b border-gray-700">
-            <Link
+            <NavLink
               to="/admin/class-format"
-              className="block py-3 px-6 hover:bg-slate-700 hover:text-gray-300 transition duration-300"
+              className={({ isActive }) =>
+                `block py-3 px-6 transition duration-300 ${
+                  isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
+                }`
+              }
               onClick={(e) => {
                 e.stopPropagation();
                 setIsSidebarOpen(false);
               }}
             >
               Class Format
-            </Link>
+            </NavLink>
+          </li>
+          <li className="border-b border-gray-700">
+          <NavLink
+        to="/admin/class-grading"
+         className={({ isActive }) =>
+        `block py-3 px-6 transition duration-300 ${
+          isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
+    }`
+  }
+  onClick={(e) => {
+    e.stopPropagation();
+    setIsSidebarOpen(false);
+  }}
+>
+  Class Grading
+        </NavLink>
+          </li>
+          <li className="border-b border-gray-700">
+          <NavLink
+        to="/admin/program-materi"
+         className={({ isActive }) =>
+        `block py-3 px-6 transition duration-300 ${
+          isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
+    }`
+  }
+  onClick={(e) => {
+    e.stopPropagation();
+    setIsSidebarOpen(false);
+  }}
+>
+Program Materi
+        </NavLink>
           </li>
         </ul>
       </aside>
