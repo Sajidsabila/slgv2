@@ -18,7 +18,7 @@ const ProgramMateri = () => {
     
     const handleChange = (e) => {
       if (e.target.name === "file") {
-        console.log("File yang dipilih:", e.target.files[0]); // Cek apakah file terbaca
+        console.log("File yang dipilih:", e.target.files[0]); 
         setFormData((prevForm) => ({
           ...prevForm,
           file: e.target.files[0]
@@ -39,9 +39,8 @@ const ProgramMateri = () => {
         return;
       }
     
-      console.log("Mengirim file:", formData.file); // 🔍 Debugging
-    
-      const result = await uploadFileProgramMateri(formData.file, "test-folder");
+      console.log("Mengirim file:", formData.file);
+      const result = await uploadFileProgramMateri(formData.file, "");
       console.log("Upload berhasil:", result);
       
       setFormData({ file: null, name: "" });
@@ -67,7 +66,6 @@ const ProgramMateri = () => {
       fetchCourses();
        
     }, []);
-
     const totalPages = Math.ceil(courseData.length / itemsPerPage) || 1;
   
 
