@@ -11,7 +11,7 @@ export const getProgramMateri = async () => {
 
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi?fields=["*"]`,
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi`,
       {
         withCredentials: true,
         headers: {
@@ -32,8 +32,6 @@ export const getProgramMateri = async () => {
 
 export const uploadFileProgramMateri = async (file, folder = "Home") => {
   try {
-    const apiKey = JSON.parse(localStorage.getItem("api_key"))?.value;
-    const apiSecret = JSON.parse(localStorage.getItem("api_secret"))?.value;
 
     const formData = new FormData();
     formData.append("file", file);
@@ -63,8 +61,46 @@ export const uploadFileProgramMateri = async (file, folder = "Home") => {
     throw error;
   }
 };
+export const postProgramMateri = async (data) => {
+  try {
+  
+    const response = await axios.post(
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi`,
+      data,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Terjadi kesalahan", error?.response?.data || error.message);
+    return [];
+  }
+};
 
 
+export const deleteProgramMateri = async (id) => {
+  try {
+    const response = await axios.delete(
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Terjadi kesalahan", error?.response?.data || error.message);
+    return [];
+  }
+};
 
 
 

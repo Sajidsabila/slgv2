@@ -2,16 +2,14 @@
 
 import { useState, useEffect } from "react";
 import AdminLayout from "../../layout/admin-layout";
-import { Pencil, Trash } from "lucide-react";
-import Modal from "../../components/Modal/modal";
-import InputModal from "../../components/InputModal";
 import { getCourse } from "../../api/apiCourse";
 
 const AdminPiano = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", email: "" });
+ 
+
   const [courseData, setCourseData] = useState([]); 
   const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
   const itemsPerPage = 5;
 
   useEffect(() => {
@@ -22,12 +20,15 @@ const AdminPiano = () => {
 
     fetchCourses();
   }, []);
+ 
+  const filteredCourses = courseData.filter((course) =>
+    course.name.toLowerCase().includes(search.toLowerCase())
+  );
 
-
-  const totalPages = Math.ceil(courseData.length / itemsPerPage) || 1;
+  const totalPages = Math.ceil(filteredCourses.length / itemsPerPage) || 1;
 
   // Ambil data sesuai halaman yang dipilih
-  const coursePaginatedData = courseData.slice(
+  const coursePaginatedData = filteredCourses.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -38,60 +39,28 @@ const AdminPiano = () => {
     }
   };
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`Form Submitted: ${JSON.stringify(formData)}`);
-    setFormData({ name: "", email: "" });
-    setIsOpen(false);
-  };
 
   return (
     <AdminLayout>
       <h3 className="font-bold py-7 text-lg">Course List</h3>
 
       <div className="flex flex-col w-full p-4 bg-white rounded-xl shadow-lg">
-        <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center mb-4 gap-2">
-          <button
-            onClick={() => setIsOpen(true)}
-            className="bg-blue-800 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow"
-          >
-            Insert Data
-          </button>
+       
+       
+      <div className="flex justify-end">
+         <input
+          stype="text"
+          placeholder="Search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+    </div>
 
-          <input
-            type="text"
-            placeholder="Search"
-            className="border border-gray-300 rounded-lg px-4 py-2  focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+       
 
         {/* Modal Insert Data */}
-        <Modal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          titleModal="Form Insert Data"
-          onSubmit={handleSubmit}
-        >
-          <InputModal
-            label="Name"
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter your name"
-          />
-          <InputModal
-            label="Email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Enter your email"
-          />
-        </Modal>
+       
 
         {/* Tabel */}
         <div className="relative overflow-x-auto rounded-xl shadow-md">
@@ -99,8 +68,8 @@ const AdminPiano = () => {
             <thead className="text-xs text-gray-700 uppercase bg-gray-100">
               <tr>
                 <th className="px-6 py-3">No</th>
-                <th className="px-6 py-3">Course</th>
-                <th className="px-6 py-3">Action</th>
+                <th className="px-6 py-3">Name</th>
+                <th className="px-6 py-3">Course name</th>
               </tr>
             </thead>
             <tbody>
@@ -114,14 +83,8 @@ const AdminPiano = () => {
                       {(currentPage - 1) * itemsPerPage + index + 1}
                     </th>
                     <td className="px-6 py-4">{item.name}</td>
-                    <td className="px-6 py-4 text-center flex gap-4">
-                      <button className="text-blue-600 hover:text-blue-800 flex items-center gap-1">
-                        <Pencil size={16} /> Edit
-                      </button>
-                      <button className="text-red-600 hover:text-red-800 flex items-center gap-1">
-                        <Trash size={16} /> Delete
-                      </button>
-                    </td>
+                    <td className="px-6 py-4">{item.course_name}</td>
+                   
                   </tr>
                 ))
               ) : (

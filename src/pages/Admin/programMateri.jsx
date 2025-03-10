@@ -6,86 +6,171 @@ import { Pencil, Trash } from "lucide-react";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
 import { getProgramMateri } from "../../api/apiProgramMateri";
-import { uploadFileProgramMateri } from "../../api/apiProgramMateri";
+import { uploadFileProgramMateri, postProgramMateri, deleteProgramMateri } from "../../api/apiProgramMateri";
+import { getClassFormat } from "../../api/apiClassFormat";
+import { getClassGrading } from "../../api/apiClassGrade";
+import { motion } from "framer-motion";
+import { getCourse } from "../../api/apiCourse";
 
 const ProgramMateri = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [formData, setFormData] = useState({ file: null, name: "" });
-    const [courseData, setCourseData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [Error, setError] = useState(null);
-    const itemsPerPage = 5;
-    
-    const handleChange = (e) => {
-      if (e.target.name === "file") {
-        console.log("File yang dipilih:", e.target.files[0]); 
-        setFormData((prevForm) => ({
-          ...prevForm,
-          file: e.target.files[0]
-        }));
-      } else {
-        setFormData((prevForm) => ({
-          ...prevForm,
-          [e.target.name]: e.target.value
-        }));
-      }
-    };
-    
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-    
-      if (!formData.file) {
-        console.error("Tidak ada file yang dipilih!");
-        return;
-      }
-    
-      console.log("Mengirim file:", formData.file);
+  const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState({ file: null });
+  const [courseData, setCourseData] = useState([]);
+  const [programMateri, setProgramMateri] = useState([]);
+  const [classFormat, setClassFormat] = useState([]);
+  const [classGrading, setClassGrading] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [loading, setIsLoading] = useState(false);
+  const itemsPerPage = 5;
+  
+  const handleChange = (e) => {
+    if (e.target.name === "file") {
+      setFormData((prevForm) => ({
+        ...prevForm,
+        file: e.target.files[0]
+      }));
+    } else {
+      setFormData((prevForm) => ({
+        ...prevForm,
+        [e.target.name]: e.target.value
+      }));
+    }
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+  
+    if (!formData.file) {
+      alert("Silakan pilih file terlebih dahulu.");
+      return;
+    }
+  
+    const allowedTypes = ["audio/mpeg", "audio/mp3"];
+    if (!allowedTypes.includes(formData.file.type)) {
+      alert("Hanya file MP3 yang diperbolehkan.");
+      return;
+    }
+  
+    try {
+      setIsLoading(true);
       const result = await uploadFileProgramMateri(formData.file, "");
-      console.log("Upload berhasil:", result);
       
-      setFormData({ file: null, name: "" });
-      setIsOpen(false);
-    };
-    
-    
-
-    const handleClose = () => {
-      setFormData({
-        name: "",
-        file: null,
-      });
-      setIsOpen(false);
-    };
-
-    useEffect(() => {
-      const fetchCourses = async () => {
-        const courses = await getProgramMateri();
-        setCourseData(courses); 
+      if (!result || !result.name) {
+       setError(result?.message || "Gagal mengupload file.");
+      }
+  
+      const data = {
+        file: [{ file_url: result.name }]
       };
   
-      fetchCourses();
-       
-    }, []);
-    const totalPages = Math.ceil(courseData.length / itemsPerPage) || 1;
+      const postMateriResponse = await postProgramMateri(data);
   
-
-    const coursePaginatedData = courseData.slice(
-      (currentPage - 1) * itemsPerPage,
-      currentPage * itemsPerPage
-    );
+      if (!postMateriResponse || !postMateriResponse.name) {
+        setError(postMateriResponse?.message || "Gagal menyimpan data materi.");
+      }
   
-    const changePage = (newPage) => {
-      if (newPage >= 1 && newPage <= totalPages) {
-        setCurrentPage(newPage);
+      setSuccess("Data Materi berhasil disimpan.");
+      setProgramMateri((prevData) => [...prevData, postMateriResponse]);
+      setFormData({ file: null, name: "" });
+      setIsOpen(false);
+    } catch (error) {
+      setError(`Error: ${error.message || "Terjadi kesalahan saat mengupload atau mengirim data"}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleDelete = async (id) => {
+    setError(null);
+    setSuccess(null);
+    try {
+      setIsLoading(true);
+      const deleteResponse = await deleteProgramMateri(id);
+      
+      if (deleteResponse) { 
+        setSuccess("Data Materi berhasil dihapus.");
+        setProgramMateri((prevData) => prevData.filter((course) => course.id !== id));
+      }
+    } catch (error) {
+      setError(`Terjadi kesalahan: ${error.message || "Gagal menghapus data"}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleClose = () => {
+    setFormData({
+      name: "",
+      file: null,
+    });
+    setIsOpen(false);
+  };
+  
+  useEffect(() => {
+    const fetchProgramMateri = async () => {
+      try {
+        const program = await getProgramMateri();
+        setProgramMateri(program);
+      } catch (error) {
+        console.error("Error fetching program materi:", error);
       }
     };
   
-   
+    const fetchCourse = async () => {
+      try {
+        const course = await getCourse();
+        setCourseData(course);
+      } catch (error) {
+      setError("Error fetching course:", error);
+      }
+    };
+
+    const fetchClasssFormat = async () => {
+      try {
+        const classFormat = await getClassFormat();
+        setClassFormat(classFormat);
+      } catch (error) {
+      setError("Error fetching class format:", error);
+      }
+    };
+
+    const fetchClassGrading = async () => {
+      try {
+        const classGrading = await getClassGrading();
+        setClassGrading(classGrading);
+      } catch (error) {
+      setError("Error fetching class grading:", error);
+      }
+    }
+    fetchClassGrading();
+    fetchClasssFormat();
+    fetchCourse();
+    fetchProgramMateri();
+  }, []);
+  
+  console.log(courseData);
+  const totalPages = Math.ceil(programMateri.length / itemsPerPage) || 1;
+  
+  const coursePaginatedData = programMateri.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+  
+  const changePage = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
   
     return (
       <AdminLayout>
-        <h3 className="font-bold py-7 text-lg">Class Grading List</h3>
-  
+        <h3 className="font-bold py-7 text-lg">Program Materi</h3>
+        {error && <p className="bg-red-700 text-sm text-white py-3 px-4 my-3">{error}</p>}
+        {success && <p className="bg-green-700 text-sm text-white py-3 px-4 my-3">{success}</p>}
         <div className="flex flex-col w-full p-4 bg-white rounded-xl shadow-lg">
           <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center mb-4 gap-2">
             <button
@@ -103,36 +188,38 @@ const ProgramMateri = () => {
           </div>
   
           {/* Modal Insert Data */}
-          <Modal
-            isOpen={isOpen}
-            onClose={handleClose}
-            titleModal="Form Insert Data"
-            onSubmit={handleSubmit}
-          >
-            <InputModal
-              label="Name"
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your name"
-            />
-            <InputModal
-             label="File"
-             type="file"
-             name="file"
-             onChange={handleChange}
-            />
-          </Modal>
+          {isOpen && !loading && (
+        <Modal isOpen={isOpen} onClose={handleClose} titleModal="Form Insert Data" onSubmit={handleSubmit}>
+          <InputModal label="File" type="file" name="file" onChange={handleChange} />
+        </Modal>
+      )}
+      {loading && (
+        <motion.div
+          className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+         <div className="fixed inset-0 bg-transparent bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-sm text-blue-500 mt-3">Memproses data...</p>
+            </div>
+  </div>
+
+        </motion.div>
+      )}
+
   
           {/* Tabel */}
+        
           <div className="relative overflow-x-auto rounded-xl shadow-md">
+        
             <table className="w-full text-sm text-left text-gray-600">
               <thead className="text-xs text-gray-700 uppercase bg-gray-100">
                 <tr>
                   <th className="px-6 py-3">No</th>
                   <th className="px-6 py-3">Name</th>
-                  <th className="px-6 py-3">File URL</th>
                   <th className="px-6 py-3">Action</th>
                 </tr>
               </thead>
@@ -147,14 +234,17 @@ const ProgramMateri = () => {
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </th>
                       <td className="px-6 py-4">{item.name}</td>
-                      <td className="px-6 py-4">{item.file  ?? 'File Kosong'}</td>
-
+                 
                       <td className="px-6 py-4 text-center flex gap-4">
-                        <button className="text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                        <button  className="text-blue-600 hover:text-blue-800 flex items-center gap-1">
                           <Pencil size={16} /> Edit
                         </button>
-                        <button className="text-red-600 hover:text-red-800 flex items-center gap-1">
-                          <Trash size={16} /> Delete
+                        <button
+                         onClick={ () => {
+                          if(window.confirm('Apakah anda yakin ingin Menghapus data ini?'))
+                          {handleDelete(item.name)}}}
+                        className="text-red-600 hover:text-red-800 flex items-center gap-1">
+                          <Trash  size={16} /> Delete
                         </button>
                       </td>
                     </tr>
