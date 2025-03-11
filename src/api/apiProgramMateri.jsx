@@ -1,22 +1,13 @@
 import axios from "axios";
 
 export const getProgramMateri = async () => {
-  const api_key = localStorage.getItem("api_key");
-  const api_secret = localStorage.getItem("api_secret");
-
-  if (!api_key || !api_secret) {
-    console.error("API Key atau Secret tidak ditemukan di localStorage");
-    return [];
-  }
-
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi`,
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi?fields=["*"]&order_by=creation desc`,
       {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `token ${api_key}:${api_secret}`,
         },
       }
     );
@@ -49,6 +40,7 @@ export const uploadFileProgramMateri = async (file, folder = "Home") => {
     );
     console.log(response);
 
+    
     if (!response.data) {
       throw new Error("Response dari server kosong.");
     }
@@ -102,6 +94,44 @@ export const deleteProgramMateri = async (id) => {
   }
 };
 
+export const updateProgramMateri = async (id, data) => {
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      data,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Terjadi kesalahan", error?.response?.data || error.message);
+    return [];
+  }
+};
+
+export const getProgramMateriById = async (id) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}?fields=["*"]`,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Terjadi kesalahan", error?.response?.data || error.message);
+    return [];
+  }
+};
 
 
 

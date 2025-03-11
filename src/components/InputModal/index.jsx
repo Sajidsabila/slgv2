@@ -1,7 +1,7 @@
-const InputModal = ({label, type, name, value, onChange, placeholder}) => {
+ const InputModal = ({label, type, name, value, onChange, placeholder}) => {
     return(
       <>
-          <label htmlFor={name} className="text-bold">{label}</label>
+          <label htmlFor={name} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{label}</label>
           <input
             type={type}
             name={name}
@@ -9,10 +9,10 @@ const InputModal = ({label, type, name, value, onChange, placeholder}) => {
             onChange={onChange}
             placeholder={placeholder}
             id={name}
-            required
            className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
       </>
     )
 }
 
-export default InputModal;
+export default InputModal
+

@@ -18,6 +18,7 @@ const Profile = lazy(() => import("./pages/Admin/profile.jsx"));
 const Page404 = lazy(() => import("./pages/404.jsx"));
 const ClassGrading = lazy(() => import("./pages/Admin/classGrasding.jsx"));
 const ProgramMateri = lazy(() => import("./pages/Admin/programMateri.jsx"));
+const DetailProgramMateri= lazy(() => import("./pages/Admin/detailClassFormat.jsx"));
 
 const router = createBrowserRouter([
   { 
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
       { path: "*", element: <Page404 /> },
       {path: "class-grading", element: <ClassGrading />},
       {path: "program-materi", element: <ProgramMateri />},
+      {path: "program-materi/:id", element: <DetailProgramMateri />}
     ]
   }
 ]);
