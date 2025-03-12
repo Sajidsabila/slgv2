@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react";
 import AdminLayout from "../../layout/admin-layout";
-import { Pencil, Trash, Eye } from "lucide-react";
+import { Pencil, Trash, Eye, Plus} from "lucide-react";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
 import { getProgramMateri, updateProgramMateri } from "../../api/apiProgramMateri";
 import { uploadFileProgramMateri, postProgramMateri, deleteProgramMateri } from "../../api/apiProgramMateri";
+
 import { getClassFormat } from "../../api/apiClassFormat";
 import { getClassGrading } from "../../api/apiClassGrade";
 import { motion } from "framer-motion";
@@ -29,6 +30,7 @@ const ProgramMateri = () => {
   const [loading, setIsLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [oldFile, setOldFile] = useState(null);
+  const [search, setSearch] = useState("");
 
 
   const itemsPerPage = 5;
@@ -117,6 +119,8 @@ const ProgramMateri = () => {
   useEffect(() => {
      selectedClassGrading
   }, [selectedClassGrading]);
+
+  
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
@@ -290,9 +294,14 @@ const ProgramMateri = () => {
   
 
   
-  const totalPages = Math.ceil(programMateri.length / itemsPerPage) || 1;
+  const filteredProgramMateri =  programMateri.filter((programMateri) =>
+    programMateri.class_grade.toLowerCase().includes(search.toLowerCase()) ||
+    programMateri.class_course.toLowerCase().includes(search.toLowerCase()) ||
+    programMateri.class_format.toLowerCase().includes(search.toLowerCase())
+  );
+  const totalPages = Math.ceil(filteredProgramMateri.length / itemsPerPage) || 1;
   
-  const coursePaginatedData = programMateri.slice(
+  const coursePaginatedData = filteredProgramMateri.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -320,15 +329,19 @@ const ProgramMateri = () => {
             <input
               type="text"
               placeholder="Search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               className="border border-gray-300 rounded-lg px-4 py-2  focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
   
           {/* Modal Insert Data */}
           {isOpen && !loading && (
-        <Modal isOpen={isOpen} onClose={handleClose} titleModal={isEditMode ? "Edit Program Materi" : "Insert Program Materi"} onSubmit={handleSubmit}>
+        <Modal isOpen={isOpen} onClose={handleClose}
+         titleModal={isEditMode ? "Edit Program Materi" : "Insert Program Materi"} 
+         onSubmit={handleSubmit}>
        <InputModal 
-           
+
             type="hidden"
             name="name"
             value={formData.name}
@@ -392,6 +405,7 @@ const ProgramMateri = () => {
               <p className="py-2 text-sm font-semibold">note: Kosongkan file jika tidak ingin di update</p>
             )}
         </Modal>
+
       )}
       {loading && (
         <motion.div
@@ -409,10 +423,6 @@ const ProgramMateri = () => {
 
         </motion.div>
       )}
-
-  
-          {/* Tabel */}
-        
           <div className="relative overflow-x-auto rounded-xl shadow-md">
         
             <table className="w-full text-sm text-left text-gray-600">
@@ -440,7 +450,7 @@ const ProgramMateri = () => {
                       <td className="px-6 py-4">{item.class_grade}</td>
                  
                       <td className="px-6 py-4 text-center flex gap-4">
-                        <button  className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                        <button className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 flex items-center gap-1 px-3 py-1 rounded-md"
                         onClick={() => handleOpen(item)}>
                           <Pencil size={16} /> Edit
                         </button>
@@ -448,18 +458,23 @@ const ProgramMateri = () => {
                          onClick={ () => {
                           if(window.confirm('Apakah anda yakin ingin Menghapus data ini?'))
                           {handleDelete(item.name)}}}
-                        className="text-red-600 hover:text-red-800 flex items-center gap-1">
+                          className="bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 flex items-center gap-1 px-3 py-1 rounded-md">
                           <Trash  size={16} /> Delete
                         </button>
-                        <Link to={`/admin/program-materi/${item.name}`} className="text-green-600 hover:text-green-800 flex items-center gap-1">
+                        <Link to={`/admin/program-materi/${item.name}`}
+                        className="bg-green-100 text-green-600 hover:bg-green-200 hover:text-green-800 flex items-center gap-1 px-3 py-1 rounded-md">
                           <Eye size={16} /> Detail
                         </Link>
+                        <button 
+                       className="bg-yellow-100 text-yellow-600 hover:bg-yellow-200 hover:text-yellow-800 flex items-center gap-1 px-3 py-1 rounded-md" >
+                        <Plus size={16} />Tambah Materi
+                        </button>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="3" className="px-6 py-4 text-center text-gray-500">
+                    <td colSpan="5" className="px-6 py-4 text-center text-gray-500 font-bold">
                       Tidak ada data
                     </td>
                   </tr>
