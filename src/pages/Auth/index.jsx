@@ -56,7 +56,7 @@ const Login = () => {
                  });
                  const dataUser = await userData.json();
                  const roles = Array.isArray(dataUser.data.roles) ? dataUser.data.roles : [];
-                 const isInstructor = roles.some(roleObj => roleObj.role === "Instructor");
+                 const isInstructor = roles.some(roleObj => roleObj.role === "Instructor" || "Education Manager");
                  if (!isInstructor) {
                      localStorage.clear();
                      setIsLoading(false)

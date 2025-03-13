@@ -21,7 +21,7 @@ export const getProgramMateri = async () => {
 };
 
 
-export const uploadFileProgramMateri = async (file, folder = "Home") => {
+export const uploadFileProgramMateri = async (file, folder = "") => {
   try {
 
     const formData = new FormData();
@@ -29,7 +29,7 @@ export const uploadFileProgramMateri = async (file, folder = "Home") => {
     formData.append("folder", folder);
     formData.append("is_private", "0");
     for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]); // Debug apakah FormData berisi file
+      console.log(pair[0], pair[1]);
     }
     const response = await axios.post(
       `${import.meta.env.VITE_SISTER_URL}/api/method/upload_file`,
@@ -45,7 +45,7 @@ export const uploadFileProgramMateri = async (file, folder = "Home") => {
 
     
     if (!response.data) {
-      throw new Error("Response dari server kosong.");
+     setError("Response dari server kosong.");
     }
 
     console.log("Parsed Response:", response.data);
@@ -179,9 +179,8 @@ export const addFileToProgramMateri = async (id, newFile) => {
   }
 };
 
-export const removeFileProramMateri = async (id, fileName) => {
+export const removeFileProramMateri  = async (id, fileName) => {
   try {
-    // Ambil data terbaru dari server
     const getResponse = await axios.get(
       `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
       { withCredentials: true }
@@ -189,11 +188,7 @@ export const removeFileProramMateri = async (id, fileName) => {
 
     const oldData = getResponse.data?.data || {};
     const oldFiles = oldData.file || [];
-
-    // Filter hanya file yang akan dihapus
     const updatedFiles = oldFiles.filter((fileItem) => fileItem.file !== fileName);
-
-    // Kirim data yang sudah diupdate ke server
     const response = await axios.put(
       `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
       { ...oldData, file: updatedFiles },
@@ -210,6 +205,71 @@ export const removeFileProramMateri = async (id, fileName) => {
     return [];
   }
 }
+export const updateFileProgramMateri = async (id, oldFileName, newFile) => {
+  try {
+    // 1. Ambil data materi berdasarkan ID
+    const getResponse = await axios.get(
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      { withCredentials: true }
+    );
 
+    const oldData = getResponse.data?.data || {};
+    const oldFiles = oldData.file || [];
+
+    // 2. Hapus file lama dari daftar
+    const updatedFiles = oldFiles.filter((fileItem) => fileItem.file !== oldFileName);
+
+    // 3. Upload file baru
+    const folder = `Home/${oldData.abbr_course}/${oldData.abbr_format}/${oldData.abbr_grade}`;
+    const uploadResponse = await uploadFileProgramMateri(newFile, folder);
+
+    if (!uploadResponse || !uploadResponse.name) {
+      throw new Error("Gagal mengunggah file baru.");
+    }
+
+    // 4. Tambahkan file baru ke daftar
+    updatedFiles.push({
+      file: uploadResponse.name,
+      title: uploadResponse.file_name,
+      file_url: uploadResponse.file_url,
+    });
+
+    // 5. Simpan perubahan ke database
+    const updateResponse = await axios.put(
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      { ...oldData, file: updatedFiles },
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    return updateResponse.data?.data || [];
+  } catch (error) {
+    console.error("Terjadi kesalahan saat memperbarui file", error?.response?.data || error.message);
+    return [];
+  }
+};
+
+export const createFolderProgramMateri = async (folderName) => {
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_SISTER_URL}/api/method/frappe.core.doctype.file.file.create_new_folder`,
+    folderName,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+    console.log(response.data);
+    return response.data?.data || []; 
+
+  } catch (error) {
+    console.error("Terjadi kesalahan", error?.response?.data || error.message);
+    return;
+  }
+};
 
 

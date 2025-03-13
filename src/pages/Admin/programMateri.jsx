@@ -5,7 +5,7 @@ import AdminLayout from "../../layout/admin-layout";
 import { Pencil, Trash, Eye, Plus} from "lucide-react";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
-import { getProgramMateri, updateProgramMateri } from "../../api/apiProgramMateri";
+import { createFolderProgramMateri, getProgramMateri, updateProgramMateri } from "../../api/apiProgramMateri";
 import { uploadFileProgramMateri, postProgramMateri, deleteProgramMateri } from "../../api/apiProgramMateri";
 
 import { getClassFormat } from "../../api/apiClassFormat";
@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 
 const ProgramMateri = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({ file: null, name: "", classFormat: "", classGrade: "", course: "" });
+  const [formData, setFormData] = useState({name: "", classFormat: "", classGrade: "", course: "" });
   const [courseData, setCourseData] = useState([]);
   const [programMateri, setProgramMateri] = useState([]);
   const [classFormat, setClassFormat] = useState([]);
@@ -29,38 +29,28 @@ const ProgramMateri = () => {
   const [success, setSuccess] = useState(null);
   const [loading, setIsLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [oldFile, setOldFile] = useState(null);
   const [search, setSearch] = useState("");
 
 
   const itemsPerPage = 5;
   
   const handleChange = (e) => {
-    if (e.target.name === "file") {
-      setFormData((prevForm) => ({
-        ...prevForm,
-        file: e.target.files[0]
-      }));
-    } else {
-      setFormData((prevForm) => ({
-        ...prevForm,
-        [e.target.name]: e.target.value
-      }));
-
-      if (e.target.name === "course") {
-        setSelectedCourse(e.target.value);
-       
-      }
+    const { name, value } = e.target;
   
-      if (e.target.name === "class_format") {
-        setSelectedClassFormat(e.target.value);
-      }
+    setFormData((prevForm) => ({
+      ...prevForm,
+      [name]: value
+    }));
   
-      if (e.target.name === "class_grading") {
-        setSelectedClassGrading(e.target.value);
-      }
+    if (name === "class_course") {
+      setSelectedCourse(value);
+    } else if (name === "class_format") {
+      setSelectedClassFormat(value);
+    } else if (name === "class_grading") {
+      setSelectedClassGrading(value);
     }
   };
+  
   
   useEffect(() => {
     selectedCourse
@@ -123,145 +113,89 @@ const ProgramMateri = () => {
   
   const handleSubmit = async () => {
     try {
-      setIsLoading(true);
-      let fileData = null;
- 
-      if (!isEditMode) {
-        const duplicateCourse = programMateri.some(
-          (materi) =>
-            materi.class_format === selectedClassFormat &&
-            materi.class_grade === selectedClassGrading &&
-            materi.class_course === selectedCourse
-        );
-  
-        if (duplicateCourse) {
-          alert("Data dengan format, grade, dan kursus yang sama sudah ada!");
-          setIsLoading(false);
-          return;
-        }
-  
-        if (!formData.file) {
-          alert("Silakan pilih file terlebih dahulu untuk menyimpan materi baru.");
-          setIsLoading(false);
-          return;
-        }
-        if(!selectedClassFormat){
-          alert("class format harus diisi");
-          setIsLoading(false)
-          return;
-        }
-        if(!selectedClassGrading){
-          alert("class grading harus diisi");
-          setIsLoading(false)
-          return;
-        }
-        if(!selectedCourse){
-          alert("course harus diis")
-          setIsLoading(false)
-          return;
-        }
-      }
+        setIsLoading(true);
 
-      if (formData.file) {
-        const allowedTypes = ["audio/mpeg", "audio/mp3"];
-        if (!allowedTypes.includes(formData.file.type)) {
-          alert("Hanya file MP3 yang diperbolehkan.");
-          setIsLoading(false);
-          return;
+        if (!isEditMode && programMateri.some(
+            (materi) =>
+                materi.class_format === selectedClassFormat &&
+                materi.class_grade === selectedClassGrading &&
+                materi.class_course === selectedCourse
+        )) {
+            alert("Data dengan format, grade, dan kursus yang sama sudah ada!");
+            return setIsLoading(false);
         }
-  
-        const result = await uploadFileProgramMateri(formData.file, "");
-  
-        if (!result || !result.name) {
-          setError(result?.message || "Gagal mengupload file.");
-          setIsLoading(false);
-          return;
-        }
-  
-        fileData = { file: result.name, title: result.file_name };
-      }
 
-      const data = {
-        class_format: selectedClassFormat,
-        class_grade: selectedClassGrading,
-        class_course: selectedCourse,
-        file: fileData ? [fileData] : oldFile ? [oldFile] : undefined 
-      };
-  
-      if (isEditMode) {
-        const updateResponse = await updateProgramMateri(formData.name, data);
-  
-        if (!updateResponse || !updateResponse.name) {
-          setError(updateResponse?.message || "Gagal mengupdate materi.");
-          setIsOpen(false);
-          return;
+        const data = {
+            title: `${selectedCourse}${selectedClassFormat}${selectedClassGrading}`,
+            class_format: classFormat.find(f => f.abbr === selectedClassFormat)?.name || "",
+            class_grade: classGrading.find(g => g.abbr === selectedClassGrading)?.name || "",
+            class_course: courseData.find(c => c.abbr === selectedCourse)?.name || ""
+        };
+
+        const response = isEditMode
+            ? await updateProgramMateri(formData.name, data)
+            : await postProgramMateri(data);
+
+        if (!response?.name) {
+            setError(response?.message || "Gagal menyimpan data materi.");
+            return setIsLoading(false);
         }
-  
-        setSuccess("Data Materi berhasil diperbarui.");
-        setProgramMateri((prevData) =>
-          prevData.map((item) =>
-            item.name === updateResponse.name ? updateResponse : item
-          )
+
+        if (!isEditMode) {
+            const folderPath = `Home/${response.abbr_course}/${response.abbr_format}`;
+            
+            try {
+                const folderExists = await checkFolderExists(folderPath);
+                
+                if (!folderExists) {
+                    await createFolderProgramMateri({
+                        file_name: response.abbr_grade,
+                        folder: folderPath
+                    });
+                }
+            } catch (error) {
+                console.error("Gagal mengecek/membuat folder:", error);
+            }
+        }
+
+        setSuccess(`Data Materi berhasil ${isEditMode ? "diperbarui" : "disimpan"}.`);
+        setProgramMateri(prevData =>
+            isEditMode
+                ? prevData.map(item => (item.name === response.name ? response : item))
+                : [...prevData, response]
         );
+
         setIsEditMode(false);
         setIsOpen(false);
-        return;
-      }
-  
-
-      const postMateriResponse = await postProgramMateri(data);
-  
-      if (!postMateriResponse || !postMateriResponse.name) {
-        setError(postMateriResponse?.message || "Gagal menyimpan data materi.");
-        setIsLoading(false);
-        return;
-      }
-  
-      setSuccess("Data Materi berhasil disimpan.");
-      setProgramMateri((prevData) => [...prevData, postMateriResponse]);
-  
-      setIsOpen(false);
     } catch (error) {
-      setError(`Error: ${error.message || "Terjadi kesalahan saat mengupload atau mengirim data"}`);
-      setIsOpen(false);
+        console.error("Error:", error);
+        setError(`Error: ${error.message || "Terjadi kesalahan saat menyimpan data"}`);
     } finally {
-      setIsLoading(false);
-      setFormData({ file: null, name: "" });
-      if (!isEditMode || fileData) {
-        setOldFile(null);
-      }
-      setSelectedClassFormat("");
-      setSelectedClassGrading("");
-      setSelectedCourse("");
+        setIsLoading(false);
+        setFormData({ name: "" });
+        setSelectedClassFormat("");
+        setSelectedClassGrading("");
+        setSelectedCourse("");
     }
-  };
-  
-  
-  
-  
-  const handleOpen = (data = null) => {
-    if (data) {
+};  
+const handleOpen = (data = null) => {
+  if (data) {
       setSelectedCourse(data.class_course || "");
       setSelectedClassFormat(data.class_format || "");
       setSelectedClassGrading(data.class_grade || "");
-      setOldFile(data.file ? data.file[0] : null);
-      setFormData((prevForm) => ({
-        ...prevForm,
-        name: data.name
-    }));
+      setFormData({ name: data.name || "" });
       setIsEditMode(true);
-    } else {
+  } else {
       setSelectedCourse("");
-      setSelectedClassFormat("");         
+      setSelectedClassFormat("");
       setSelectedClassGrading("");
+      setFormData({ name: "" });
       setIsEditMode(false);
-      setFormData((prevForm) => ({
-        ...prevForm,
-        name: ""
-    }));
-    }
-    setIsOpen(true); 
-  };
+  }
+  setIsOpen(true);
+};
+
+
   const handleDelete = async (id) => {
     setError(null);
     setSuccess(null);
@@ -340,12 +274,10 @@ const ProgramMateri = () => {
         <Modal isOpen={isOpen} onClose={handleClose}
          titleModal={isEditMode ? "Edit Program Materi" : "Insert Program Materi"} 
          onSubmit={handleSubmit}>
-       <InputModal 
+      {isEditMode && (
+  <InputModal type="hidden" name="name" value={formData.name} onChange={handleChange} />
+)}
 
-            type="hidden"
-            name="name"
-            value={formData.name}
-            onChange={handleChange} />
       <label 
         htmlFor="counse" 
         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Course</label>
@@ -358,7 +290,7 @@ const ProgramMateri = () => {
       >
         <option defaultValue="">-- Pilih Course --</option>
         {courseData.map((course) => (
-          <option key={course.name} value={course.name}>
+          <option key={course.name} value={course.abbr}>
             {course.name}
           </option>
         ))}
@@ -374,7 +306,7 @@ const ProgramMateri = () => {
       >
         <option defaultValue="">-- Pilih Class Format --</option>
         {classFormat.map((classFormat) => (
-          <option key={classFormat.name} value={classFormat.name}>
+          <option key={classFormat.name} value={classFormat.abbr}>
             {classFormat.name}
           </option>
         ))}
@@ -391,19 +323,12 @@ const ProgramMateri = () => {
       >
         <option defaultValue="">-- Pilih Class Grading --</option>
         {classGrading.map((classGrading) => (
-          <option key={classGrading.name} value={classGrading.name}>
+          <option key={classGrading.name} value={classGrading.abbr}>
             {classGrading.name}
           </option>
         ))}
       </select>
-          <InputModal 
-            label="File" 
-            type="file"
-            name="file"
-            onChange={handleChange} />
-            {isEditMode && (
-              <p className="py-2 text-sm font-semibold">note: Kosongkan file jika tidak ingin di update</p>
-            )}
+        
         </Modal>
 
       )}
@@ -465,10 +390,6 @@ const ProgramMateri = () => {
                         className="bg-green-100 text-green-600 hover:bg-green-200 hover:text-green-800 flex items-center gap-1 px-3 py-1 rounded-md">
                           <Eye size={16} /> Detail
                         </Link>
-                        <button 
-                       className="bg-yellow-100 text-yellow-600 hover:bg-yellow-200 hover:text-yellow-800 flex items-center gap-1 px-3 py-1 rounded-md" >
-                        <Plus size={16} />Tambah Materi
-                        </button>
                       </td>
                     </tr>
                   ))

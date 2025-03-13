@@ -24,7 +24,9 @@ const Middleware = ({ children }) => {
                     },
                 });
 
-                if (!response.ok) throw new Error("Invalid token");
+                if (!response.ok){
+                    throw new Error("Invalid token");
+                } 
                 setIsAuthenticated(true);
             } catch (error) {
                 console.error("Auth Error:", error);

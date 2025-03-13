@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import AdminLayout from "../../layout/admin-layout";
 import { getProgramMateriById, uploadFileProgramMateri, addFileToProgramMateri, removeFileProramMateri } from "../../api/apiProgramMateri";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
 import { motion } from "framer-motion";
+import { Pencil, Trash } from "lucide-react";
 
 const DetailClassFormat = () => {
     const { id } = useParams();
@@ -15,10 +16,40 @@ const DetailClassFormat = () => {
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
     const [currentPage, setCurrentPage] = useState(1)
+    const [isEditMode, setIsEditMode] = useState(false);
     const [search, setSearch] = useState("");
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(null);
+    const audioRefs = useRef([]);
 
 
-    const itemsPerPage = 1;
+    const itemsPerPage = 5;
+    useEffect(() => {
+      if (!id) return;
+
+      const fetchData = async () => {
+          try {
+              const response = await getProgramMateriById(id);
+              setProgramMateri(response);
+          } catch (error) {
+              console.error(" Error fetching data:", error);
+          }
+      };
+
+      fetchData();
+  }, [id]);
+    const playTrack = (index) => {
+    
+      audioRefs.current.forEach((audio, i) => {
+          if (audio && i !== index) {
+              audio.pause();
+              audio.currentTime = 0;
+          }
+      });
+      setCurrentTrackIndex(index);
+      if (audioRefs.current[index]) {
+          audioRefs.current[index].play();
+      }
+  };
 
     // Handle perubahan file
     const handleChange = (e) => {
@@ -39,22 +70,22 @@ const DetailClassFormat = () => {
         }
     
         try {
+          const folder = `Home/ Program Materi/${programMateri.abbr_course}/${programMateri.abbr_format}/${programMateri.abbr_grade}`;
             setLoading(true);
             setIsOpen(false);
-    
-     
-            const addFile = await uploadFileProgramMateri(formData.file);
+         
+            const addFile = await uploadFileProgramMateri(formData.file, folder);
             if (!addFile || !addFile.name) {
                 throw new Error("File tidak dikembalikan oleh server.");
             }
             console.log("add File", addFile);
             const newFile = {
                 file: addFile.name,
-                title: addFile.file_url, 
+                title: addFile.file_name, 
+                file_url: addFile.file_url
               };
             const res = await addFileToProgramMateri(id, newFile);
             console.log("hasil", res)
-    
             setLoading(false);
            
             setSuccess("File berhasil diupload!");
@@ -93,25 +124,14 @@ const DetailClassFormat = () => {
         setIsOpen(true);
     };
 
-    useEffect(() => {
-        if (!id) return;
+    const handleEdit = (data) => {
+        setIsEditMode(true);
+        console.log(data);
+        setIsOpen(true);
+    };
 
-        const fetchData = async () => {
-            try {
-                const response = await getProgramMateriById(id);
-                setProgramMateri(response);
-            } catch (error) {
-                console.error(" Error fetching data:", error);
-            }
-        };
-
-        fetchData();
-    }, [id]);
+  
     
-    function removeHash(filename) {
-        // Regex: -\w+ sebelum .mp3
-        return filename.replace(/-\w+(?=\.mp3$)/, "");
-      }
     const totalPages = programMateri?.file ? Math.ceil(programMateri.file.length / itemsPerPage) : 1;
 
     const coursePaginatedData = programMateri?.file
@@ -131,6 +151,9 @@ const DetailClassFormat = () => {
         <AdminLayout>
             <Modal isOpen={isOpen} onClose={handleClose} titleModal="Add File Materi" onSubmit={handleSubmit}>
                 <InputModal label="File" type="file" name="file" onChange={handleChange} />
+                {isEditMode && (
+                  <p className="font-bold py-2">Note : Kosongkan file jika tidak ingin diubah atau langsung klik Cancel</p>
+                )}
             </Modal>
             {loading && (
         <motion.div
@@ -209,20 +232,37 @@ const DetailClassFormat = () => {
             <td className="px-4 py-2 text-center border border-gray-300">{index + 1}</td>
             <td className="px-4 py-2 font-medium border border-gray-300">{fileItem.title}</td>
             <td className="px-4 py-2 border border-gray-300">
-              <audio controls className="w-full">
+              <audio
+              ref={(el) => (audioRefs.current[index] = el)}
+              controls className="w-full"
+              onPlay={() => playTrack(index)}>
                 <source
-                src={`${import.meta.env.VITE_SISTER_URL}/files/${removeHash(fileItem.title)}`}
-                  type="audio/mpeg"
+              
+                src={`${import.meta.env.VITE_SISTER_URL}/${fileItem.file_url}`}
+                type="audio/mpeg"
+                
                 />
                 Browser Anda tidak mendukung pemutar audio.
               </audio>
             </td>
-            <td className="px-4 py-2 text-center border border-gray-300">
+            <td className="px-4 py-2 flex flex-row gap-2 text-center border border-gray-300">
               <button
-                className="px-3 py-1 text-sm font-semibold text-white bg-red-500 rounded hover:bg-red-600"
-                onClick={() =>  handleDeleteFile(fileItem.file)}
+                className="bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 flex items-center gap-1 px-3 py-1 rounded-md"
+                onClick={() => {
+                  if(window.confirm("Apakah Anda yakin ingin menghapus file ini?")) 
+                   handleDeleteFile(fileItem.file)}}
               >
+                 <Trash size={16}/>
+                
                 Hapus
+              </button>
+              <button
+                className="bg-yellow-100 text-yellow-600 hover:bg-yellow-200 hover:text-yellow-800 flex items-center gap-1 px-3 py-1 rounded-md"
+                onClick={() => {
+                   handleEdit(fileItem)}}
+              >
+                   <Pencil size={16}/>
+              Edit
               </button>
             </td>
           </tr>
