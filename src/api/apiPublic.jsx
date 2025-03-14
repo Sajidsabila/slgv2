@@ -8,4 +8,14 @@ export const apiGetProgramMateriPublic = async () => {
         return [];
     }
     
-}
+};
+
+export const  apiGetProgramMateriPublicById = async (id) => {
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}?fields=["*"]`);    
+        return response.data?.data || []; 
+    } catch (error) {
+        console.error("Terjadi kesalahan", error?.response?.data || error.message);
+        return [];
+    }
+};

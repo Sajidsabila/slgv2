@@ -4,11 +4,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 
 import Index from "./pages/index.jsx";
-import ClassFormat from "./pages/Admin/classFormat.jsx";
+import ClassFormat from "./pages/Admin/classFormat.jsx"
 
-const Saxophone = lazy(() => import("./pages/saxophone.jsx"));
-const Violin = lazy(() => import("./pages/violin.jsx"));
-const Cfk1Piano = lazy(() => import("./pages/Piano/PrivateClass/cfk1piano.jsx"));
+import PageProgramMateri from "./pages/pageProgramMateri.jsx";
 const Login = lazy(() => import("./pages/Auth/index.jsx"));
 const Dashboard = lazy(() => import("./pages/Admin/dashboard.jsx"));
 const AdminPiano = lazy(() => import("./pages/Admin/piano.jsx"));
@@ -27,17 +25,13 @@ const router = createBrowserRouter([
     errorElement: <Page404 /> 
   },
   {
-     path: "/saxophone",
-     element: <Saxophone /> 
-    },
-  {
-    path: "/violin",
-     element: <Violin />
-     },
-  {
-     path: "/cfk-1-piano",
-     element: <Cfk1Piano />
-     },
+    path: "*",
+    element: <Page404 />
+  },
+{
+  path: "/program-materi/:id",
+  element: <PageProgramMateri />
+},
   { 
     path: "/login",
      element: <Guest><Login />
