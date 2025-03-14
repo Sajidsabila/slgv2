@@ -1,7 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import AdminLayout from "../../layout/admin-layout";
-import { getProgramMateriById, uploadFileProgramMateri, addFileToProgramMateri, removeFileProramMateri } from "../../api/apiProgramMateri";
+import { getProgramMateriById, 
+  uploadFileProgramMateri,
+   addFileToProgramMateri, 
+   removeFileProramMateri,
+   deleteFileProgramMateri} from "../../api/apiProgramMateri";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
 import { motion } from "framer-motion";
@@ -70,7 +74,7 @@ const DetailClassFormat = () => {
         }
     
         try {
-          const folder = `Home/ Program Materi/${programMateri.abbr_course}/${programMateri.abbr_format}/${programMateri.abbr_grade}`;
+          const folder = `Home/Program Materi/${programMateri.abbr_course}/${programMateri.abbr_format}/${programMateri.abbr_grade}`;
             setLoading(true);
             setIsOpen(false);
          
@@ -102,17 +106,20 @@ const DetailClassFormat = () => {
     };
     
     const handleDeleteFile = async (fileName) => {
-       try{
-        const deleteMateri = await  removeFileProramMateri(id, fileName);
-        setProgramMateri((prevData) => ({
-            ...prevData,
-            file: prevData.file.filter((item) => item.file !== fileName),
+      try {
+          await removeFileProramMateri(id, fileName);
+          await deleteFileProgramMateri(id, fileName);
+          setProgramMateri((prevData) => ({
+              ...prevData,
+              file: prevData.file.filter((item) => item.file !== fileName),
           }));
-          setSuccess("Data Berhasil dihapus")
-       }catch{
-        setError("terjadi kesalahan", error)
-       }
-      };
+  
+          setSuccess("Data Berhasil dihapus");
+      } catch (error) {
+          setError(`Terjadi kesalahan: ${error.message || "Tidak diketahui"}`);
+      }
+  };
+  
       
 
     const handleClose = () => {

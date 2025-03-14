@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, use } from "react";
 import { motion } from "framer-motion";
 import hamburgerIcon from "../../assets/icons8-hamburger.svg";
 import closeIcon from "../../assets/close.svg";
@@ -18,7 +18,7 @@ const Navbar = () => {
   const dropdownTimer = useRef(null);
   const submenuTimer = useRef(null);
   
-  // Event listener untuk cek apakah layar mobile atau tidak
+
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;

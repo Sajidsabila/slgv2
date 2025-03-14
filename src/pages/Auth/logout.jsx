@@ -4,6 +4,7 @@ const Logout = async () => {
    try{
     const response = await fetch(`${import.meta.env.VITE_SISTER_URL}/api/method/logout`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({}), 
       }); 

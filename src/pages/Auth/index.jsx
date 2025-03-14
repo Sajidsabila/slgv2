@@ -55,6 +55,14 @@ const Login = () => {
                      mode: "cors",
                  });
                  const dataUser = await userData.json();
+                 const getUser = {
+                    full_name: dataUser.data.full_name,
+                    user_image: dataUser.data.user_image,
+                    email: dataUser.data.email,
+                    roles: dataUser.data.roles,
+                    mobile_no: dataUser.data.mobile_no,
+                };
+                
                  const roles = Array.isArray(dataUser.data.roles) ? dataUser.data.roles : [];
                  const isInstructor = roles.some(roleObj => roleObj.role === "Instructor" || "Education Manager");
                  if (!isInstructor) {
@@ -62,9 +70,8 @@ const Login = () => {
                      setIsLoading(false)
                      throw new Error("Username dan Password Salah")
                  } 
-                     localStorageExpired("api_key", dataUser.data.api_key, 7200000);
-                     localStorageExpired("api_secret", dataUser.data.api_secret, 7200000);
-                     localStorageExpired("user", dataUser, 7200000);
+                   
+                     localStorageExpired("user", getUser, 7200000);
                      window.location.href = "/admin";
         } catch (err) {
             setError(err.message || "Terjadi kesalahan");

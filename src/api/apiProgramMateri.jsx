@@ -272,4 +272,45 @@ export const createFolderProgramMateri = async (folderName) => {
   }
 };
 
+export const checkFolderExists = async (folderName) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/File/${folderName}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    console.log(response.data);
+    
+    // Jika respons sukses, kembalikan true (folder ada)
+    return !!response.data?.data; 
+  } catch (error) { 
+    console.error("Terjadi kesalahan", error?.response?.data || error.message); 
+    return false; // Jika error, anggap folder tidak ada agar tetap bisa dibuat  
+  }
+};
+
+export const deleteFileProgramMateri = async (id, fileName) => {
+  try {
+    const response = await axios.delete(
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/File/${fileName}`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    console.log("File berhasil dihapus:", fileName);
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Terjadi kesalahan saat menghapus file", error?.response?.data || error.message);
+    return [];
+  }
+};
+
+
+
 

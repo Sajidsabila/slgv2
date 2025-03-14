@@ -1,7 +1,7 @@
 import AdminLayout from "../../layout/admin-layout";
 
 const Profile = () => {
-    const roles = JSON.parse(localStorage.getItem("user"))?.value?.data?.roles;
+    const roles = JSON.parse(localStorage.getItem("user"))?.value?.roles;
     return(
        
         <AdminLayout>
@@ -17,7 +17,7 @@ const Profile = () => {
                         readOnly
                         type="text" 
                         id="name" 
-                        value={JSON.parse(localStorage.getItem("user"))?.value?.data?.full_name}
+                        value={JSON.parse(localStorage.getItem("user"))?.value?.full_name || ""}
                         placeholder="Enter your name" 
                         className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -28,7 +28,7 @@ const Profile = () => {
                          readOnly
                         type="email" 
                         id="email" 
-                        value={JSON.parse(localStorage.getItem("user"))?.value?.data?.email}
+                        value={JSON.parse(localStorage.getItem("user"))?.value?.email || ""}
                         className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
@@ -38,8 +38,7 @@ const Profile = () => {
                          readOnly
                         type="email" 
                         id="email" 
-                        value={JSON.parse(localStorage.getItem("user"))?.value?.data?.mobile_no
-                        }
+                        value={JSON.parse(localStorage.getItem("user"))?.value?.mobile_no || ""}
                         className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>

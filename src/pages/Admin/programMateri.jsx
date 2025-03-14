@@ -5,8 +5,13 @@ import AdminLayout from "../../layout/admin-layout";
 import { Pencil, Trash, Eye, Plus} from "lucide-react";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
-import { createFolderProgramMateri, getProgramMateri, updateProgramMateri } from "../../api/apiProgramMateri";
-import { uploadFileProgramMateri, postProgramMateri, deleteProgramMateri } from "../../api/apiProgramMateri";
+import { createFolderProgramMateri,
+        getProgramMateri,
+        updateProgramMateri,
+        postProgramMateri, 
+        deleteProgramMateri,
+        checkFolderExists} from "../../api/apiProgramMateri";
+
 
 import { getClassFormat } from "../../api/apiClassFormat";
 import { getClassGrading } from "../../api/apiClassGrade";
@@ -122,7 +127,7 @@ const ProgramMateri = () => {
                 materi.class_course === selectedCourse
         )) {
             alert("Data dengan format, grade, dan kursus yang sama sudah ada!");
-            return setIsLoading(false);
+            return;
         }
 
         const data = {
@@ -137,26 +142,28 @@ const ProgramMateri = () => {
             : await postProgramMateri(data);
 
         if (!response?.name) {
-            setError(response?.message || "Gagal menyimpan data materi.");
-            return setIsLoading(false);
+            throw new Error(response?.message || "Gagal menyimpan data materi.");
         }
 
-        if (!isEditMode) {
-            const folderPath = `Home/${response.abbr_course}/${response.abbr_format}`;
-            
-            try {
+      
+            const folderPaths = [
+                "Home/Program Materi",
+                `Home/Program Materi/${response.abbr_course}`,
+                `Home/Program Materi/${response.abbr_course}/${response.abbr_format}`,
+                `Home/Program Materi/${response.abbr_course}/${response.abbr_format}/${response.abbr_grade}`
+            ];
+
+            for (let i = 0; i < folderPaths.length; i++) {
+                const folderPath = folderPaths[i];
                 const folderExists = await checkFolderExists(folderPath);
-                
+
                 if (!folderExists) {
                     await createFolderProgramMateri({
-                        file_name: response.abbr_grade,
-                        folder: folderPath
+                        file_name: folderPath.split("/").pop(),
+                        folder: folderPaths[i - 1] || "Home"
                     });
                 }
-            } catch (error) {
-                console.error("Gagal mengecek/membuat folder:", error);
             }
-        }
 
         setSuccess(`Data Materi berhasil ${isEditMode ? "diperbarui" : "disimpan"}.`);
         setProgramMateri(prevData =>
@@ -168,7 +175,6 @@ const ProgramMateri = () => {
         setIsEditMode(false);
         setIsOpen(false);
     } catch (error) {
-        console.error("Error:", error);
         setError(`Error: ${error.message || "Terjadi kesalahan saat menyimpan data"}`);
     } finally {
         setIsLoading(false);
@@ -177,12 +183,15 @@ const ProgramMateri = () => {
         setSelectedClassGrading("");
         setSelectedCourse("");
     }
-};  
+};
+
+
+
 const handleOpen = (data = null) => {
   if (data) {
-      setSelectedCourse(data.class_course || "");
-      setSelectedClassFormat(data.class_format || "");
-      setSelectedClassGrading(data.class_grade || "");
+      setSelectedCourse(data.abbr_course || "");
+      setSelectedClassFormat(data.abbr_format || "");
+      setSelectedClassGrading(data.abbr_grade || "");
       setFormData({ name: data.name || "" });
       setIsEditMode(true);
   } else {
