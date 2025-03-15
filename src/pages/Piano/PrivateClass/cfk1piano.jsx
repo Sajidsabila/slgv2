@@ -1,4 +1,4 @@
-import LandingPageLayout from "../../../Layout/landing-page";
+import LandingPageLayout from "../../../layout/landing-page";
 import { useState } from "react";
 
 const Cfk1Piano = () => {

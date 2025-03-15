@@ -1,4 +1,4 @@
-import LandingPageLayout from "../Layout/landing-page";
+import LandingPageLayout from "../layout/landing-page";
 import building from "../assets/smibuilding-1.webp";
 
 const Index = () => {

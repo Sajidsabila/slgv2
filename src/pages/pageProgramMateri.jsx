@@ -1,4 +1,4 @@
-import LandingPageLayout from "../Layout/landing-page";
+import LandingPageLayout from "../layout/landing-page";
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { apiGetProgramMateriPublicById } from "../api/apiPublic";
