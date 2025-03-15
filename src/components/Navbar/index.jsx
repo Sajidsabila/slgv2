@@ -5,6 +5,7 @@ import hamburgerIcon from "../../assets/icons8-hamburger.svg";
 import closeIcon from "../../assets/close.svg";
 import { apiGetProgramMateriPublic } from "../../api/apiPublic";
 import style from "./Navbar.module.css";
+import ProgramMateri from "../../pages/Admin/programMateri";
 
 const Navbar = () => {
   const [program, setProgram] = useState([]);
@@ -17,16 +18,27 @@ const Navbar = () => {
   const submenuTimer = useRef(null);
 
   useEffect(() => {
+    const controller = new AbortController(); // Buat instance AbortController
+    const signal = controller.signal; // Ambil signal untuk request
+  
     const getProgram = async () => {
       try {
-        const programData = await apiGetProgramMateriPublic();
+        const programData = await apiGetProgramMateriPublic({ signal }); // Kirim signal ke API
         setProgram(programData);
       } catch (error) {
-        console.error("Terjadi kesalahan", error?.response?.data || error.message);
+        if (error.name !== "AbortError") {
+          console.error("Terjadi kesalahan", error?.response?.data || error.message);
+        }
       }
     };
+  
     getProgram();
+  
+    return () => {
+      controller.abort(); // Hentikan request jika komponen unmount
+    };
   }, []);
+  
 
   const uniqueCourses = [...new Set(program.map(item => item.class_course))];
   const uniqueFormats = [...new Set(program.map(item => item.class_format))];
