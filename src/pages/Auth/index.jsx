@@ -94,6 +94,7 @@ const Login = () => {
                             type="email"
                             placeholder="Email"
                             value={email}
+                            autoFocus
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>

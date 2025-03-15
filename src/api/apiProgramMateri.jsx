@@ -205,9 +205,9 @@ export const removeFileProramMateri  = async (id, fileName) => {
     return [];
   }
 }
-export const updateFileProgramMateri = async (id, oldFileName, newFile) => {
+export const updateFileProgramMateri = async (id, newFile) => {
   try {
-    // 1. Ambil data materi berdasarkan ID
+    // 1. Ambil data lama dari API
     const getResponse = await axios.get(
       `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
       { withCredentials: true }
@@ -216,23 +216,25 @@ export const updateFileProgramMateri = async (id, oldFileName, newFile) => {
     const oldData = getResponse.data?.data || {};
     const oldFiles = oldData.file || [];
 
-    // 2. Hapus file lama dari daftar
-    const updatedFiles = oldFiles.filter((fileItem) => fileItem.file !== oldFileName);
-
+    // 2. Tentukan folder penyimpanan
+    const folder = `Home/Program Materi/${oldData.abbr_course}/${oldData.abbr_format}/${oldData.abbr_grade}`;
+    
     // 3. Upload file baru
-    const folder = `Home/${oldData.abbr_course}/${oldData.abbr_format}/${oldData.abbr_grade}`;
     const uploadResponse = await uploadFileProgramMateri(newFile, folder);
 
     if (!uploadResponse || !uploadResponse.name) {
       throw new Error("Gagal mengunggah file baru.");
     }
 
-    // 4. Tambahkan file baru ke daftar
-    updatedFiles.push({
-      file: uploadResponse.name,
-      title: uploadResponse.file_name,
-      file_url: uploadResponse.file_url,
-    });
+    // 4. Tambahkan file baru ke daftar tanpa menghapus file lama
+    const updatedFiles = [
+      ...oldFiles, 
+      {
+        file: uploadResponse.name,
+        title: uploadResponse.file_name,
+        file_url: uploadResponse.file_url,
+      }
+    ];
 
     // 5. Simpan perubahan ke database
     const updateResponse = await axios.put(
@@ -250,6 +252,7 @@ export const updateFileProgramMateri = async (id, oldFileName, newFile) => {
     return [];
   }
 };
+
 
 export const createFolderProgramMateri = async (folderName) => {
   try {

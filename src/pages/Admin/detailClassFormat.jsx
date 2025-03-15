@@ -5,7 +5,8 @@ import { getProgramMateriById,
   uploadFileProgramMateri,
    addFileToProgramMateri, 
    removeFileProramMateri,
-   deleteFileProgramMateri} from "../../api/apiProgramMateri";
+   deleteFileProgramMateri,
+   updateFileProgramMateri} from "../../api/apiProgramMateri";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
 import { motion } from "framer-motion";
@@ -15,12 +16,12 @@ const DetailClassFormat = () => {
     const { id } = useParams();
     const [programMateri, setProgramMateri] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-    const [formData, setFormData] = useState({ file: null });
+    const [formData, setFormData] = useState({ file: null, name: "" });
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
     const [currentPage, setCurrentPage] = useState(1)
-    const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
     const [search, setSearch] = useState("");
     const [currentTrackIndex, setCurrentTrackIndex] = useState(null);
     const audioRefs = useRef([]);
@@ -57,55 +58,88 @@ const DetailClassFormat = () => {
 
     // Handle perubahan file
     const handleChange = (e) => {
-        if (e.target.files.length > 0) {
-            setFormData((prevForm) => ({
-                ...prevForm,
-                file: e.target.files[0],
-            }));
-        }
-    };
+      const { name, value, type, files } = e.target;
+  
+      setFormData((prevForm) => ({
+          ...prevForm,
+          [name]: type === "file" ? files[0] : value, 
+      }));
+  };
+  
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-    
-        if (!formData.file) {
-            alert("Silakan pilih file terlebih dahulu.");
-            return;
-        }
-    
-        try {
-          const folder = `Home/Program Materi/${programMateri.abbr_course}/${programMateri.abbr_format}/${programMateri.abbr_grade}`;
-            setLoading(true);
-            setIsOpen(false);
-         
-            const addFile = await uploadFileProgramMateri(formData.file, folder);
-            if (!addFile || !addFile.name) {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+        setLoading(true);
+        setIsOpen(false);
+
+        let newFile;
+
+        if (isEditMode && !formData.file) {
+            // Jika mode edit dan tidak ada file baru, gunakan file lama
+            newFile = {
+                file: formData.oldFileName,
+                title: formData.oldTitle,
+                file_url: formData.oldFileUrl
+            };
+        } else {
+            // Jika ada file baru, upload ke server
+            const folder = `Home/Program Materi/${programMateri.abbr_course}/${programMateri.abbr_format}/${programMateri.abbr_grade}`;
+            const uploadedFile = await uploadFileProgramMateri(formData.file, folder);
+
+            if (!uploadedFile || !uploadedFile.name) {
                 throw new Error("File tidak dikembalikan oleh server.");
             }
-            console.log("add File", addFile);
-            const newFile = {
-                file: addFile.name,
-                title: addFile.file_name, 
-                file_url: addFile.file_url
-              };
-            const res = await addFileToProgramMateri(id, newFile);
-            console.log("hasil", res)
-            setLoading(false);
-           
-            setSuccess("File berhasil diupload!");
-            setProgramMateri((prevData) => ({
-                ...prevData,
-                file: [...prevData.file, newFile], 
-            }));
-    
-        } catch (error) {
-            setLoading(false);
-            console.error("Error upload file:", error.response?.data || error.message);
-            setError("Terjadi kesalahan saat mengupload file.");
+
+            console.log("File baru berhasil diupload:", uploadedFile);
+
+            newFile = {
+                file: uploadedFile.name,
+                title: uploadedFile.file_name,
+                file_url: uploadedFile.file_url
+            };
+
+            // Hapus file lama jika dalam mode edit dan file baru diunggah
+            if (isEditMode && formData.oldFileName) {
+                await removeFileProgramMateri(id, formData.oldFileName);
+            }
         }
-    };
-    
+
+        let updateResponse;
+
+        if (isEditMode) {
+            // Mode Edit: Update file lama dengan file baru
+            updateResponse = await updateFileProgramMateri(id, newFile);
+        } else {
+            // Mode Tambah: Tambahkan file baru ke daftar
+            updateResponse = await addFileToProgramMateri(id, newFile);
+        }
+
+        console.log("Hasil update:", updateResponse);
+
+        setLoading(false);
+        setSuccess(`File berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
+
+        setProgramMateri((prevData) => ({
+            ...prevData,
+            file: isEditMode
+                ? prevData.file.map(file => file.file === formData.oldFileName ? newFile : file)
+                : [...prevData.file, newFile]
+        }));
+
+        // Reset form
+        setFormData({ file: null, oldFileName: "", oldTitle: "", oldFileUrl: "" });
+        setIsEditMode(false);
+
+    } catch (error) {
+        setLoading(false);
+        console.error("Error upload/update file:", error.response?.data || error.message);
+        setError("Terjadi kesalahan saat mengupload file.");
+    }
+};
     const handleDeleteFile = async (fileName) => {
+      setLoading(true);
       try {
           await removeFileProramMateri(id, fileName);
           await deleteFileProgramMateri(id, fileName);
@@ -113,9 +147,10 @@ const DetailClassFormat = () => {
               ...prevData,
               file: prevData.file.filter((item) => item.file !== fileName),
           }));
-  
+          setLoading(false)
           setSuccess("Data Berhasil dihapus");
       } catch (error) {
+        setLoading(false)
           setError(`Terjadi kesalahan: ${error.message || "Tidak diketahui"}`);
       }
   };
@@ -132,7 +167,14 @@ const DetailClassFormat = () => {
     };
 
     const handleEdit = (data) => {
+
         setIsEditMode(true);
+        setFormData({
+          name: data.name || "",
+          oldFileName: data.file || "",  // Simpan nama file lama
+          oldTitle: data.title || "",    // Simpan judul lama
+          oldFileUrl: data.file_url || "" // Simpan URL file lama
+      });
         console.log(data);
         setIsOpen(true);
     };
@@ -157,6 +199,14 @@ const DetailClassFormat = () => {
     return (
         <AdminLayout>
             <Modal isOpen={isOpen} onClose={handleClose} titleModal="Add File Materi" onSubmit={handleSubmit}>
+              {isEditMode && (
+                <InputModal
+                  type="hidden"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              )}
                 <InputModal label="File" type="file" name="file" onChange={handleChange} />
                 {isEditMode && (
                   <p className="font-bold py-2">Note : Kosongkan file jika tidak ingin diubah atau langsung klik Cancel</p>

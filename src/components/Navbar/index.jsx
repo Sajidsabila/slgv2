@@ -59,15 +59,23 @@ const Navbar = () => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
   };
 
+
+  const replaceTitle = (title) => {
+    return (title || "").replace(/-\s*/, ""); 
+};
+const  replaceTitle2 = (title) => {
+    if (!title) return ""; 
+    return title.split("-")[1]?.trim() || ""; 
+};
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50">
-      <div className="max-w-screen-lg mx-auto px-6 flex justify-between items-center py-3">
+      <div className="max-w-screen-lg mx-auto px-1 flex justify-between items-center py-3">
 
-      <div className="md:hidden ml-auto">
+      <div className="md:hidden ml-auto px-4">
           <img
             src={isOpen ? closeIcon : hamburgerIcon}
             alt="Menu Icon"
-            width="28px"
+            width="25px"
             className="cursor-pointer"
             onClick={() => setIsOpen(!isOpen)}
           />
@@ -81,11 +89,11 @@ const Navbar = () => {
           {uniqueCourses.map((course, index) => (
             <li
               key={index}
-              className="relative cursor-pointer px-2 py-1"
+              className="relative cursor-pointer px-2 py-1 font-semibold font-sm"
               onMouseEnter={() => handleMouseEnterDropdown(course)}
               onMouseLeave={handleMouseLeaveDropdown}
             >
-              <span className="hover:text-blue-600">{course}</span>
+              <span className="hover:text-blue-600">{replaceTitle2(course)}</span>
               {activeDropdown === course && (
                 <motion.ul
                   initial={{ opacity: 0, y: -10 }}
@@ -100,7 +108,7 @@ const Navbar = () => {
                       onMouseEnter={() => handleMouseEnterSubmenu(format)}
                       onMouseLeave={handleMouseLeaveSubmenu}
                     >
-                      {format === "Group" ? "Harmoni Class" : "Private Class"} ▾
+                      {format === "Group" ? "Harmoni Class" : "Private Class"} 
                       {activeSubmenu === format && (
                         <ul className="absolute left-full top-0 mt-0 w-48 bg-[#454545] border-t-4 border-orange-500 text-white rounded-md shadow-lg">
                           {program
@@ -108,8 +116,8 @@ const Navbar = () => {
                             .map((item, gIdx) => (
                               <li key={gIdx} className="px-4 py-2 hover:bg-black border-b border-gray-100">
                               <Link to={`/program-materi/${item.name}`}>
-  {item.class_grade}
-</Link>
+                        {replaceTitle2(item.class_grade) + " " + replaceTitle2(item.class_course)}
+                        </Link>
 
                               </li>
                             ))}
@@ -123,6 +131,78 @@ const Navbar = () => {
           ))}
         </ul>
       </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+  <div className="md:hidden bg-white shadow-lg p-1 border-t-2 border-orange-700">
+    <ul className="space-y-1">
+      <li className="hover:text-blue-600 cursor-pointer px-2 py-1 py-2 border-b border-gray-900 text-xs font-semibold">
+        <Link to="/">Home</Link>
+      </li>
+
+      {uniqueCourses.map((course, index) => (
+        <li
+          key={index}
+          className="relative cursor-pointer px-2 py-2 border-b border-gray-900"
+        >
+          <div
+            className="flex justify-between items-center"
+            onClick={() => toggleDropdown(course)}
+          >
+            <span className="hover:text-blue-600 text-sm font-semibold">
+              {replaceTitle2(course)}
+            </span>
+            <i className={`fa-solid fa-chevron-${activeDropdown === course ? "up" : "down"} pr-2`}></i>
+          </div>
+
+          {activeDropdown === course && (
+            <motion.ul
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mt-2 w-full bg-white text-black border border-gray-300 shadow-lg rounded-md"
+            >
+              {uniqueFormats.map((format, fIndex) => (
+                <li key={fIndex} className="relative">
+                  <div
+                    className="px-4 py-2 cursor-pointer text-sm font-normal flex justify-between border-b border-gray-300"
+                    onClick={() => setActiveSubmenu(activeSubmenu === format ? "" : format)}
+                  >
+                    {format === "GR - Group" ? "Harmoni Class" : "Private Class"}
+                    <i className={`fa-solid pl-2 fa-chevron-${activeSubmenu === format ? "up" : "down"} pr-2`}></i>
+                  </div>
+                  
+                  {activeSubmenu === format && (
+                    <ul className="mt-1 w-full bg-white text-black rounded-md shadow-lg">
+                      {program
+                        .filter(item => item.class_course === course && item.class_format === format)
+                        .map((item, index) => (
+                          <li
+                            key={index}
+                            className="px-4 py-2 hover:bg-gray-200 border-b border-gray-300"
+                          >
+                            <Link to={`/program-materi/${item.name}`} className="block w-full h-full focus:outline-none text-xs px-1">
+                              {item.name}
+                            </Link>
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </motion.ul>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+
+
+
+
+
     </nav>
   );
 };
