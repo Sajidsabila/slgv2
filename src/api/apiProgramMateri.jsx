@@ -1,5 +1,7 @@
+
 import axios from "axios";
 
+//  api Program Materi List
 export const getProgramMateri = async () => {
   try {
     const response = await axios.get(
@@ -20,42 +22,6 @@ export const getProgramMateri = async () => {
   }
 };
 
-
-export const uploadFileProgramMateri = async (file, folder = "") => {
-  try {
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("folder", folder);
-    formData.append("is_private", "0");
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
-    const response = await axios.post(
-      `${import.meta.env.VITE_SISTER_URL}/api/method/upload_file`,
-      formData,
-      {
-        headers: {
-          "Accept": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
-    console.log(response);
-
-    
-    if (!response.data) {
-     setError("Response dari server kosong.");
-    }
-
-    console.log("Parsed Response:", response.data);
-
-    return response.data.message || "Upload berhasil!";
-  } catch (error) {
-    console.error("Error upload file:", error.response?.data || error.message);
-    throw error;
-  }
-};
 export const postProgramMateri = async (data) => {
   try {
   
@@ -98,8 +64,10 @@ export const deleteProgramMateri = async (id) => {
   }
 };
 
-export const updateProgramMateri = async (id, data) => {
+export const updateProgramMateri = async (id, data, file) => {
   try {
+    console.log("Uploading file:", file); 
+console.log("File name:", file.name);
     const response = await axios.put(
       `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
       data,
@@ -205,55 +173,81 @@ export const removeFileProramMateri  = async (id, fileName) => {
     return [];
   }
 }
-export const updateFileProgramMateri = async (id, newFile) => {
+export const updateFileToProgramMateri = async (id, newFile) => {
   try {
-    // 1. Ambil data lama dari API
+    // 1️⃣ Ambil data lama dari API
     const getResponse = await axios.get(
       `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
       { withCredentials: true }
     );
 
-    const oldData = getResponse.data?.data || {};
-    const oldFiles = oldData.file || [];
-
-    // 2. Tentukan folder penyimpanan
-    const folder = `Home/Program Materi/${oldData.abbr_course}/${oldData.abbr_format}/${oldData.abbr_grade}`;
-    
-    // 3. Upload file baru
-    const uploadResponse = await uploadFileProgramMateri(newFile, folder);
-
-    if (!uploadResponse || !uploadResponse.name) {
-      throw new Error("Gagal mengunggah file baru.");
+    if (!getResponse.data || !getResponse.data.data) {
+      throw new Error("Data tidak ditemukan di API");
     }
 
-    // 4. Tambahkan file baru ke daftar tanpa menghapus file lama
-    const updatedFiles = [
-      ...oldFiles, 
-      {
-        file: uploadResponse.name,
-        title: uploadResponse.file_name,
-        file_url: uploadResponse.file_url,
-      }
-    ];
+    const oldData = getResponse.data.data;
+    let oldFiles = Array.isArray(oldData.file) ? oldData.file : oldData.file ? [oldData.file] : [];
 
-    // 5. Simpan perubahan ke database
-    const updateResponse = await axios.put(
+    console.log("📂 Semua File dalam Data Lama:", oldFiles);
+    console.log("📂 Data yang Dikirim:", newFile);
+
+    // 🔥 **Fix: Pastikan `oldFileName` ada di `newFile`**
+    if (!newFile.oldFileName) {
+      console.warn("⚠️ oldFileName tidak ditemukan di newFile!");
+      return [];
+    }
+
+    console.log("📂 File yang Dicari:", newFile.oldFileName);
+
+    // 2️⃣ Cari file yang cocok
+    const fileIndex = oldFiles.findIndex(file => 
+      String(file.file).trim() === String(newFile.oldFileName).trim()
+    );
+
+    if (fileIndex === -1) {
+      console.warn("⚠️ File yang ingin diganti tidak ditemukan:", newFile.oldFileName);
+      return [];
+    }
+
+    console.log("✅ File Ditemukan, Akan Diperbarui!");
+
+    // 3️⃣ Update hanya file yang ditemukan
+    oldFiles[fileIndex] = {
+      ...oldFiles[fileIndex], // Simpan data lama selain file
+      file: newFile.file, 
+      title: newFile.title,
+      file_url: newFile.file_url,
+    };
+
+    // 4️⃣ Kirim update ke API
+    const response = await axios.put(
       `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
-      { ...oldData, file: updatedFiles },
+      { file: oldFiles },
       {
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
       }
     );
 
-    return updateResponse.data?.data || [];
+    if (!response.data || !response.data.data) {
+      throw new Error("Gagal memperbarui file di API");
+    }
+
+    console.log("✅ File berhasil diperbarui:", response.data.data);
+    return response.data.data;
+
   } catch (error) {
-    console.error("Terjadi kesalahan saat memperbarui file", error?.response?.data || error.message);
+    console.error("❌ Terjadi kesalahan:", error?.response?.data || error.message);
     return [];
   }
 };
 
+// end
 
+
+
+
+// apiii folde and file 
 export const createFolderProgramMateri = async (folderName) => {
   try {
     const response = await axios.post(
@@ -274,6 +268,24 @@ export const createFolderProgramMateri = async (folderName) => {
     return;
   }
 };
+
+export const deleteFileProgramMateri = async (id, fileName) => {
+  try {
+    const response = await axios.delete(
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/File/${fileName}`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    console.log("File berhasil dihapus:", fileName);
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Terjadi kesalahan saat menghapus file", error?.response?.data || error.message);
+    return [];
+  }
+};
+
 
 export const checkFolderExists = async (folderName) => {
   try {
@@ -297,23 +309,41 @@ export const checkFolderExists = async (folderName) => {
   }
 };
 
-export const deleteFileProgramMateri = async (id, fileName) => {
+
+export const uploadFileProgramMateri = async (file, folder = "") => {
   try {
-    const response = await axios.delete(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/File/${fileName}`,
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", folder);
+    formData.append("is_private", "0");
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+    const response = await axios.post(
+      `${import.meta.env.VITE_SISTER_URL}/api/method/upload_file`,
+      formData,
       {
+        headers: {
+          "Accept": "application/json",
+        },
         withCredentials: true,
       }
     );
+    console.log(response);
 
-    console.log("File berhasil dihapus:", fileName);
-    return response.data?.data || [];
+    
+    if (!response.data) {
+     setError("Response dari server kosong.");
+    }
+
+    console.log("Parsed Response:", response.data);
+
+    return response.data.message || "Upload berhasil!";
   } catch (error) {
-    console.error("Terjadi kesalahan saat menghapus file", error?.response?.data || error.message);
-    return [];
+    console.error("Error upload file:", error.response?.data || error.message);
+    throw error;
   }
 };
 
-
-
-
+// end

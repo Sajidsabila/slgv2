@@ -120,13 +120,16 @@ const  replaceTitle2 = (title) => {
                       onMouseEnter={() => handleMouseEnterSubmenu(format)}
                       onMouseLeave={handleMouseLeaveSubmenu}
                     >
-                      {format === "Group" ? "Harmoni Class" : "Private Class"} 
+                      {replaceTitle2(format) + " " + "Class"} 
                       {activeSubmenu === format && (
-                        <ul className="absolute left-full top-0 mt-0 w-48 bg-[#454545] border-t-4 border-orange-500 text-white rounded-md shadow-lg">
+                        <ul className={`absolute left-full top-0 mt-0 w-48 bg-[#454545]  ${
+                          activeSubmenu > 0  ? "border-t-4 border-orange-500" : "border-transparent"
+                        } text-white rounded-md shadow-lg`}
+                      >
                           {program
                             .filter(item => item.class_course === course && item.class_format === format)
                             .map((item, gIdx) => (
-                              <li key={gIdx} className="px-4 py-2 hover:bg-black border-b border-gray-100">
+                              <li key={gIdx} className= "px-4 py-2 hover:bg-black border-b border-gray-100">
                               <Link to={`/program-materi/${item.name}`}>
                         {replaceTitle2(item.class_grade) + " " + replaceTitle2(item.class_course)}
                         </Link>

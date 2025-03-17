@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -21,7 +22,7 @@ const Middleware = () => {
 
                 setIsAuthenticated(true);
             } catch (error) {
-                console.error("Auth Error:", error);
+                console.error("Auth Error:");
                 localStorage.clear();
                 setIsAuthenticated(false);
             }

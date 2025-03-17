@@ -6,7 +6,7 @@ import { getProgramMateriById,
    addFileToProgramMateri, 
    removeFileProramMateri,
    deleteFileProgramMateri,
-   updateFileProgramMateri} from "../../api/apiProgramMateri";
+   updateFileToProgramMateri} from "../../api/apiProgramMateri";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
 import { motion } from "framer-motion";
@@ -62,37 +62,22 @@ const DetailClassFormat = () => {
   
       setFormData((prevForm) => ({
           ...prevForm,
-          [name]: type === "file" ? files[0] : value, 
+          [name]: type === "file" ? files[0] || prevForm.oldFileName : value,
       }));
   };
   
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
         setLoading(true);
         setIsOpen(false);
 
-        let newFile;
+        let newFile = null;
+        const folder = `Home/Program Materi/${programMateri.abbr_course}/${programMateri.abbr_format}/${programMateri.abbr_grade}`;
 
-        if (isEditMode && !formData.file) {
-            // Jika mode edit dan tidak ada file baru, gunakan file lama
-            newFile = {
-                file: formData.oldFileName,
-                title: formData.oldTitle,
-                file_url: formData.oldFileUrl
-            };
-        } else {
-            // Jika ada file baru, upload ke server
-            const folder = `Home/Program Materi/${programMateri.abbr_course}/${programMateri.abbr_format}/${programMateri.abbr_grade}`;
+        if (!isEditMode) {
             const uploadedFile = await uploadFileProgramMateri(formData.file, folder);
-
-            if (!uploadedFile || !uploadedFile.name) {
-                throw new Error("File tidak dikembalikan oleh server.");
-            }
-
-            console.log("File baru berhasil diupload:", uploadedFile);
+            if (!uploadedFile?.name) throw new Error("File tidak dikembalikan oleh server.");
 
             newFile = {
                 file: uploadedFile.name,
@@ -100,44 +85,70 @@ const DetailClassFormat = () => {
                 file_url: uploadedFile.file_url
             };
 
-            // Hapus file lama jika dalam mode edit dan file baru diunggah
-            if (isEditMode && formData.oldFileName) {
-                await removeFileProgramMateri(id, formData.oldFileName);
-            }
+            await addFileToProgramMateri(id, newFile);
+            setProgramMateri(prev => ({
+                ...prev,
+                file: [...(prev.file || []), newFile]
+            }));
         }
-
-        let updateResponse;
 
         if (isEditMode) {
-            // Mode Edit: Update file lama dengan file baru
-            updateResponse = await updateFileProgramMateri(id, newFile);
-        } else {
-            // Mode Tambah: Tambahkan file baru ke daftar
-            updateResponse = await addFileToProgramMateri(id, newFile);
+            if (!formData.file || formData.file === "") {
+                newFile = {
+                    file: formData.oldFileName || "",
+                    title: formData.oldTitle || "",
+                    file_url: formData.oldFileUrl || "",
+                    oldFileName: formData.oldFileName || ""
+                };
+            } else {
+                const uploadedFile = await uploadFileProgramMateri(formData.file, folder);
+                if (!uploadedFile?.name) throw new Error("File tidak dikembalikan oleh server.");
+
+                newFile = {
+                    file: uploadedFile.name,
+                    title: uploadedFile.file_name,
+                    file_url: uploadedFile.file_url,
+                    oldFileName: formData.oldFileName || ""
+                };
+            }
+
+            const update = await updateFileToProgramMateri(id, newFile);
+
+            if (update) {  
+                if (formData.oldFileName) {
+                    try {
+                        await deleteFileProgramMateri(id, formData.oldFileName);
+                    } catch (deleteError) {
+                        console.error("Gagal menghapus file:", deleteError);
+                    }
+                }
+            }
+
+            setProgramMateri(prev => ({
+                ...prev,
+                file: (prev.file || []).map(file =>
+                    file.file === formData.oldFileName ? newFile : file
+                )
+            }));
         }
 
-        console.log("Hasil update:", updateResponse);
+        const updatedData = await getProgramMateriById(id);
+        setProgramMateri(updatedData);
 
         setLoading(false);
         setSuccess(`File berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
 
-        setProgramMateri((prevData) => ({
-            ...prevData,
-            file: isEditMode
-                ? prevData.file.map(file => file.file === formData.oldFileName ? newFile : file)
-                : [...prevData.file, newFile]
-        }));
-
-        // Reset form
         setFormData({ file: null, oldFileName: "", oldTitle: "", oldFileUrl: "" });
         setIsEditMode(false);
-
     } catch (error) {
         setLoading(false);
-        console.error("Error upload/update file:", error.response?.data || error.message);
         setError("Terjadi kesalahan saat mengupload file.");
+        console.error("Error upload/update file:", error.response?.data || error.message);
     }
 };
+
+
+
     const handleDeleteFile = async (fileName) => {
       setLoading(true);
       try {
@@ -167,17 +178,17 @@ const DetailClassFormat = () => {
     };
 
     const handleEdit = (data) => {
-
-        setIsEditMode(true);
-        setFormData({
+      setIsEditMode(true);
+      setFormData({
           name: data.name || "",
-          oldFileName: data.file || "",  // Simpan nama file lama
-          oldTitle: data.title || "",    // Simpan judul lama
-          oldFileUrl: data.file_url || "" // Simpan URL file lama
+          file: null,  // Kosongkan file baru saat edit
+          oldFileName: data.file || "",  // Pastikan ini mengambil nama file lama
+          oldTitle: data.title || "",
+          oldFileUrl: data.file_url || ""
       });
-        console.log(data);
-        setIsOpen(true);
-    };
+      setIsOpen(true);
+  };
+  
 
   
     
