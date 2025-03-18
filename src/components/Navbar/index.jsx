@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import hamburgerIcon from "../../assets/icons8-hamburger.svg";
 import closeIcon from "../../assets/close.svg";
 import { apiGetProgramMateriPublic } from "../../api/apiPublic";
@@ -13,7 +13,8 @@ const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-
+  const location = useLocation(); 
+  console.log(location);
   const dropdownTimer = useRef(null);
   const submenuTimer = useRef(null);
 
@@ -212,10 +213,6 @@ const  replaceTitle2 = (title) => {
     </ul>
   </div>
 )}
-
-
-
-
 
 
     </nav>

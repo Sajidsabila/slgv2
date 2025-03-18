@@ -68,6 +68,31 @@ const DetailClassFormat = () => {
   
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!formData.file && !isEditMode && !formData.oldFileName) {
+      alert("File masih kosong!");
+      return;
+    }
+    const file = formData.file;
+
+    if (file) {
+      const filType = ["audio/mpeg", "video/mp4"];
+    
+      if (!filType.includes(file.type)) {
+        alert("File harus berformat MP3 atau MP4!");
+        return;
+      }
+    
+      const fileTitle = file.name.toLowerCase();
+    
+      const duplicateFile = programMateri?.file?.some(
+        (item) => item.title?.toLowerCase() === fileTitle
+      );
+    
+      if (duplicateFile) {
+        alert("Maaf, program materi sudah ada!");
+        return;
+      }
+    }
     try {
         setLoading(true);
         setIsOpen(false);
@@ -114,15 +139,15 @@ const DetailClassFormat = () => {
 
             const update = await updateFileToProgramMateri(id, newFile);
 
-            if (update) {  
-                if (formData.oldFileName) {
+           
+                if (formData.oldFileName && update) {
                     try {
                         await deleteFileProgramMateri(id, formData.oldFileName);
                     } catch (deleteError) {
                         console.error("Gagal menghapus file:", deleteError);
                     }
                 }
-            }
+            
 
             setProgramMateri(prev => ({
                 ...prev,
@@ -146,9 +171,6 @@ const DetailClassFormat = () => {
         console.error("Error upload/update file:", error.response?.data || error.message);
     }
 };
-
-
-
     const handleDeleteFile = async (fileName) => {
       setLoading(true);
       try {
@@ -165,9 +187,6 @@ const DetailClassFormat = () => {
           setError(`Terjadi kesalahan: ${error.message || "Tidak diketahui"}`);
       }
   };
-  
-      
-
     const handleClose = () => {
         setFormData({ file: null });
         setIsOpen(false);
@@ -175,8 +194,8 @@ const DetailClassFormat = () => {
 
     const handleOpen = () => {
         setIsOpen(true);
+        setIsEditMode(false);
     };
-
     const handleEdit = (data) => {
       setIsEditMode(true);
       setFormData({
@@ -188,18 +207,17 @@ const DetailClassFormat = () => {
       });
       setIsOpen(true);
   };
-  
+    const filterFileProgramMateri = (search) => {
+      return programMateri?.file?.filter((item) =>
+        item.title.toLowerCase().includes(search.toLowerCase())
+    ) || [];
+    };
+    const totalPages = Math.ceil(filterFileProgramMateri(search).length / itemsPerPage);
 
-  
-    
-    const totalPages = programMateri?.file ? Math.ceil(programMateri.file.length / itemsPerPage) : 1;
-
-    const coursePaginatedData = programMateri?.file
-      ? programMateri.file.slice(
+    const coursePaginatedData = filterFileProgramMateri(search).slice(
           (currentPage - 1) * itemsPerPage,
           currentPage * itemsPerPage
-        )
-      : [];
+        );
 
       const changePage = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
@@ -209,23 +227,9 @@ const DetailClassFormat = () => {
       
     return (
         <AdminLayout>
-            <Modal isOpen={isOpen} onClose={handleClose} titleModal="Add File Materi" onSubmit={handleSubmit}>
-              {isEditMode && (
-                <InputModal
-                  type="hidden"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-              )}
-                <InputModal label="File" type="file" name="file" onChange={handleChange} />
-                {isEditMode && (
-                  <p className="font-bold py-2">Note : Kosongkan file jika tidak ingin diubah atau langsung klik Cancel</p>
-                )}
-            </Modal>
-            {loading && (
+                    {loading && (
         <motion.div
-          className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md"
+          className="flex flex-col items-center justify-center bg-transparent p-6 rounded-lg shadow-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -239,6 +243,21 @@ const DetailClassFormat = () => {
 
         </motion.div>
       )}
+            <Modal isOpen={isOpen} onClose={handleClose} titleModal={isEditMode ? "Edit File Materi" : "Add File Materi"} onSubmit={handleSubmit}>
+              {isEditMode && (
+                <InputModal
+                  type="hidden"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              )}
+                <InputModal label="File" type="file" name="file" onChange={handleChange} />
+                {isEditMode && (
+                  <p className="font-semibold text-sm py-2">Note : Kosongkan file jika tidak ingin diubah atau langsung klik Cancel</p>
+                )}
+            </Modal>
+  
 
             <h3 className="font-bold text-lg py-5 text-center md:text-left">Detail Program Materi</h3>
             <div className="w-full p-6 bg-white rounded-xl shadow-lg relative overflow-y-auto h-auto">
@@ -279,7 +298,8 @@ const DetailClassFormat = () => {
                             <input
               type="text"
               placeholder="Search"
-          
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               className="border border-gray-300 rounded-lg px-4 py-2  focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
                             </div>
@@ -294,13 +314,16 @@ const DetailClassFormat = () => {
     </thead>
     <tbody>
     {coursePaginatedData.length > 0 ? (
-    coursePaginatedData.map((fileItem, index) => (
-      
+    coursePaginatedData.map((fileItem, index) => {
+
+      const fileType = fileItem.title.split(".").pop()?.toLowerCase();
+      return (
           <tr key={index} className="bg-white border-b hover:bg-gray-50">
             <td className="px-4 py-2 text-center border border-gray-300">{index + 1}</td>
             <td className="px-4 py-2 font-medium border border-gray-300">{fileItem.title}</td>
             <td className="px-4 py-2 border border-gray-300">
-              <audio
+          {fileType === "mp3" && (
+                <audio
               ref={(el) => (audioRefs.current[index] = el)}
               controls className="w-full"
               onPlay={() => playTrack(index)}>
@@ -312,6 +335,24 @@ const DetailClassFormat = () => {
                 />
                 Browser Anda tidak mendukung pemutar audio.
               </audio>
+          )}
+
+          {fileType === "mp4" && (
+             <video
+             ref={(el) => (audioRefs.current[index] = el)}
+             controls
+             className="w-60 h-40"
+             onPlay={() => playTrack(index)}
+           >
+             <source
+               src={`${import.meta.env.VITE_SISTER_URL}/${fileItem.file_url}`}
+               type="video/mp4"
+             />
+             Browser Anda tidak mendukung pemutar video.
+           </video>
+           
+          )}
+          
             </td>
             <td className="px-4 py-2 flex flex-row gap-2 text-center border border-gray-300">
               <button
@@ -334,11 +375,12 @@ const DetailClassFormat = () => {
               </button>
             </td>
           </tr>
-        ))
+        )
+})
       ) : (
         <tr>
           <td colSpan="4" className="px-4 py-3 text-center text-gray-500 italic border border-gray-300">
-            Tidak ada file audio
+            Tidak ada data
           </td>
         </tr>
       )}

@@ -64,10 +64,8 @@ export const deleteProgramMateri = async (id) => {
   }
 };
 
-export const updateProgramMateri = async (id, data, file) => {
+export const updateProgramMateri = async (id, data) => {
   try {
-    console.log("Uploading file:", file); 
-console.log("File name:", file.name);
     const response = await axios.put(
       `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
       data,
@@ -85,6 +83,7 @@ console.log("File name:", file.name);
     return [];
   }
 };
+
 
 export const getProgramMateriById = async (id) => {
   try {
@@ -345,5 +344,7 @@ export const uploadFileProgramMateri = async (file, folder = "") => {
     throw error;
   }
 };
+
+
 
 // end

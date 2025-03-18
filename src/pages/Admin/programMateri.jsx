@@ -116,20 +116,24 @@ const ProgramMateri = () => {
   }, [selectedClassGrading]);
 
   
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  
+      if (!selectedCourse || !selectedClassFormat || !selectedClassGrading) {
+        alert("Pilih format, grade, dan kursus terlebih dahulu!");
+        return;
+      }
+    if (!isEditMode && programMateri.some(
+      (materi) =>
+          materi.abbr_format === selectedClassFormat &&
+          materi.abbr_grade === selectedClassGrading &&
+          materi.abbr_course === selectedCourse
+  )) {
+      alert("Data dengan format, grade, dan kursus yang sama sudah ada!");
+      return;
+  }
     try {
         setIsLoading(true);
-
-        if (!isEditMode && programMateri.some(
-            (materi) =>
-                materi.class_format === selectedClassFormat &&
-                materi.class_grade === selectedClassGrading &&
-                materi.class_course === selectedCourse
-        )) {
-            alert("Data dengan format, grade, dan kursus yang sama sudah ada!");
-            return;
-        }
-
         const data = {
             title: `${selectedCourse}${selectedClassFormat}${selectedClassGrading}`,
             class_format: classFormat.find(f => f.abbr === selectedClassFormat)?.name || "",
@@ -140,8 +144,9 @@ const ProgramMateri = () => {
         const response = isEditMode
             ? await updateProgramMateri(formData.name, data)
             : await postProgramMateri(data);
+            console.log("Response dari API:", response);
 
-        if (!response?.name) {
+        if (!response.name) {
             throw new Error(response?.message || "Gagal menyimpan data materi.");
         }
 
@@ -281,11 +286,8 @@ const handleOpen = (data = null) => {
           {/* Modal Insert Data */}
           {isOpen && !loading && (
         <Modal isOpen={isOpen} onClose={handleClose}
-         titleModal={isEditMode ? "Edit Program Materi" : "Insert Program Materi"} 
+         titleModal={isEditMode ? "Edit Program Materi" : "Add Program Materi"} 
          onSubmit={handleSubmit}>
-      {isEditMode && (
-  <InputModal type="hidden" name="name" value={formData.name} onChange={handleChange} />
-)}
 
       <label 
         htmlFor="counse" 
