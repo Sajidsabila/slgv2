@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 
 import Index from "./pages/index.jsx";
+import { FilterProvider } from "./context/FilterContext";
 import ClassFormat from "./pages/Admin/classFormat.jsx"
 
 import PageProgramMateri from "./pages/pageProgramMateri.jsx";
@@ -55,6 +56,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <FilterProvider> {/* Tambahkan FilterProvider di sini */}
+      <RouterProvider router={router} />
+    </FilterProvider>
   </StrictMode>
 );

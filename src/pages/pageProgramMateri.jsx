@@ -2,14 +2,14 @@ import LandingPageLayout from "../layout/landing-page";
 import { useEffect, useState, useRef, use } from "react";
 import { useParams } from "react-router-dom";
 import { apiGetProgramMateriPublicById, apiGetProgramMateriPublic } from "../api/apiPublic";
-
+import { useFilter } from "../context/FilterContext";
 const PageProgramMateri = () => {
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const [programById, setProgramById] = useState(null);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [program, setProgram] = useState([]);
-    const [selectedCategories, setSelectedCategories] = useState([]);
+    const { selectedCategories, setSelectedCategories } = useFilter();
     const { id } = useParams();
     const audioRefs = useRef([]);
 
@@ -112,6 +112,7 @@ useEffect(() => {
                             {isCategoryOpen && (
                                 <div className="ps-6 py-2">
                                     <div className="flex flex-col gap-2">
+                                        {/* filter navbar  */}
                                         {program.map((course, index) => (
                                            <div key={index} className="flex items-center">
                                     <input
@@ -147,7 +148,7 @@ useEffect(() => {
                                         <li key={index} className="text-slate-700 text-sm md:text-m font-bold tracking-wide py-3">
                                             {item.title}
                                             <div className="mt-3">
-                                                {fileType === "mp3" && (
+                                                {(fileType === "mp3" || fileType === "wav") && (
                                                     <audio
                                                     ref={(el) => (audioRefs.current[index] = el)}
                                                     onPlay={() => playTrack(index)}

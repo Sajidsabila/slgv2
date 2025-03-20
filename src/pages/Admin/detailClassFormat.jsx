@@ -75,7 +75,7 @@ const DetailClassFormat = () => {
     const file = formData.file;
 
     if (file) {
-      const filType = ["audio/mpeg", "video/mp4"];
+      const filType = ["audio/mpeg", "video/mp4", "audio/mp3", "wav"];
     
       if (!filType.includes(file.type)) {
         alert("File harus berformat MP3 atau MP4!");
@@ -319,10 +319,12 @@ const DetailClassFormat = () => {
       const fileType = fileItem.title.split(".").pop()?.toLowerCase();
       return (
           <tr key={index} className="bg-white border-b hover:bg-gray-50">
-            <td className="px-4 py-2 text-center border border-gray-300">{index + 1}</td>
+            <td className="px-4 py-2 text-center border border-gray-300">
+            {(currentPage - 1) * itemsPerPage + index + 1}
+            </td>
             <td className="px-4 py-2 font-medium border border-gray-300">{fileItem.title}</td>
             <td className="px-4 py-2 border border-gray-300">
-          {fileType === "mp3" && (
+          {(fileType === "mp3" || fileType === "wav") && (
                 <audio
               ref={(el) => (audioRefs.current[index] = el)}
               controls className="w-full"
