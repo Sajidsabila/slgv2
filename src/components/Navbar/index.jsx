@@ -6,16 +6,15 @@ import closeIcon from "../../assets/close.svg";
 import { apiGetProgramMateriPublic } from "../../api/apiPublic";
 import style from "./Navbar.module.css";
 import ProgramMateri from "../../pages/Admin/programMateri";
-import { useFilter } from "../../context/FilterContext"; 
 
 const Navbar = () => {
-  const { selectedCategories } = useFilter(); 
   const [program, setProgram] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation(); 
+  console.log(location);
   const dropdownTimer = useRef(null);
   const submenuTimer = useRef(null);
 
@@ -41,15 +40,9 @@ const Navbar = () => {
     };
   }, []);
   
-const uniqueCourses =
-  selectedCategories.length > 0
-    ? [...new Set(program.filter(item => selectedCategories.includes(item.class_course)).map(item => item.class_course))]
-    : [...new Set(program.map(item => item.class_course))];
 
-const uniqueFormats = [...new Set(program.map(item => item.class_format))];
-
-
-
+  const uniqueCourses = [...new Set(program.map(item => item.class_course))];
+  const uniqueFormats = [...new Set(program.map(item => item.class_format))];
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -130,10 +123,10 @@ const  replaceTitle2 = (title) => {
                     >
                       {replaceTitle2(format) + " " + "Class"} 
                       {activeSubmenu === format && (
-                      <ul className={`absolute left-full top-0 mt-0 w-48 bg-[#454545]  
-  ${activeSubmenu === format ? "border-t-4 border-orange-500" : "border-transparent"} 
-  text-white rounded-md shadow-lg`}
->
+                        <ul className={`absolute left-full top-0 mt-0 w-48 bg-[#454545]  ${
+                          activeSubmenu > 0  ? "border-t-4 border-orange-500" : "border-transparent"
+                        } text-white rounded-md shadow-lg`}
+                      >
                           {program
                             .filter(item => item.class_course === course && item.class_format === format)
                             .map((item, gIdx) => (

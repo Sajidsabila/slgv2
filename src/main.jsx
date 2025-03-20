@@ -8,6 +8,7 @@ import { FilterProvider } from "./context/FilterContext";
 import ClassFormat from "./pages/Admin/classFormat.jsx"
 
 import PageProgramMateri from "./pages/pageProgramMateri.jsx";
+import ClassCourseDetail  from "./pages/class.jsx";
 const Login = lazy(() => import("./pages/Auth/index.jsx"));
 const Dashboard = lazy(() => import("./pages/Admin/dashboard.jsx"));
 const AdminPiano = lazy(() => import("./pages/Admin/piano.jsx"));
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
     path: "/login",
      element: <Guest><Login />
      </Guest>
+ },
+ {
+  path: "/class-course/:abbr_course",
+  element: < ClassCourseDetail />
  },
   { 
     path: "/admin", 
