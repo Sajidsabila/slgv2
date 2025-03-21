@@ -12,7 +12,6 @@ const ClassGrades = () => {
     const getPrograms = async () => {
       try {
         const res = await apiGetProgramMateriPublic();
-        console.log("Response API Data:", res);
         setPrograms(Array.isArray(res) ? res : []);
       } catch (error) {
         console.error("Error fetching program data:", error);
@@ -22,56 +21,58 @@ const ClassGrades = () => {
     getPrograms();
   }, []);
 
-  const classFormats = useMemo(() => {
-    if (!programs.length) return [];
+  // Filter hanya Class Grading berdasarkan abbr_course
+  const classGrades = useMemo(() => {
+    if (!programs.length || !abbr_course) return [];
 
-   
-    const filteredData = programs.filter((item) => item.abbr_course === abbr_course);
-    const groupedFormats = {};
-    filteredData.forEach((item) => {
-      if (!groupedFormats[item.abbr_format]) {
-        groupedFormats[item.abbr_format] = [];
-      }
-      if (!groupedFormats[item.abbr_format].includes(item.abbr_grade)) {
-        groupedFormats[item.abbr_format].push(item.abbr_grade);
-      }
-    });
-
-    console.log("Grouped Class Formats:", groupedFormats);
-    return groupedFormats;
-  }, [abbr_course, programs]);
+    return programs
+      .filter((item) => item.abbr_course === abbr_course)
+      .map((item) => ({
+        class_grade: item.class_grade,
+        name: item.name,
+      }))
+      .filter(
+        (value, index, self) =>
+          index === self.findIndex((t) => t.class_grade === value.class_grade)
+      );
+  }, [programs, abbr_course]);
 
   return (
-    <LandingPageLayout title={`${abbr_course}`}>
-      <div className="flex justify-center min-h-screen px-4 py-10">
+    <LandingPageLayout title={abbr_course}>
+      <div className="flex justify-center h-auto px-4 py-6">
         <div className="max-w-3xl w-full">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-           Data
+          <h2 className="text-xl font-bold text-center text-gray-800 mb-4">
+            Data Class Grade
           </h2>
           {error && <p className="text-red-500 text-center">{error}</p>}
-          <div className="grid grid-cols-2 gap-6 content-center">
-            {Object.keys(classFormats).length > 0 ? (
-              Object.entries(classFormats).map(([format, grades], index) => (
-                <div key={index} className="p-5 bg-white border border-gray-200 rounded-lg shadow-lg text-center">
-                  <p className="text-lg font-semibold text-gray-700 mb-3">{format}</p>
-                  <div className="flex flex-col gap-2">
-                    {grades.map((grade, i) => (
-                      <Link
-                        key={i}
-                        to={`/class-course/${abbr_course}/${format}/${grade}`}
-                        className="block text-blue-600 hover:underline"
-                      >
-                        {grade}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {classGrades.length > 0 ? (
+              classGrades.map((gradeData, i) => (
+                <Link
+                  key={i}
+                  to={`/program-materi/${gradeData.name}`}
+                  className="p-3 bg-white border border-gray-200 rounded-md shadow-sm text-center text-blue-600 hover:underline text-md"
+                >
+                  {gradeData.class_grade}
+                </Link>
               ))
             ) : (
-              <p className="text-center text-gray-500">Tidak ada format kelas tersedia</p>
+              <div className="flex justify-center items-center">
+                <p className="text-center text-white h-8 py-1 text-sm md:text-md w-100 bg-slate-900 shadow-md rounded-lg">
+                  Tidak ada data
+                </p>
+              </div>
             )}
           </div>
         </div>
+      </div>
+      <div className="flex justify-center">
+        <Link
+          to="/"
+          className="bg-slate-900 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow-md my-2 text-center"
+        >
+          Home
+        </Link>
       </div>
     </LandingPageLayout>
   );

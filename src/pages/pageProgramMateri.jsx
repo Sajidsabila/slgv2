@@ -1,75 +1,97 @@
+import { useEffect, useState, useRef, useMemo } from "react";
+import { useParams, useNavigate, useSearchParams,  } from "react-router-dom";
 import LandingPageLayout from "../layout/landing-page";
-import { useEffect, useState, useRef, use } from "react";
-import { useParams } from "react-router-dom";
 import { apiGetProgramMateriPublicById, apiGetProgramMateriPublic } from "../api/apiPublic";
-import { useFilter } from "../context/FilterContext";
+
 const PageProgramMateri = () => {
-    const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+    const [isCategoryOpen, setIsCategoryOpen] = useState(true);
+    const [isFormatOpen, setIsFormatOpen] = useState(true);
+    const [isGradeOpen, setIsGradeOpen] = useState(true);
     const [programById, setProgramById] = useState(null);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [program, setProgram] = useState([]);
-    const { selectedCategories, setSelectedCategories } = useFilter();
-    const { id } = useParams();
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedFormat, setSelectedFormat] = useState([]);
+    const [selectedGrade, setSelectedGrade] = useState([]);
+    
+    const navigate = useNavigate();
     const audioRefs = useRef([]);
-
+    const { id } = useParams();
     const itemsPerPage = 10;
 
     const replaceTitle = (title) => (title || "").replace(/-\s*/, ""); 
     const replaceTitle2 = (title) => (title ? title.split("-")[1]?.trim() || "" : "");
 
-    const handleCategoryChange = (event) => {
-        const { value, checked } = event.target;
-        setSelectedCategories((prev) =>
-          checked ? [...prev, value] : prev.filter((cat) => cat !== value)
-        );
-      };
-
-    const playTrack = (index) => {
-    
-        audioRefs.current.forEach((audio, i) => {
-            if (audio && i !== index) {
-                audio.pause();
-                audio.currentTime = 0;
-            }
-        });
-        setCurrentTrackIndex(index);
-        if (audioRefs.current[index]) {
-            audioRefs.current[index].play();
-        }
+    const handleSelectionChange = (event, setSelected) => {
+        const { value } = event.target;
+        setSelected((prev) => (prev.includes(value) ? [] : [value]));
     };
+    useEffect(() => {
+        if (selectedCategories.length > 0 && selectedFormat.length > 0 && selectedGrade.length > 0) {
+            const newId = `${selectedCategories[0]}${selectedFormat[0]}${selectedGrade[0]}`;
+    
+            if (newId !== id) {
+                console.log("Navigating to:", `/program-materi/${newId}`);
+                navigate(`/program-materi/${newId}`, { replace: true });
+            }
+        }
+    }, [selectedCategories, selectedFormat, selectedGrade, navigate, id]);
+    
+    useEffect(() => {
+        if (!id) return;
+    
+        console.log("Fetching data for ID:", id);
+    
+        const fetchProgramById = async () => {
+            try {
+                setProgramById(null);
+                const response = await apiGetProgramMateriPublicById(id);
+                console.log("API Response:", response);
+                setProgramById(response?.data || response);
+            } catch (error) {
+                console.error("API Error:", error);
+            }
+        };
+    
+        fetchProgramById();
+    }, [id]); 
+    
 
     useEffect(() => {
-        const getProgramById = async () => {
+        if (id) {
+            const regex = /^([A-Z]{2})([A-Z]{2})(\d+)$/;
+        const match = id.match(regex);
+    
+            if (match) {
+                const [, abbr_course, class_format, abbr_grade] = match;
+    
+                setSelectedCategories([abbr_course]);
+                setSelectedFormat([class_format]);
+                setSelectedGrade([abbr_grade]);
+            } else {
+                console.log("Regex tidak cocok dengan ID:", id);
+            }
+        }
+    }, [id]);
+    
+
+    useEffect(() => {
+        const fetchProgram = async () => {
             try {
-                const response = await apiGetProgramMateriPublicById(id);
-                setProgramById(response);
+                const response = await apiGetProgramMateriPublic();
+                setProgram(response);
             } catch (error) {
                 console.error(error);
             }
         };
-
-        getProgramById();
-    }, [id]);
-
-useEffect(() => {
-    const filterProgram = async() => {
-        try {
-            const response = await  apiGetProgramMateriPublic();
-            setProgram(response);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    filterProgram();
-}, []);
-
-    const filterFiles = (search) => {
-        return programById?.file?.filter((item) =>
-            item.title.toLowerCase().includes(search.toLowerCase())
-        ) || [];
+        fetchProgram();
+    }, []);
+    
+    const playTrack = (index) => {
     };
+    const filterFiles = (search) =>
+        programById?.file?.filter((item) => item.title.toLowerCase().includes(search.toLowerCase())) || [];
 
     const totalPages = Math.ceil(filterFiles(search).length / itemsPerPage) || 1;
     const programFilePaginatedData = filterFiles(search).slice(
@@ -83,58 +105,61 @@ useEffect(() => {
         }
     };
 
-    return (
-        <LandingPageLayout title={`${replaceTitle2(programById?.class_course)} ${replaceTitle(programById?.class_grade)}`}>
-            <div className="flex flex-col w-full gap-10 px-4 md:px-10">
-           
-            <div className="flex flex-row items-center justify-center w-full">
-             <input
-                className="w-full max-w-lg md:max-w-[800px] h-[50px] rounded-lg bg-white placeholder:text-gray-500 text-gray-800 text-base border border-gray-300 px-4 pr-28 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-blue-500 hover:border-gray-400 shadow-md focus:shadow-lg"
-                value={search}
-                autoFocus
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Pencarian Materi ..."
-             />
+    const renderFilterSection = (title, isOpen, setIsOpen, items, selectedItems, setSelectedItems, valueKey, labelKey) => (
+        <div className="relative flex flex-col bg-white shadow-sm border border-slate-200 rounded-lg mt-2">
+            <div className="border-b flex justify-between border-slate-200 p-2">
+                <span className="text-sm text-slate-600 font-bold">{title}</span>
+                <span className="text-sm text-slate-600 font-bold cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+                    <i className={`fa-solid fa-chevron-${isOpen ? "up" : "down"}`}></i>
+                </span>
+            </div>
+            {isOpen && (
+                <div className="p-0">
+                    <div className="flex flex-col gap-0">
+                        {[...new Map(items.map((item) => [item[labelKey], item])).values()].map((item, index) => (
+                            <div key={index} className="flex items-center px-2 py-1">
+                                <input
+                                    type="checkbox"
+                                    id={`${valueKey}-${index}`}
+                                    className="mr-2"
+                                    value={item[valueKey]}
+                                    checked={selectedItems.includes(item[valueKey])}
+                                    onChange={(e) => handleSelectionChange(e, setSelectedItems)}
+                                />
+                                <label htmlFor={`${valueKey}-${index}`} className="text-sm text-slate-600 font-medium">
+                                    {item[labelKey]}
+                                </label>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
+    );
 
-
-       
+    return (
+        <LandingPageLayout
+        title={
+            `${replaceTitle2(programById?.class_course ?? "")} ${replaceTitle(programById?.class_grade ?? "")}`.trim() || "Data Tidak Ditemukan"
+        }
+    >
+        <div  key={id} className="flex flex-col w-full gap-10 px-4 md:px-10">
+                <div className="flex flex-row items-center justify-center w-full">
+                    <input
+                        className="w-full max-w-lg md:max-w-[800px] h-[50px] rounded-lg bg-white placeholder:text-gray-500 text-gray-800 text-base border border-gray-300 px-4 pr-28 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-blue-500 hover:border-gray-400 shadow-md focus:shadow-lg"
+                        value={search}
+                        autoFocus
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Pencarian Materi ..."
+                    />
+                </div>
                 <div className="flex flex-col md:flex-row gap-7 w-full items-start">
                     <div className="flex flex-col w-full md:w-60">
-                        <p className="text-slate-700 text-xl font-bold tracking-wide mb-3">Filter</p>
-                        <div className="relative flex flex-col bg-white shadow-sm border border-slate-200 rounded-lg">
-                            <div className="mx-3 border-b flex justify-between border-slate-200 pt-3 pb-2 px-1">
-                                <span className="text-sm text-slate-600 font-bold">Class Course</span>
-                                <span className="text-sm text-slate-600 font-bold cursor-pointer" onClick={() => setIsCategoryOpen(!isCategoryOpen)}>
-                                    <i className={`fa-solid fa-chevron-${isCategoryOpen ? "up" : "down"}`}></i>
-                                </span>
-                            </div>
-                            {isCategoryOpen && (
-                                <div className="ps-6 py-2">
-                                    <div className="flex flex-col gap-2">
-                                        {/* filter navbar  */}
-                                        {program.map((course, index) => (
-                                           <div key={index} className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        id={`category-${index}`}
-                                        className="mr-2"
-                                        value={course.class_course}
-                                        onChange={handleCategoryChange} // Tambahkan event handler
-                                    />
-                                        <label htmlFor={`category-${index}`} className="text-sm text-slate-600 font-medium">
-                                        {course.class_course}
-                                            </label>
-                                                </div>
-                                        ))}
-                                        
-                                    
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                        <p className="text-slate-700 text-xl font-bold tracking-wide mb-2">Filter</p>
+                        {renderFilterSection("Class Course", isCategoryOpen, setIsCategoryOpen, program, selectedCategories, setSelectedCategories, "abbr_course", "class_course")}
+                        {renderFilterSection("Class Format", isFormatOpen, setIsFormatOpen, program, selectedFormat, setSelectedFormat, "abbr_format", "class_format")}
+                        {renderFilterSection("Class Grade", isGradeOpen, setIsGradeOpen, program, selectedGrade, setSelectedGrade, "abbr_grade", "class_grade")}
                     </div>
-
                     <div className="musik flex flex-col w-full md:max-w-[800px] gap-7 py-3">
                         <div className="flex-col">
                             <p className="text-white font-md font-semi-bold md:text-lg md:font-semibold px-3 tracking-wide bg-slate-600 p-2 rounded-lg">Program Materi</p>

@@ -28,7 +28,7 @@ const Navbar = () => {
         setProgram(programData);
       } catch (error) {
         if (error.name !== "AbortError") {
-          console.error("Terjadi kesalahan", error?.response?.data || error.message);
+          console.error("Terjadi kesalahan", response || error.message);
         }
       }
     };
@@ -71,11 +71,6 @@ const Navbar = () => {
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
   };
-
-
-  const replaceTitle = (title) => {
-    return (title || "").replace(/-\s*/, ""); 
-};
 const  replaceTitle2 = (title) => {
     if (!title) return ""; 
     return title.split("-")[1]?.trim() || ""; 

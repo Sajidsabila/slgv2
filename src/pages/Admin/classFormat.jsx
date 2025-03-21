@@ -11,7 +11,7 @@ const ClassFormat = () => {
 
   const [courseData, setCourseData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState(""); // ✅ State pencarian
+  const [search, setSearch] = useState(""); 
   const itemsPerPage = 5;
   
   useEffect(() => {
