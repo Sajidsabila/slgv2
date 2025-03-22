@@ -11,7 +11,6 @@ const Navbar = () => {
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation(); 
-  console.log(location);
   const dropdownTimer = useRef(null);
   const submenuTimer = useRef(null);
 

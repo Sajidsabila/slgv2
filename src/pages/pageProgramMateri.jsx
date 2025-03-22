@@ -48,7 +48,6 @@ const PageProgramMateri = () => {
             try {
                 setProgramById(null);
                 const response = await apiGetProgramMateriPublicById(id);
-                console.log("API Response:", response);
                 setProgramById(response?.data || response);
             } catch (error) {
                 console.error("API Error:", error);

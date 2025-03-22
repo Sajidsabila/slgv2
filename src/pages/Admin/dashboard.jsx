@@ -57,7 +57,7 @@ const Dashboard = () => {
         countProgram();
         countClassFormat();
     })
-    console.log(program)
+
     return ( 
         <AdminLayout>
             <div className="bg-slate-700 h-15 rounded-lg text-xl text-white flex items-center p-4">

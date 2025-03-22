@@ -11,7 +11,6 @@ const Index = () => {
     const getPrograms = async () => {
       try {
         const res = await apiGetProgramMateriPublic();
-        console.log("Response API:", res); 
         setPrograms(Array.isArray(res) ? res : []); 
       } catch (error) {
         console.error("Error fetching program data:", error);
@@ -26,7 +25,6 @@ const Index = () => {
     );
   }, [programs]);
 
-  console.log("Unique Courses:", uniqueCourses); // Debugging
 
   return (
     <LandingPageLayout title="Welcome to SMI">
