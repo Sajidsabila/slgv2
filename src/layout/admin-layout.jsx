@@ -89,55 +89,6 @@ const AdminLayout = ({ children }) => {
               Home
             </NavLink>
           </li>
-
-          <li className="border-b border-gray-700">
-            <NavLink
-              to="/admin/course"
-              className={({ isActive }) =>
-                `block py-3 px-6 transition duration-300 ${
-                  isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
-                }`
-              }
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsSidebarOpen(false);
-              }}
-            >
-              Course
-            </NavLink>
-          </li>
-          <li className="border-b border-gray-700">
-            <NavLink
-              to="/admin/class-format"
-              className={({ isActive }) =>
-                `block py-3 px-6 transition duration-300 ${
-                  isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
-                }`
-              }
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsSidebarOpen(false);
-              }}
-            >
-              Class Format
-            </NavLink>
-          </li>
-          <li className="border-b border-gray-700">
-          <NavLink
-        to="/admin/class-grading"
-         className={({ isActive }) =>
-        `block py-3 px-6 transition duration-300 ${
-          isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
-    }`
-  }
-  onClick={(e) => {
-    e.stopPropagation();
-    setIsSidebarOpen(false);
-  }}
->
-  Class Grading
-        </NavLink>
-          </li>
           <li className="border-b border-gray-700">
           <NavLink
         to="/admin/program-materi"

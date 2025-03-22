@@ -365,6 +365,7 @@ const handleOpen = (data = null) => {
               <thead className="text-xs text-gray-700 uppercase bg-gray-100">
                 <tr>
                   <th className="px-6 py-3">No</th>
+                  <th className="px-6 py-3">ID Course</th>
                   <th className="px-6 py-3">Class Course</th>
                   <th className="px-6 py-3">Class Format</th>
                   <th className="px-6 py-3">Class Grade</th>
@@ -381,15 +382,13 @@ const handleOpen = (data = null) => {
                       <th className="px-6 py-4 font-medium text-gray-900">
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </th>
+                      <td className="px-6 py-4 font-bold">{item.name}</td>
                       <td className="px-6 py-4">{item.class_course}</td>
                       <td className="px-6 py-4">{item.class_format}</td>
                       <td className="px-6 py-4">{item.class_grade}</td>
                  
                       <td className="px-6 py-4 text-center flex gap-4">
-                        <button className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 flex items-center gap-1 px-3 py-1 rounded-md"
-                        onClick={() => handleOpen(item)}>
-                          <Pencil size={16} /> Edit
-                        </button>
+                  
                         <button
                          onClick={ () => {
                           if(window.confirm('Apakah anda yakin ingin Menghapus data ini?'))
@@ -398,8 +397,8 @@ const handleOpen = (data = null) => {
                           <Trash  size={16} /> Delete
                         </button>
                         <Link to={`/admin/program-materi/${item.name}`}
-                        className="bg-green-100 text-green-600 hover:bg-green-200 hover:text-green-800 flex items-center gap-1 px-3 py-1 rounded-md">
-                          <Eye size={16} /> Detail
+                        className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 hover:text-green-800 flex items-center gap-1 px-3 py-1 rounded-md">
+                          <Pencil size={16} /> Edit
                         </Link>
                       </td>
                     </tr>

@@ -65,7 +65,7 @@ const Dashboard = () => {
             </div>
             <div className="flex flex-col md:flex-row">
             <div className="flex items-start pt-10 pl-3"> 
-                <Link to="/admin/course" className="w-70 h-auto bg-white border-2 border-slate-100 shadow-lg rounded-xl">
+                <Link to="#" className="w-70 h-auto bg-white border-2 border-slate-100 shadow-lg rounded-xl">
                     <div className="bg-slate-800 text-white px-6 py-3 font-semibold">
                     Class Course
                     </div>
@@ -79,7 +79,7 @@ const Dashboard = () => {
             </div>
 
             <div className="flex items-start pt-10 pl-3"> 
-                <Link to="/admin/class-format" className="w-70 h-auto bg-white border-2 border-slate-100 shadow-lg rounded-xl">
+                <Link Link to="#" className="w-70 h-auto bg-white border-2 border-slate-100 shadow-lg rounded-xl">
                     <div className="bg-slate-800 text-white px-6 py-3 font-semibold">
                     Class Format
                     </div>
@@ -93,7 +93,7 @@ const Dashboard = () => {
             </div>
 
             <div className="flex items-start pt-10 pl-3"> 
-                <Link to="/admin/class-grading" className="w-70 h-auto bg-white border-2 border-slate-100 shadow-lg rounded-xl">
+                <Link  to="#" className="w-70 h-auto bg-white border-2 border-slate-100 shadow-lg rounded-xl">
                     <div className="bg-slate-800 text-white px-6 py-3 font-semibold">
                     Class Grading
                     </div>

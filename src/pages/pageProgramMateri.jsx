@@ -28,21 +28,22 @@ const PageProgramMateri = () => {
         setSelected((prev) => (prev.includes(value) ? [] : [value]));
     };
     useEffect(() => {
-        if (selectedCategories.length > 0 && selectedFormat.length > 0 && selectedGrade.length > 0) {
+        if (selectedCategories.length && selectedFormat.length && selectedGrade.length) {
             const newId = `${selectedCategories[0]}${selectedFormat[0]}${selectedGrade[0]}`;
-    
             if (newId !== id) {
-                console.log("Navigating to:", `/program-materi/${newId}`);
                 navigate(`/program-materi/${newId}`, { replace: true });
             }
         }
     }, [selectedCategories, selectedFormat, selectedGrade, navigate, id]);
+
+    const getFilteredFiles = useMemo(
+        () => (search ? programById?.file?.filter((item) => item.title.toLowerCase().includes(search.toLowerCase())) : programById?.file || []),
+        [search, programById]
+    );
+
     
     useEffect(() => {
         if (!id) return;
-    
-        console.log("Fetching data for ID:", id);
-    
         const fetchProgramById = async () => {
             try {
                 setProgramById(null);
