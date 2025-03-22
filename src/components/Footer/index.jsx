@@ -98,7 +98,7 @@ const Footer = () => {
 
   {/* Bagian Copyright */}
   <div className="w-full bg-gray-300 text-black text-center py-2">
-    <p className="font-semibold">&copy; All Rights Reserved. PT. Sinergi Mandiricipta Indonesia.</p>
+    <p className="font-semibold">&copy; All Rights Reserved. PT. Simfoni Melodi Indonesia.</p>
   </div>
 </footer>
 
