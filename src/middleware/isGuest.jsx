@@ -18,7 +18,7 @@ const Guest = ({ children }) => {
                 if (!response.ok) throw new Error("Unauthorized");
                 setIsGuest(false);
             } catch (error) {
-                console.error("Auth Error:", error);
+              
                 localStorage.clear();
                 setIsGuest(true);
             }

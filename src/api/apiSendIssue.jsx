@@ -1,0 +1,64 @@
+import axios from "axios";
+
+export const getIssueTypeList = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_SISTER_URL}/api/resource/Issue%20Type?fields=["*"]`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.data);
+      return response.data?.data || []; 
+ 
+    } catch (error) {
+      console.error("Terjadi kesalahan", error?.response?.data || error.message);
+      return [];
+    }
+  };
+export const postIssue = async (data) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SISTER_URL}/api/resource/Issue`,
+        data,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data || []; 
+  
+    } catch (error) {
+      console.error("Terjadi kesalahan", error?.response?.data || error.message);
+      return [];
+    }
+  };
+
+  export const apiSendWa = async (number = "", body = {}) => {
+    try {
+      const wabody = {
+        receiver: number.replace(/^0/, '62'),
+        message: body,
+        session: "628112971117", 
+      };
+  
+      const response = await axios.post(
+        "https://wa.sekolahmusik.co.id/api/send",
+        wabody,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data || [];
+    } catch (error) {
+      console.error("Terjadi kesalahan:", response.message|| error.message);
+      return [];
+    }
+  };

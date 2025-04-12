@@ -1,6 +1,7 @@
 import Header from "../components/Header/index";
 import Navbar from "../components/Navbar/index";
 import Footer from "../components/Footer/index";
+import FloatingChatButton from "../components/Button/floatingButton";
 
 const LandingPageLayout = ({ title, children }) => {
     return (
@@ -17,6 +18,7 @@ const LandingPageLayout = ({ title, children }) => {
                 </main>
                 <Footer />
             </div>
+            <FloatingChatButton />
         </div>
     );
 };
