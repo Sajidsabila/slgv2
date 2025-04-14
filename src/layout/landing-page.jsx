@@ -5,6 +5,7 @@ import FloatingChatButton from "../components/Button/floatingButton";
 
 const LandingPageLayout = ({ title, children }) => {
     return (
+    <>
         <div className="flex flex-col min-h-screen">
             <div className="fixed top-0 left-0 w-full z-50">
                 <Navbar />
@@ -18,9 +19,10 @@ const LandingPageLayout = ({ title, children }) => {
                 </main>
                 <Footer />
             </div>
-            <FloatingChatButton />
         </div>
-    );
+        <FloatingChatButton className="fixed " />
+    </>
+    )
 };
 
 export default LandingPageLayout;

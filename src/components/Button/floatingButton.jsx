@@ -71,7 +71,7 @@ const FloatingChatButton = () => {
           `*${description}*\n\n` +
           `Jika ada pertanyaan lebih lanjut, silakan hubungi kami kembali.\nTerima kasih.`;
 
-        // await apiSendWa(mobile_no, message);
+        await apiSendWa(mobile_no, message);
 
         notification.success({
           message: "Berhasil Dikirim",
@@ -117,9 +117,9 @@ const FloatingChatButton = () => {
   
     {!modal && (
       <FloatButton
-        icon={<QuestionCircleOutlined style={{ fontSize: 24 }} />}
+        icon={<QuestionCircleOutlined style={{ fontSize: 18 }} />}
         type="primary"
-        style={{ right: 30, bottom: 24, width: 60, height: 60 }}
+        style={{ right: 30, bottom: 24, width: 40, height: 40, poistion: `fixed` }}
         onClick={showModal}
       />
     )}

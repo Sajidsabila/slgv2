@@ -140,17 +140,14 @@ const ProgramMateri = () => {
             class_grade: classGrading.find(g => g.abbr === selectedClassGrading)?.name || "",
             class_course: courseData.find(c => c.abbr === selectedCourse)?.name || ""
         };
-
         const response = isEditMode
             ? await updateProgramMateri(formData.name, data)
             : await postProgramMateri(data);
-            console.log("Response dari API:", response);
-
         if (!response.name) {
-            throw new Error(response?.message || "Gagal menyimpan data materi.");
+            setError(`Data Materi gagal ${isEditMode ? "diperbarui" : "disimpan"}.`);
+            return ;
+           
         }
-
-      
             const folderPaths = [
                 "Home/Program Materi",
                 `Home/Program Materi/${response.abbr_course}`,
@@ -171,6 +168,7 @@ const ProgramMateri = () => {
             }
 
         setSuccess(`Data Materi berhasil ${isEditMode ? "diperbarui" : "disimpan"}.`);
+        setError(null);
         setProgramMateri(prevData =>
             isEditMode
                 ? prevData.map(item => (item.name === response.name ? response : item))
@@ -180,7 +178,11 @@ const ProgramMateri = () => {
         setIsEditMode(false);
         setIsOpen(false);
     } catch (error) {
-        setError(`Error: ${error.message || "Terjadi kesalahan saat menyimpan data"}`);
+      console.log(error);
+        setError(`Error: ${error.response.data.exc_type || error.response.data.exception || error.message}`);
+        setSuccess("");
+        setIsEditMode(false);
+        setIsOpen(false);
     } finally {
         setIsLoading(false);
         setFormData({ name: "" });
@@ -222,7 +224,8 @@ const handleOpen = (data = null) => {
         setProgramMateri((prevData) => prevData.filter((classFormat) => classFormat.name !== id));
       }
     } catch (error) {
-      setError(`Terjadi kesalahan: ${error.message || "Gagal menghapus data"}`);
+      setError(`Error: ${error.response.data.exc_type || error.response.data.exception || error.message}`);
+      setSuccess("");
     } finally {
       setIsLoading(false);
     }

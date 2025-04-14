@@ -167,8 +167,8 @@ const DetailClassFormat = () => {
         setIsEditMode(false);
     } catch (error) {
         setLoading(false);
-        setError("Terjadi kesalahan saat mengupload file.");
-        console.error("Error upload/update file:", error.response?.data || error.message);
+        setError(`Terjadi kesalahan: ${error.response.data.exception || error.message}`);
+        setSuccess("");
     }
 };
     const handleDeleteFile = async (fileName) => {

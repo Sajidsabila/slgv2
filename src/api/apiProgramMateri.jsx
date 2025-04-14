@@ -1,5 +1,6 @@
 
 import axios from "axios";
+import { th } from "framer-motion/client";
 
 //  api Program Materi List
 export const getProgramMateri = async () => {
@@ -38,8 +39,7 @@ export const postProgramMateri = async (data) => {
 
     return response.data?.data || [];
   } catch (error) {
-    console.error("Terjadi kesalahan", error?.response?.data || error.message);
-    return [];
+    throw error;
   }
 };
 
@@ -58,8 +58,7 @@ export const deleteProgramMateri = async (id) => {
 
     return response.data?.data || [];
   } catch (error) {
-    console.error("Terjadi kesalahan", error?.response?.data || error.message);
-    return [];
+    throw error;
   }
 };
 
@@ -186,38 +185,21 @@ export const updateFileToProgramMateri = async (id, newFile) => {
     const oldData = getResponse.data.data;
     let oldFiles = Array.isArray(oldData.file) ? oldData.file : oldData.file ? [oldData.file] : [];
 
-    console.log("📂 Semua File dalam Data Lama:", oldFiles);
-    console.log("📂 Data yang Dikirim:", newFile);
-
-    // 🔥 **Fix: Pastikan `oldFileName` ada di `newFile`**
     if (!newFile.oldFileName) {
-      console.warn("⚠️ oldFileName tidak ditemukan di newFile!");
       return [];
     }
-
-    console.log("📂 File yang Dicari:", newFile.oldFileName);
-
-    // 2️⃣ Cari file yang cocok
     const fileIndex = oldFiles.findIndex(file => 
       String(file.file).trim() === String(newFile.oldFileName).trim()
     );
-
     if (fileIndex === -1) {
-      console.warn("⚠️ File yang ingin diganti tidak ditemukan:", newFile.oldFileName);
       return [];
     }
-
-    console.log("✅ File Ditemukan, Akan Diperbarui!");
-
-    // 3️⃣ Update hanya file yang ditemukan
     oldFiles[fileIndex] = {
-      ...oldFiles[fileIndex], // Simpan data lama selain file
+      ...oldFiles[fileIndex],
       file: newFile.file, 
       title: newFile.title,
       file_url: newFile.file_url,
     };
-
-    // 4️⃣ Kirim update ke API
     const response = await axios.put(
       `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
       { file: oldFiles },
@@ -230,12 +212,10 @@ export const updateFileToProgramMateri = async (id, newFile) => {
     if (!response.data || !response.data.data) {
       throw new Error("Gagal memperbarui file di API");
     }
-
-    console.log("✅ File berhasil diperbarui:", response.data.data);
     return response.data.data;
 
   } catch (error) {
-    console.error("❌ Terjadi kesalahan:", error?.response?.data || error.message);
+ 
     return [];
   }
 };
@@ -260,10 +240,8 @@ export const createFolderProgramMateri = async (folderName) => {
     );
     console.log(response.data);
     return response.data?.data || []; 
-
   } catch (error) {
-    console.error("Terjadi kesalahan", error?.response?.data || error.message);
-    return;
+    throw error;
   }
 };
 
@@ -279,8 +257,7 @@ export const deleteFileProgramMateri = async (id, fileName) => {
     console.log("File berhasil dihapus:", fileName);
     return response.data?.data || [];
   } catch (error) {
-    console.error("Terjadi kesalahan saat menghapus file", error?.response?.data || error.message);
-    return [];
+   throw error;
   }
 };
 
@@ -298,11 +275,9 @@ export const checkFolderExists = async (folderName) => {
     );
 
     console.log(response.data);
-    
-    // Jika respons sukses, kembalikan true (folder ada)
     return !!response.data?.data; 
   } catch (error) { 
-    console.error("Terjadi kesalahan", error?.response?.data || error.message); 
+  
     return false; // Jika error, anggap folder tidak ada agar tetap bisa dibuat  
   }
 };
@@ -339,7 +314,6 @@ export const uploadFileProgramMateri = async (file, folder = "") => {
 
     return response.data.message || "Upload berhasil!";
   } catch (error) {
-    console.error("Error upload file:", error.response?.data || error.message);
     throw error;
   }
 };

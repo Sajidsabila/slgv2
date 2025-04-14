@@ -33,8 +33,7 @@ export const postIssue = async (data) => {
       return response.data || []; 
   
     } catch (error) {
-      console.error("Terjadi kesalahan", error?.response?.data || error.message);
-      return [];
+    throw error;
     }
   };
 
@@ -58,7 +57,6 @@ export const postIssue = async (data) => {
 
       return response.data || [];
     } catch (error) {
-      console.error("Terjadi kesalahan:", response.message|| error.message);
-      return [];
+     throw error;
     }
   };
