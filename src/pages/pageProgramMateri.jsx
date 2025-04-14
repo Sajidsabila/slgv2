@@ -65,7 +65,6 @@ const PageProgramMateri = () => {
     
             if (match) {
                 const [, abbr_course, class_format, abbr_grade] = match;
-    
                 setSelectedCategories([abbr_course]);
                 setSelectedFormat([class_format]);
                 setSelectedGrade([abbr_grade]);
