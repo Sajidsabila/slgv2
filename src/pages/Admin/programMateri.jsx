@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import AdminLayout from "../../layout/admin-layout";
 import { Pencil, Trash, Eye, Plus} from "lucide-react";
 import Modal from "../../components/Modal/modal";
-import InputModal from "../../components/InputModal";
+import { Select } from 'antd';
 import { createFolderProgramMateri,
         getProgramMateri,
         updateProgramMateri,
@@ -286,64 +286,73 @@ const handleOpen = (data = null) => {
             />
           </div>
   
-          {/* Modal Insert Data */}
+       
           {isOpen && !loading && (
-        <Modal isOpen={isOpen} onClose={handleClose}
-         titleModal={isEditMode ? "Edit Program Materi" : "Add Program Materi"} 
-         onSubmit={handleSubmit}>
+       <Modal
+        isOpen={isOpen}
+        onClose={handleClose}
+        titleModal={isEditMode ? "Edit Program Materi" : "Add Program Materi"}
+        onSubmit={handleSubmit}
+      >
+     <label htmlFor="course" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Course
+    </label>
+  <Select
+    showSearch
+    id="course"
+    name="course"
+    placeholder="Select Course"
+    value={selectedCourse}
+    onChange={(value) => setSelectedCourse(value)}
+    filterOption={(input, option) =>
+      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+    }
+    options={courseData.map((course) => ({
+      value: course.abbr,
+      label: course.name
+    }))}
+    style={{ width: '100%', height: '40px' }}
+  />
 
-      <label 
-        htmlFor="counse" 
-        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Course</label>
-      <select
-        id="course"
-        name="course"
-        value={selectedCourse}
-        onChange={(e) => setSelectedCourse(e.target.value)}
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      >
-        <option defaultValue="">-- Pilih Course --</option>
-        {courseData.map((course) => (
-          <option key={course.name} value={course.abbr}>
-            {course.name}
-          </option>
-        ))}
-      </select>
-      <label 
-        htmlFor="classFormat" 
-        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Class Format</label>
-      <select
-        id="classFormat"
-        value={selectedClassFormat}
-        onChange={(e) => setSelectedClassFormat(e.target.value)}
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      >
-        <option defaultValue="">-- Pilih Class Format --</option>
-        {classFormat.map((classFormat) => (
-          <option key={classFormat.name} value={classFormat.abbr}>
-            {classFormat.name}
-          </option>
-        ))}
-      </select>
+  <label htmlFor="classFormat" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+    Class Format
+  </label>
+  <Select
+    showSearch
+    id="classFormat"
+    placeholder="Select Class Format"
+    value={selectedClassFormat}
+    onChange={(value) => setSelectedClassFormat(value)}
+    filterOption={(input, option) =>
+      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+    }
+    options={classFormat.map((cf) => ({
+      value: cf.abbr,
+      label: cf.name
+    }))}
+    style={{ width: '100%', height: '40px' }}
+  />
 
-      <label 
-        htmlFor="classGrading" 
-        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Class Grading</label>
-      <select
-        id="classGrading"
-        value={selectedClassGrading}
-        onChange={(e) => setSelectedClassGrading(e.target.value)}
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      >
-        <option defaultValue="">-- Pilih Class Grading --</option>
-        {classGrading.map((classGrading) => (
-          <option key={classGrading.name} value={classGrading.abbr}>
-            {classGrading.name}
-          </option>
-        ))}
-      </select>
-        
-        </Modal>
+  <label htmlFor="classGrading" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+    Class Grading
+  </label>
+  <Select
+    showSearch
+    id="classGrading"
+    placeholder="Select Class Grading"
+    value={selectedClassGrading}
+    onChange={(value) => setSelectedClassGrading(value)}
+    filterOption={(input, option) =>
+      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+    }
+    options={classGrading.map((grading) => ({
+      value: grading.abbr,
+      label: grading.name
+    }))}
+    style={{ width: '100%',  height: '40px' }}
+  />
+</Modal>
+
 
       )}
       {loading && (

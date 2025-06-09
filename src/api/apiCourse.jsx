@@ -4,7 +4,7 @@ export const getCourse = async () => {
 
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Course?fields=["name", "abbr"]`,
+      `${import.meta.env.VITE_SISTER_URL}/api/resource/Course?fields=["name", "abbr"]&limit_page_length=None&filters=[["name", "!=", "Piano"]]`,
       {
         withCredentials: true,
         headers: {
