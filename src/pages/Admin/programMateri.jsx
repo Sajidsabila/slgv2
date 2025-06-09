@@ -245,11 +245,11 @@ const handleOpen = (data = null) => {
   
 
   
-  const filteredProgramMateri =  programMateri.filter((programMateri) =>
-    programMateri.class_grade.toLowerCase().includes(search.toLowerCase()) ||
-    programMateri.class_course.toLowerCase().includes(search.toLowerCase()) ||
-    programMateri.class_format.toLowerCase().includes(search.toLowerCase())
-  );
+const filteredProgramMateri = programMateri.filter((item) =>
+  (item.class_grade ?? '').toLowerCase().includes(search.toLowerCase()) ||
+  (item.class_course ?? '').toLowerCase().includes(search.toLowerCase()) ||
+  (item.class_format ?? '').toLowerCase().includes(search.toLowerCase())
+);
   const totalPages = Math.ceil(filteredProgramMateri.length / itemsPerPage) || 1;
   
   const coursePaginatedData = filteredProgramMateri.slice(
