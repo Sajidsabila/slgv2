@@ -209,7 +209,7 @@ const DetailClassFormat = () => {
   };
     const filterFileProgramMateri = (search) => {
       return programMateri?.file?.filter((item) =>
-        item.title.toLowerCase().includes(search.toLowerCase())
+       (item.title ?? '').toLowerCase().includes(search.toLowerCase())
     ) || [];
     };
     const totalPages = Math.ceil(filterFileProgramMateri(search).length / itemsPerPage);
