@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { urlLink } from "../api/config";
 
 const Guest = ({ children }) => {
     const [isGuest, setIsGuest] = useState(null);
@@ -7,7 +8,7 @@ const Guest = ({ children }) => {
     useEffect(() => {
         const checkGuest = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_SISTER_URL}/api/method/frappe.auth.get_logged_user`, {
+                const response = await fetch(`${urlLink.url}/api/method/frappe.auth.get_logged_user`, {
                     method: "GET",
                     credentials: "include",
                     headers: {
