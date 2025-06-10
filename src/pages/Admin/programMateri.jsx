@@ -137,9 +137,10 @@ const ProgramMateri = () => {
         const data = {
             title: `${selectedCourse}${selectedClassFormat}${selectedClassGrading}`,
             class_format: classFormat.find(f => f.abbr === selectedClassFormat)?.name || "",
-            class_grade: classGrading.find(g => g.abbr === selectedClassGrading)?.name || "",
+            class_grade: selectedClassGrading || "",
             class_course: courseData.find(c => c.abbr === selectedCourse)?.name || ""
         };
+        console.log("ini data ya ", data);
         const response = isEditMode
             ? await updateProgramMateri(formData.name, data)
             : await postProgramMateri(data);
@@ -152,7 +153,7 @@ const ProgramMateri = () => {
                 "Home/Program Materi",
                 `Home/Program Materi/${response.abbr_course}`,
                 `Home/Program Materi/${response.abbr_course}/${response.abbr_format}`,
-                `Home/Program Materi/${response.abbr_course}/${response.abbr_format}/${response.abbr_grade}`
+                `Home/Program Materi/${response.abbr_course}/${response.abbr_format}/${response.class_grade}`
             ];
 
             for (let i = 0; i < folderPaths.length; i++) {
@@ -346,7 +347,7 @@ const filteredProgramMateri = programMateri.filter((item) =>
       (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
     }
     options={classGrading.map((grading) => ({
-      value: grading.abbr,
+      value: grading.name,
       label: grading.name
     }))}
     style={{ width: '100%',  height: '40px' }}
@@ -410,7 +411,7 @@ const filteredProgramMateri = programMateri.filter((item) =>
                         </button>
                         <Link to={`/admin/program-materi/${item.name}`}
                         className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 hover:text-green-800 flex items-center gap-1 px-3 py-1 rounded-md">
-                          <Pencil size={16} /> Edit
+                          <Pencil size={16} /> Detail
                         </Link>
                       </td>
                     </tr>

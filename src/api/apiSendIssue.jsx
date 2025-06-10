@@ -1,9 +1,10 @@
 import axios from "axios";
+import { urlLink } from "./config";
 
 export const getIssueTypeList = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_SISTER_URL}/api/resource/Issue%20Type?fields=["*"]`,
+        `${urlLink.url}/api/resource/Issue%20Type?fields=["*"]`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -21,7 +22,7 @@ export const getIssueTypeList = async () => {
 export const postIssue = async (data) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_SISTER_URL}/api/resource/Issue`,
+        `${urlLink.url}/api/resource/Issue`,
         data,
         {
           withCredentials: true,

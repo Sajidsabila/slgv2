@@ -1,10 +1,11 @@
 import axios from "axios";
+import { urlLink } from "./config";
 
 export const getCourse = async () => {
 
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Course?fields=["name", "abbr"]&limit_page_length=None&filters=[["name", "!=", "Piano"]]`,
+      `${urlLink.url}/api/resource/Course?fields=["name", "abbr"]&limit_page_length=None&filters=[["name", "!=", "Piano"]]`,
       {
         withCredentials: true,
         headers: {

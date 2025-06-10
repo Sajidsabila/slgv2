@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { urlLink } from "../../api/config";
 
 
 const Login = () => {
@@ -28,7 +29,7 @@ const Login = () => {
         }
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_SISTER_URL}/api/method/login`, {
+            const response = await fetch(`${urlLink.url}/api/method/login`, {
                 method: "POST",
                 headers: headers,
                 body: new URLSearchParams({ usr: email, pwd: password }),
@@ -40,7 +41,7 @@ const Login = () => {
                 throw new Error(data.message);
          
             }
-           const getLoggedUser = await fetch(`${import.meta.env.VITE_SISTER_URL}/api/method/frappe.auth.get_logged_user`, {
+           const getLoggedUser = await fetch(`${urlLink.url}/api/method/frappe.auth.get_logged_user`, {
                  method: "POST",
                  credentials: "include",
 
@@ -48,7 +49,7 @@ const Login = () => {
                  mode: "cors",
            });
             const user = await  getLoggedUser.json();
-            const userData = await fetch(`${import.meta.env.VITE_SISTER_URL}/api/resource/User/${user.message}`, {
+            const userData = await fetch(`${urlLink.url}/api/resource/User/${user.message}`, {
                      method: "GET",
                      credentials: "include",
                      headers: headers,

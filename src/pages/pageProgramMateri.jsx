@@ -188,6 +188,13 @@ const PageProgramMateri = () => {
                                                       <source src={`${import.meta.env.VITE_SISTER_URL}/${item.file_url}`} type="audio/mpeg" />
                                                   </video>
                                                 )}
+                                                {fileType === "pdf" && (
+                                                 
+                                                        <a href={`${import.meta.env.VITE_SISTER_URL}/${item.file_url}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                                                            <img src="/pdf.png" alt="PDF" className="w-10 h-10" />
+                                                        </a>
+                                                   
+                                                )}
                                             </div>
                                         </li>
                                 )})

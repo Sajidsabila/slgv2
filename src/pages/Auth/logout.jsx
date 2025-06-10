@@ -1,8 +1,9 @@
+import { urlLink } from "../../api/config";
 
 
 const Logout = async () => {
    try{
-    const response = await fetch(`${import.meta.env.VITE_SISTER_URL}/api/method/logout`, {
+    const response = await fetch(`${urlLink.url}/api/method/logout`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },

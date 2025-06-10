@@ -1,12 +1,12 @@
 
 import axios from "axios";
-import { th } from "framer-motion/client";
+import { urlLink } from "./config";
 
 //  api Program Materi List
 export const getProgramMateri = async () => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi?fields=["*"]&order_by=creation desc`,
+      `${urlLink.url}/api/resource/Program%20Materi?fields=["*"]&order_by=creation desc`,
       {
         withCredentials: true,
         headers: {
@@ -26,7 +26,7 @@ export const postProgramMateri = async (data) => {
   try {
   
     const response = await axios.post(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi`,
+      `${urlLink.url}/api/resource/Program%20Materi`,
       data,
       {
         withCredentials: true,
@@ -47,7 +47,7 @@ export const postProgramMateri = async (data) => {
 export const deleteProgramMateri = async (id) => {
   try {
     const response = await axios.delete(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
       {
         withCredentials: true,
         headers: {
@@ -65,7 +65,7 @@ export const deleteProgramMateri = async (id) => {
 export const updateProgramMateri = async (id, data) => {
   try {
     const response = await axios.put(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
       data,
       {
         withCredentials: true,
@@ -86,7 +86,7 @@ export const updateProgramMateri = async (id, data) => {
 export const getProgramMateriById = async (id) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}?fields=["*"]`,
+      `${urlLink.url}/api/resource/Program%20Materi/${id}?fields=["*"]`,
       {
         withCredentials: true,
         headers: {
@@ -105,7 +105,7 @@ export const getProgramMateriById = async (id) => {
 export const addFileToProgramMateri = async (id, newFile) => {
   try {
     const getResponse = await axios.get(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
       { withCredentials: true }
     );
 
@@ -119,7 +119,7 @@ export const addFileToProgramMateri = async (id, newFile) => {
     const updatedFiles = [...oldFiles, newFile];
 
     const response = await axios.put(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
       { 
         file: updatedFiles
       },
@@ -147,7 +147,7 @@ export const addFileToProgramMateri = async (id, newFile) => {
 export const removeFileProramMateri  = async (id, fileName) => {
   try {
     const getResponse = await axios.get(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
       { withCredentials: true }
     );
 
@@ -155,7 +155,7 @@ export const removeFileProramMateri  = async (id, fileName) => {
     const oldFiles = oldData.file || [];
     const updatedFiles = oldFiles.filter((fileItem) => fileItem.file !== fileName);
     const response = await axios.put(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
       { ...oldData, file: updatedFiles },
       {
         withCredentials: true,
@@ -174,7 +174,7 @@ export const updateFileToProgramMateri = async (id, newFile) => {
   try {
     // 1️⃣ Ambil data lama dari API
     const getResponse = await axios.get(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
       { withCredentials: true }
     );
 
@@ -201,7 +201,7 @@ export const updateFileToProgramMateri = async (id, newFile) => {
       file_url: newFile.file_url,
     };
     const response = await axios.put(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
       { file: oldFiles },
       {
         withCredentials: true,
@@ -229,7 +229,7 @@ export const updateFileToProgramMateri = async (id, newFile) => {
 export const createFolderProgramMateri = async (folderName) => {
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_SISTER_URL}/api/method/frappe.core.doctype.file.file.create_new_folder`,
+      `${urlLink.url}/api/method/frappe.core.doctype.file.file.create_new_folder`,
     folderName,
       {
         headers: {
@@ -248,7 +248,7 @@ export const createFolderProgramMateri = async (folderName) => {
 export const deleteFileProgramMateri = async (id, fileName) => {
   try {
     const response = await axios.delete(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/File/${fileName}`,
+      `${urlLink.url}/api/resource/File/${fileName}`,
       {
         withCredentials: true,
       }
@@ -265,7 +265,7 @@ export const deleteFileProgramMateri = async (id, fileName) => {
 export const checkFolderExists = async (folderName) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_SISTER_URL}/api/resource/File/${folderName}`,
+      `${urlLink.url}/api/resource/File/${folderName}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -294,7 +294,7 @@ export const uploadFileProgramMateri = async (file, folder = "") => {
       console.log(pair[0], pair[1]);
     }
     const response = await axios.post(
-      `${import.meta.env.VITE_SISTER_URL}/api/method/upload_file`,
+      `${urlLink.url}/api/method/upload_file`,
       formData,
       {
         headers: {

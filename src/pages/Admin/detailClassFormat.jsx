@@ -75,10 +75,10 @@ const DetailClassFormat = () => {
     const file = formData.file;
 
     if (file) {
-      const filType = ["audio/mpeg", "video/mp4", "audio/mp3", "wav"];
+      const filType = ["audio/mpeg", "video/mp4", "audio/mp3", "audio/wav", "application/pdf", "png", "jpg", "jpeg"];
     
       if (!filType.includes(file.type)) {
-        alert("File harus berformat MP3 atau MP4!");
+        alert("File harus berformat MP3, MP4 dan pdf!");
         return;
       }
     
@@ -98,7 +98,7 @@ const DetailClassFormat = () => {
         setIsOpen(false);
 
         let newFile = null;
-        const folder = `Home/Program Materi/${programMateri.abbr_course}/${programMateri.abbr_format}/${programMateri.abbr_grade}`;
+        const folder = `Home/Program Materi/${programMateri.abbr_course}/${programMateri.abbr_format}/${programMateri.class_grade}`;
 
         if (!isEditMode) {
             const uploadedFile = await uploadFileProgramMateri(formData.file, folder);
@@ -355,6 +355,11 @@ const DetailClassFormat = () => {
            
           )}
           
+          {fileType === "pdf" && (
+            <a href={`${import.meta.env.VITE_SISTER_URL}/${fileItem.file_url}`} target="_blank" rel="noopener noreferrer">
+              <img src="/pdf.png" alt="PDF Icon" className="w-8 h-8" />
+            </a>
+          )}
             </td>
             <td className="px-4 py-2 flex flex-row gap-2 text-center border border-gray-300">
               <button
