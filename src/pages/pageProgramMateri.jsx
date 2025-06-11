@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import { useParams, useNavigate, useSearchParams,  } from "react-router-dom";
 import LandingPageLayout from "../layout/landing-page";
 import { apiGetProgramMateriPublicById, apiGetProgramMateriPublic } from "../api/apiPublic";
+import { nav } from "framer-motion/client";
 
 const PageProgramMateri = () => {
     const [isCategoryOpen, setIsCategoryOpen] = useState(true);
@@ -29,7 +30,9 @@ const PageProgramMateri = () => {
     };
     useEffect(() => {
         if (selectedCategories.length && selectedFormat.length && selectedGrade.length) {
-            const newId = `${selectedCategories[0]}${selectedFormat[0]}${selectedGrade[0]}`;
+           const newId = `${selectedCategories[0]}${selectedFormat[0]}${selectedGrade[0]}`.replaceAll('%20', '');
+
+            console.log("ini newId", newId);
             if (newId !== id) {
                 navigate(`/program-materi/${newId}`, { replace: true });
             }
@@ -157,7 +160,7 @@ const PageProgramMateri = () => {
                         <p className="text-slate-700 text-xl font-bold tracking-wide mb-2">Filter</p>
                         {renderFilterSection("Class Course", isCategoryOpen, setIsCategoryOpen, program, selectedCategories, setSelectedCategories, "abbr_course", "class_course")}
                         {renderFilterSection("Class Format", isFormatOpen, setIsFormatOpen, program, selectedFormat, setSelectedFormat, "abbr_format", "class_format")}
-                        {renderFilterSection("Class Grade", isGradeOpen, setIsGradeOpen, program, selectedGrade, setSelectedGrade, "abbr_grade", "class_grade")}
+                        {renderFilterSection("Class Grade", isGradeOpen, setIsGradeOpen, program, selectedGrade, setSelectedGrade, "class_grade", "class_grade")}
                     </div>
                     <div className="musik flex flex-col w-full md:max-w-[800px] gap-7 py-3">
                         <div className="flex-col">

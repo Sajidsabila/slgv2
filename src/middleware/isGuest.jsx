@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { urlLink } from "../api/config";
+import { urlLink } from "../config/config";
 
-const Guest = ({ children }) => {
+
+export const Guest = ({ children }) => {
     const [isGuest, setIsGuest] = useState(null);
 
     useEffect(() => {
@@ -32,4 +33,22 @@ const Guest = ({ children }) => {
     return isGuest ? children : <Navigate to="/admin" replace />;
 };
 
-export default Guest;
+export const GuestStudent = ({ children }) => {
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+    useEffect(() => {
+        const checkStudentAuth = () => {
+            const getStudentId = sessionStorage.getItem("id_siswa");
+            setIsAuthenticated(!!getStudentId);
+        };
+        checkStudentAuth();
+    }, []);
+
+    if (isAuthenticated === null) return null;
+
+    if (isAuthenticated) {
+        return <Navigate to="/home" replace />;
+    }
+
+    return children;
+};

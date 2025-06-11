@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import { urlLink } from "./config";
+import { urlLink } from "../config/config";
 
 //  api Program Materi List
 export const getProgramMateri = async () => {

@@ -1,9 +1,9 @@
 
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { urlLink } from "../api/config";
+import { urlLink } from "../config/config";
 
-const Middleware = () => {
+export const Middleware = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);
 
     useEffect(() => {
@@ -38,4 +38,19 @@ const Middleware = () => {
     return <Outlet />;
 };
 
-export default Middleware;
+export const MiddlewareStudent = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+    useEffect(() => {
+        const studentAuth = async () => {
+            const getStudentId = sessionStorage.getItem("id_siswa");
+            setIsAuthenticated(!!getStudentId);
+        };
+        studentAuth();
+    }, []);
+
+    if (isAuthenticated === null) return null;
+    if (!isAuthenticated) return <Navigate to="/" replace />;
+
+    return <Outlet />;
+}; 
