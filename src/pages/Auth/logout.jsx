@@ -1,4 +1,4 @@
-import { urlLink } from "../../api/config";
+import { urlLink } from "../../config/config";
 
 
 const Logout = async () => {

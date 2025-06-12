@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { urlLink } from "../../api/config";
-
+import { urlLink } from "../../config/config";
 
 const Login = () => {
     const [email, setEmail] = useState("");
