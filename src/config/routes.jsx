@@ -1,22 +1,21 @@
-import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 
-import { MiddlewareStudent } from "../middleware/middelware.jsx";
-const Middleware = lazy(() => import("../middleware/middelware.jsx"));
-const Guest = lazy(() => import("../middleware/isGuest.jsx"));
+
+import { MiddlewareStudent, Middleware } from "../middleware/middelware.jsx";
+import { GuestStudent, Guest } from "../middleware/isGuest.jsx";
 
 import Index from "../pages/index.jsx";
 import PageProgramMateri from "../pages/pageProgramMateri.jsx";
 import ClassCourseDetail from "../pages/class.jsx";
 import AuthStudent from "../pages/Auth/student.jsx";
-import { GuestStudent } from "../middleware/isGuest.jsx";
-const Login = lazy(() => import("../pages/Auth/index.jsx"));
-const Page404 = lazy(() => import("../pages/404.jsx"));
+import Login from "../pages/Auth/index.jsx";
+import Page404 from "../pages/404.jsx";
 
-const Dashboard = lazy(() => import("../pages/Admin/dashboard.jsx"));
-const Profile = lazy(() => import("../pages/Admin/profile.jsx"));
-const ProgramMateri = lazy(() => import("../pages/Admin/programMateri.jsx"));
-const DetailProgramMateri = lazy(() => import("../pages/Admin/detailClassFormat.jsx"));
+import Dashboard from "../pages/Admin/dashboard.jsx";
+import Profile from "../pages/Admin/profile.jsx";
+import ProgramMateri from "../pages/Admin/programMateri.jsx";
+import DetailProgramMateri from "../pages/Admin/detailClassFormat.jsx";
+
 
 const routes = createBrowserRouter([
   {

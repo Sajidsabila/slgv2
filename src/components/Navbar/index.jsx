@@ -18,6 +18,11 @@ const  replaceTitle2 = (title) => {
     if (!title) return ""; 
     return title.split("-")[1]?.trim() || ""; 
 };
+
+const logoutStudent = () => {
+  sessionStorage.removeItem("id_siswa");
+  window.location.href = "/";
+}
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50">
       <div className="max-w-screen-lg mx-auto px-1 flex justify-between items-center py-3">
@@ -32,13 +37,18 @@ const  replaceTitle2 = (title) => {
           />
         </div>
 
-        <ul className="hidden md:flex space-x-5 text-base text-gray-800">
-          <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
-            <Link to="/">Home</Link>
-          </li>
+   <ul className="hidden md:flex text-base text-gray-800 w-full">
+       <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
+          <Link to="/">Home</Link>
+        </li>
 
-        
-        </ul>
+      {sessionStorage.getItem("id_siswa") && (
+          <li className="hover:text-blue-600 cursor-pointer px-2 py-1 ml-auto">
+             <button onClick ={ () => {if (window.confirm("Are you sure you want to logout?")) {logoutStudent()}}}  className="text-md font-semibold bg-red-500 py-2 px-2 text-white rounded-md hover:bg-red-600">Logout</button>
+          </li>
+      )} 
+  </ul>
+
       </div>
 
       {/* Mobile Menu */}
