@@ -38,7 +38,7 @@ export const GuestStudent = ({ children }) => {
 
     useEffect(() => {
         const checkStudentAuth = () => {
-            const getStudentId = sessionStorage.getItem("id_siswa");
+            const getStudentId = sessionStorage.getItem("token");
             setIsAuthenticated(!!getStudentId);
         };
         checkStudentAuth();

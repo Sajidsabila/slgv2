@@ -39,8 +39,7 @@ const AuthStudent = () => {
                 setError(response.message.message);
                 return;
             }
-
-            sessionStorage.setItem("id_siswa", formData.id_siswa);
+            sessionStorage.setItem("token", JSON.stringify(response.message));
             window.location.href = "/home";
 
         } catch (error) {

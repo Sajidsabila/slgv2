@@ -43,7 +43,7 @@ export const MiddlewareStudent = () => {
 
     useEffect(() => {
         const studentAuth = async () => {
-            const getStudentId = sessionStorage.getItem("id_siswa");
+            const getStudentId = sessionStorage.getItem("token");
             setIsAuthenticated(!!getStudentId);
         };
         studentAuth();

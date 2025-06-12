@@ -3,6 +3,7 @@ import { useParams, useNavigate, useSearchParams,  } from "react-router-dom";
 import LandingPageLayout from "../layout/landing-page";
 import { apiGetProgramMateriPublicById, apiGetProgramMateriPublic } from "../api/apiPublic";
 import { nav } from "framer-motion/client";
+import { getEnrollment } from "../helper/helper";
 
 const PageProgramMateri = () => {
     const [isCategoryOpen, setIsCategoryOpen] = useState(true);
@@ -23,6 +24,23 @@ const PageProgramMateri = () => {
 
     const replaceTitle = (title) => (title || "").replace(/-\s*/, ""); 
     const replaceTitle2 = (title) => (title ? title.split("-")[1]?.trim() || "" : "");
+
+   const enroll = getEnrollment();
+    const enrollClassCourse = enroll.map(item =>
+        typeof item === 'string' ? item.substring(0, 2) : ''
+    );
+    const enrollClassFormat = enroll.map(item =>
+        typeof item === 'string' ? item.substring(2, 4) : ''
+    );
+
+    const enrollClassGrade = enroll.map(item =>
+        typeof item === 'string' ? item.substring(4, 6) : ''
+    );
+
+    console.log("enrollClassFormat", enrollClassFormat);
+    console.log("enrollClassCourse", enrollClassCourse);
+    console.log("enrollClassGrade", enrollClassGrade);
+
 
     const handleSelectionChange = (event, setSelected) => {
         const { value } = event.target;
