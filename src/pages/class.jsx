@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import LandingPageLayout from "../layout/landing-page";
 import { apiGetProgramMateriPublic } from "../api/apiPublic";
+import { getEnrollment } from "../helper/helper";
 
 const ClassGrades = () => {
   const { abbr_course } = useParams();
@@ -20,17 +21,24 @@ const ClassGrades = () => {
     };
     getPrograms();
   }, []);
+  const enroll = getEnrollment();
+    const enrollGrade = enroll.map(item =>
+        typeof item.class_grading === 'string' ? item.class_grading : ''
+    );
 
-  // Filter hanya Class Grading berdasarkan abbr_course
+    console.log(enrollGrade);
   const classGrades = useMemo(() => {
     if (!programs.length || !abbr_course) return [];
+    const filteredStudentClassGrade = programs.filter(p => 
+      enrollGrade.includes(p.class_grade ?? "")
+     )
 
     return programs
       .filter((item) => item.abbr_course === abbr_course)
       .map((item) => ({
         class_grade: item.class_grade,
         name: item.name,
-      }))
+      })) && filteredStudentClassGrade
       .filter(
         (value, index, self) =>
           index === self.findIndex((t) => t.class_grade === value.class_grade)

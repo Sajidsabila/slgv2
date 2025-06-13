@@ -11,14 +11,27 @@ export const getEnrollment = () => {
     const raw = sessionStorage.getItem("token");
     if (!raw) return [];
 
-    const data = JSON.parse(raw);
-    const enrollments = data?.program_enrollment;
-
+   let data; 
+   data = typeof raw === "string" ? JSON.parse(raw) : raw;
+   const enrollments = data?.program_enrollments;
     if (Array.isArray(enrollments)) {
-      // hanya ambil nilai `program` dari setiap item
-      return enrollments.map((e) => e.program);
-    }
 
+      return enrollments.map((e) => ({
+        program: e.program,
+        course: e.course,
+        class_format: e.class_format,
+        class_grading: e.class_grading
+      }));
+    } else if(typeof enrollments === 'object' && enrollments !== null) {
+      return [
+        {
+          program: enrollments.program,
+          course: enrollments.course,
+          class_format: enrollments.class_format,
+          class_grading: enrollments.class_grading
+        }
+      ];
+    }
     return [];
   } catch (error) {
     console.error("Gagal ambil program codes dari session:", error);

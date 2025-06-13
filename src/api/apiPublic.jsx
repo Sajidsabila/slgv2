@@ -24,7 +24,6 @@ export const checkStudent = async(data) => {
         const response = await axios.post(`${urlLink.url}/api/method/erpnext.education.doctype.student.student.login_auth`,
             data,
             {
-                withCredentials: true,
                headers:  {
                     "Content-Type": "application/json",
                 },

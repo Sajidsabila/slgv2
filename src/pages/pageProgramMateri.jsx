@@ -26,22 +26,19 @@ const PageProgramMateri = () => {
     const replaceTitle2 = (title) => (title ? title.split("-")[1]?.trim() || "" : "");
 
    const enroll = getEnrollment();
-    const enrollClassCourse = enroll.map(item =>
-        typeof item === 'string' ? item.substring(0, 2) : ''
+   const enrollClassCourse = enroll.map(item =>
+        typeof item.course === 'string' ? item.course : ''
     );
     const enrollClassFormat = enroll.map(item =>
-        typeof item === 'string' ? item.substring(2, 4) : ''
+        typeof item.class_format === 'string' ? item.class_format: ''
     );
-
     const enrollClassGrade = enroll.map(item =>
-        typeof item === 'string' ? item.substring(4, 6) : ''
+        typeof item.class_grading === 'string' ? item.class_grading: ''
     );
 
-    console.log("enrollClassFormat", enrollClassFormat);
-    console.log("enrollClassCourse", enrollClassCourse);
-    console.log("enrollClassGrade", enrollClassGrade);
-
-
+    console.log("wjuhsduy", enrollClassGrade);
+   
+  console.log("enrollClassCourse", enrollClassCourse);
     const handleSelectionChange = (event, setSelected) => {
         const { value } = event.target;
         setSelected((prev) => (prev.includes(value) ? [] : [value]));
@@ -50,7 +47,7 @@ const PageProgramMateri = () => {
         if (selectedCategories.length && selectedFormat.length && selectedGrade.length) {
            const newId = `${selectedCategories[0]}${selectedFormat[0]}${selectedGrade[0]}`.replaceAll('%20', '');
 
-            console.log("ini newId", newId);
+            // console.log("ini newId", newId);
             if (newId !== id) {
                 navigate(`/program-materi/${newId}`, { replace: true });
             }
@@ -124,7 +121,19 @@ const PageProgramMateri = () => {
             setCurrentPage(newPage);
         }
     };
-
+ 
+      const filteredClassCourseStudent = program.filter(item =>
+            enrollClassCourse.includes(item.class_course ?? '')
+        );
+      const filteredClassFormatStudent = program.filter(item =>
+            enrollClassFormat.includes(item.class_format ?? '')
+        );
+      const filteredClassGradeStudent = program.filter(item =>
+            enrollClassGrade.includes(item.class_grade ?? '')
+        );
+      console.log("filteredClassCourseStudent", filteredClassCourseStudent);
+      console.log("filteredClassFormatStudent", filteredClassFormatStudent);
+      console.log("filteredClassGradeStudent", filteredClassGradeStudent);
     const renderFilterSection = (title, isOpen, setIsOpen, items, selectedItems, setSelectedItems, valueKey, labelKey) => (
         <div className="relative flex flex-col bg-white shadow-sm border border-slate-200 rounded-lg mt-2">
             <div className="border-b flex justify-between border-slate-200 p-2">
@@ -176,9 +185,9 @@ const PageProgramMateri = () => {
                 <div className="flex flex-col md:flex-row gap-7 w-full items-start">
                     <div className="flex flex-col w-full md:w-60">
                         <p className="text-slate-700 text-xl font-bold tracking-wide mb-2">Filter</p>
-                        {renderFilterSection("Class Course", isCategoryOpen, setIsCategoryOpen, program, selectedCategories, setSelectedCategories, "abbr_course", "class_course")}
-                        {renderFilterSection("Class Format", isFormatOpen, setIsFormatOpen, program, selectedFormat, setSelectedFormat, "abbr_format", "class_format")}
-                        {renderFilterSection("Class Grade", isGradeOpen, setIsGradeOpen, program, selectedGrade, setSelectedGrade, "class_grade", "class_grade")}
+                        {renderFilterSection("Class Course", isCategoryOpen, setIsCategoryOpen, filteredClassCourseStudent , selectedCategories, setSelectedCategories, "abbr_course", "class_course")}
+                        {renderFilterSection("Class Format", isFormatOpen, setIsFormatOpen, filteredClassFormatStudent, selectedFormat, setSelectedFormat, "abbr_format", "class_format")}
+                        {renderFilterSection("Class Grade", isGradeOpen, setIsGradeOpen, filteredClassGradeStudent, selectedGrade, setSelectedGrade, "class_grade", "class_grade")}
                     </div>
                     <div className="musik flex flex-col w-full md:max-w-[800px] gap-7 py-3">
                         <div className="flex-col">

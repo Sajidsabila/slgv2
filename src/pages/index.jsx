@@ -3,10 +3,14 @@ import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import LandingPageLayout from "../layout/landing-page";
 import { apiGetProgramMateriPublic } from "../api/apiPublic";
+import { getEnrollment } from "../helper/helper";
 
 const Index = () => {
   const [programs, setPrograms] = useState([]);
-
+  const enroll = getEnrollment();
+  const enrollClassCourse = enroll.map(item =>
+      typeof item.program === 'string' ? item.course : ''
+  );
   useEffect(() => {
     const getPrograms = async () => {
       try {
@@ -19,8 +23,12 @@ const Index = () => {
     getPrograms();
   }, []);
 
+  
   const uniqueCourses = useMemo(() => {
-    return programs.filter((value, index, self) =>
+      const filteredeStudentProgramEnrollment = programs.filter(p =>
+        enrollClassCourse.includes(p.class_course ?? "")
+      )
+    return filteredeStudentProgramEnrollment.filter((value, index, self) =>
       index === self.findIndex((t) => t.class_course === value.class_course)
     );
   }, [programs]);
