@@ -38,3 +38,8 @@ export const getEnrollment = () => {
     return [];
   }
 }
+
+export const capitalAtWords = (string) => {
+  if (typeof string !== 'string') return '';
+  return string.toLowerCase().replace(/(?:^|\s)\S/g, a => a.toUpperCase());
+}
