@@ -4,6 +4,7 @@ import LandingPageLayout from "../layout/landing-page";
 import { apiGetProgramMateriPublicById, apiGetProgramMateriPublic } from "../api/apiPublic";
 import { nav } from "framer-motion/client";
 import { getEnrollment } from "../helper/helper";
+import { urlLink } from "../config/config";
 
 const PageProgramMateri = () => {
     const [isCategoryOpen, setIsCategoryOpen] = useState(true);
@@ -131,9 +132,6 @@ const PageProgramMateri = () => {
       const filteredClassGradeStudent = program.filter(item =>
             enrollClassGrade.includes(item.class_grade ?? '')
         );
-      console.log("filteredClassCourseStudent", filteredClassCourseStudent);
-      console.log("filteredClassFormatStudent", filteredClassFormatStudent);
-      console.log("filteredClassGradeStudent", filteredClassGradeStudent);
     const renderFilterSection = (title, isOpen, setIsOpen, items, selectedItems, setSelectedItems, valueKey, labelKey) => (
         <div className="relative flex flex-col bg-white shadow-sm border border-slate-200 rounded-lg mt-2">
             <div className="border-b flex justify-between border-slate-200 p-2">
@@ -220,7 +218,7 @@ const PageProgramMateri = () => {
                                                 )}
                                                 {fileType === "pdf" && (
                                                  
-                                                        <a href={`${import.meta.env.VITE_SISTER_URL}/${item.file_url}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                                                        <a href={`${urlLink.url}/${item.file_url}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
                                                             <img src="/pdf.png" alt="PDF" className="w-10 h-10" />
                                                         </a>
                                                    

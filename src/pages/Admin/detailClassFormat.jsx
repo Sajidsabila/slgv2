@@ -11,6 +11,7 @@ import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
 import { motion } from "framer-motion";
 import { Pencil, Trash } from "lucide-react";
+import { urlLink } from "../../config/config";
 
 const DetailClassFormat = () => {
     const { id } = useParams();
@@ -356,7 +357,7 @@ const DetailClassFormat = () => {
           )}
           
           {fileType === "pdf" && (
-            <a href={`${import.meta.env.VITE_SISTER_URL}/${fileItem.file_url}`} target="_blank" rel="noopener noreferrer">
+            <a href={`${urlLink.url}/${fileItem.file_url}`} target="_blank" rel="noopener noreferrer">
               <img src="/pdf.png" alt="PDF Icon" className="w-8 h-8" />
             </a>
           )}
