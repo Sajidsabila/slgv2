@@ -11,7 +11,8 @@ import appstore from "../../assets/logo/logoappstore.svg";
 
 const Footer = () => {
     return (
-        <footer className="w-full bg-gray-900 text-white mt-auto">
+    <footer className="w-full bg-gray-900 text-white">
+
             <div className="py-6 px-4 md:px-8 lg:px-16">
             <div className="container mx-auto ">
       <img 

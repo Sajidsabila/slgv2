@@ -33,12 +33,16 @@ const AuthStudent = () => {
                 date_of_birth: convertDate(formData.tanggal_lahir)
             };
             const response = await checkStudent(data);
-            const status = response.message.status;
+            const status = response.message;
 
-            if (status === "failed") {
-                setError(response.message.message);
+            if (status.status === "failed") {
+                setError(status.message);
+                return;
+            }else if(status.student_status === "Out"){
+                setError(status.message);
                 return;
             }
+         
             sessionStorage.setItem("token", JSON.stringify(response.message));
             window.location.href = "/home";
 

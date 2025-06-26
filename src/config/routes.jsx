@@ -15,6 +15,8 @@ import Dashboard from "../pages/Admin/dashboard.jsx";
 import Profile from "../pages/Admin/profile.jsx";
 import ProgramMateri from "../pages/Admin/programMateri.jsx";
 import DetailProgramMateri from "../pages/Admin/detailClassFormat.jsx";
+import HistoryAbsensi from "../pages/historyAbsensi.jsx";
+import EvaluasiSemester from "../pages/Admin/evaluasiSemester.jsx";
 
 
 const routes = createBrowserRouter([
@@ -44,6 +46,13 @@ const routes = createBrowserRouter([
         { path: "", element: <ClassCourseDetail /> }
     ]
   },
+   {
+    path: "/history-absensi",
+    element: <MiddlewareStudent />,
+    children: [
+        { path: "", element: <HistoryAbsensi /> }
+    ]
+  },
   {
     path: "/login",
     element: (
@@ -60,7 +69,9 @@ const routes = createBrowserRouter([
       { path: "profile", element: <Profile /> },
       { path: "program-materi", element: <ProgramMateri /> },
       { path: "program-materi/:id", element: <DetailProgramMateri /> },
+      { path: "evaluasi-semester", element: <EvaluasiSemester /> },
       { path: "*", element: <Page404 /> },
+
     ],
   },
   {

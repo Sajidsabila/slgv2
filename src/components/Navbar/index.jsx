@@ -38,10 +38,16 @@ const logoutStudent = () => {
           />
         </div>
 
-   <ul className="hidden md:flex text-base text-gray-800 w-full">
+   <ul className="hidden md:flex text-base text-gray-800 w-full ">
+    <ul className=" xl:ms-[-25%] 2xl:ms-[-30%] xl:text-xl flex gap-3">
        <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
           <Link to="/">Home</Link>
         </li>
+          <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
+          <Link to="/history-absensi">History Absensi</Link>
+        </li>
+    </ul>
+      
 
       {sessionStorage.getItem("token") && (
           <li className="hover:text-blue-600 cursor-pointer px-2 py-1 ml-auto">

@@ -102,7 +102,23 @@ const AdminLayout = ({ children }) => {
     setIsSidebarOpen(false);
   }}
 >
-Program Materi
+Learning  Materi
+        </NavLink>
+          </li>
+             <li className="border-b border-gray-700">
+          <NavLink
+        to="/admin/evaluasi-semester"
+         className={({ isActive }) =>
+        `block py-3 px-6 transition duration-300 ${
+          isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
+    }`
+  }
+  onClick={(e) => {
+    e.stopPropagation();
+    setIsSidebarOpen(false);
+  }}
+>
+Evaluasi Semester
         </NavLink>
           </li>
         </ul>
