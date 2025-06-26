@@ -39,6 +39,14 @@ const Index = () => {
   return (
     <LandingPageLayout title="Welcome to SMI">
   <div className="container mx-auto px-4 py-10">
+      <div className="flex justify-center mb-6">
+      <Link
+        to="/history-absensi"
+        className="text-white bg-blue-500 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition"
+      >
+        History Absensi
+      </Link>
+    </div>
     <h1 className="text-3xl font-bold text-center text-sky-700 mb-2">
       Selamat Datang {getName} di Student Learning Guide
     </h1>
