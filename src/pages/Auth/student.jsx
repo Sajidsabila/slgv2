@@ -74,7 +74,7 @@ const AuthStudent = () => {
                                 type="text"
                                 name="id_siswa"
                                 id="id_siswa"
-                                maxLength={16}
+                                maxLength={25}
                                 onChange={handleChange}
                                 value={formData.id_siswa}
                                 autoComplete="off"
