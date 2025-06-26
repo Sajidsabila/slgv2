@@ -68,7 +68,7 @@ const AuthStudent = () => {
                     <form onSubmit={handleCheckStudent}>
                         <div className="mb-4 md:mx-0 mx-5">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="id_siswa">
-                                NIS Siswa
+                                NIS 
                             </label>
                             <input
                                 type="text"
