@@ -215,7 +215,7 @@ const HistoryAbsensi = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className="text-center text-gray-500 py-10">
+                    <div className="text-center text-gray-500 py-4">
                         Tidak ada data ditemukan.
                     </div>
                 )}

@@ -68,12 +68,13 @@ const AuthStudent = () => {
                     <form onSubmit={handleCheckStudent}>
                         <div className="mb-4 md:mx-0 mx-5">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="id_siswa">
-                                ID Siswa
+                                NIS Siswa
                             </label>
                             <input
                                 type="text"
                                 name="id_siswa"
                                 id="id_siswa"
+                                placeholder="Input Nis Siswa"
                                 maxLength={25}
                                 onChange={handleChange}
                                 value={formData.id_siswa}

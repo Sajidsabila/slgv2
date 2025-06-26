@@ -204,7 +204,9 @@ const PageProgramMateri = () => {
                                                     <audio
                                                     ref={(el) => (audioRefs.current[index] = el)}
                                                     onPlay={() => playTrack(index)}
-                                                   controls className="w-full">
+                                                   controls
+                                                   controlsList="nodownload" 
+                                                   className="w-full">
                                                       <source src={`${import.meta.env.VITE_SISTER_URL}/${item.file_url}`} type="audio/mpeg" />
                                                   </audio>
                                                 )}
@@ -212,7 +214,9 @@ const PageProgramMateri = () => {
                                                     <video
                                                     ref={(el) => (audioRefs.current[index] = el)}
                                                     onPlay={() => playTrack(index)}
-                                                   controls className="w-80">
+                                                   controls
+                                                   controlsList="nodownload" 
+                                                    className="w-80">
                                                       <source src={`${import.meta.env.VITE_SISTER_URL}/${item.file_url}`} type="audio/mpeg" />
                                                   </video>
                                                 )}
@@ -227,7 +231,7 @@ const PageProgramMateri = () => {
                                         </li>
                                 )})
                                 ) : (
-                                    <li className="text-slate-700 text-sm md:text-m font-bold tracking-wide text-center py-3">
+                                    <li className="text-slate-700 text-sm md:text-m font-bold tracking-wide text-center py-3 ">
                                         Tidak ada data
                                     </li>
                                 )}

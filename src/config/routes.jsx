@@ -17,6 +17,7 @@ import ProgramMateri from "../pages/Admin/programMateri.jsx";
 import DetailProgramMateri from "../pages/Admin/detailClassFormat.jsx";
 import HistoryAbsensi from "../pages/historyAbsensi.jsx";
 import EvaluasiSemester from "../pages/Admin/evaluasiSemester.jsx";
+import DetailEvaluasiSemester from "../pages/Admin/detailEvaluasiSemester.jsx";
 
 
 const routes = createBrowserRouter([
@@ -70,6 +71,7 @@ const routes = createBrowserRouter([
       { path: "program-materi", element: <ProgramMateri /> },
       { path: "program-materi/:id", element: <DetailProgramMateri /> },
       { path: "evaluasi-semester", element: <EvaluasiSemester /> },
+      { path: "evaluasi-semester/:id", element: <DetailEvaluasiSemester /> },
       { path: "*", element: <Page404 /> },
 
     ],

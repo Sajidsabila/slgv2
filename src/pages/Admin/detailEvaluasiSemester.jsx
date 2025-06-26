@@ -13,8 +13,8 @@ import { motion } from "framer-motion";
 import { Pencil, Trash } from "lucide-react";
 import { urlLink } from "../../config/config";
 
-const DetailClassFormat = () => {
-    const { id } = useParams();
+const DetailEvaluasiSemester = () => {
+  const { id } = useParams();
     const [programMateri, setProgramMateri] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [formData, setFormData] = useState({ file: null, name: "" });
@@ -212,7 +212,7 @@ const DetailClassFormat = () => {
     const filterFileProgramMateri = (search) => {
       return programMateri?.file?.filter((item) =>
        (item.title ?? '').toLowerCase().includes(search.toLowerCase()) &&
-       item.type === "Program Materi"
+       item.type === "Evaluasi Semester"
     ) || [];
     };
     const totalPages = Math.ceil(filterFileProgramMateri(search).length / itemsPerPage);
@@ -471,4 +471,4 @@ const DetailClassFormat = () => {
     );
 };
 
-export default DetailClassFormat;
+export default DetailEvaluasiSemester;
