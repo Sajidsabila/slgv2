@@ -20,12 +20,12 @@ const Footer = () => {
         alt="Logo Simfoni" 
         width="200px"
         height="200px"
-        className="w-[200px] h-auto py-5 md:mx-7 mx-9" 
+        className="w-[200px] h-auto py-5 md:mx-7 mx-9 xl:ml-[-1%] 2xl:ml-[-1%]" 
         style={{ filter: "brightness(0) invert(1)" }} 
       />
-      <div className="flex flex-col md:flex-row justify-between items-start space-y-6 md:space-y-0">
-        {/* Kolom kiri - Informasi Perusahaan */}
-        <div className="w-full md:w-2/3"> 
+      <div className="flex flex-col md:flex-row justify-between items-start space-y-6 md:space-y-0 ">
+      {/* kolom kiri */}
+        <div className="w-full md:w-2/3 xl:ml-[-2%] 2xl:ml-[-3%]"> 
           <h1 className="md:text-lg text-xl mx-9">PT Simfoni Melodi Indonesia</h1>
           <div className="flex flex-col py-3 space-y-3">
             {/* Lokasi */}

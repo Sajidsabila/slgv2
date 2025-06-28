@@ -2,6 +2,7 @@ import { useState } from "react";
 import LandingPageLayout from "../../layout/landing-page";
 import { checkStudent } from "../../api/apiPublic";
 import { convertDate } from "../../helper/helper";
+import { Link } from "react-router-dom";
 
 const AuthStudent = () => {
     const [formData, setFormData] = useState({
@@ -57,8 +58,15 @@ const AuthStudent = () => {
 
     return (
         <LandingPageLayout title="Welcome to SMI">
-            <div className="flex flex-col w-full justify-center items-center bg-white-50">
-                <div className="w-100 h-auto rounded-lg flex-row   px-4">
+            <div className="flex flex-col w-full justify-center items-center bg-white-50 ">
+                <div className="flex flex-row w-auto justify-center items-center h-auto gap-3  rounded-lg p-1 bg-white">
+                    <Link to="/" className="bg-blue-600 text-white border-1 border-white  py-3 px-6 font-bold rounded-l-lg">Student</Link>
+                    <div className="w-px h-8 bg-gray-300"></div>
+
+                    <Link to="/login-teacher" className="border-1  py-3 px-6 font-bold rounded-r-lg">Teacher</Link>
+                </div>
+
+                <div className="w-100 h-auto rounded-lg flex-row px-4">
                     <h1 className="text-xl font-semibold text-center py-4">Silahkan Login</h1>
                     {error && (
                         <p className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-5 font-bold">

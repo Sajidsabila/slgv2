@@ -461,7 +461,7 @@ const DetailClassFormat = () => {
                     </div>
                 )}
                 <div className="text-center md:text-left flex flex-row gap-2 py-3">
-                            <Link to="/admin/evaluasi-semester" className="bg-slate-500 hover:bg-blue-700 text-white py-2 px-4 rounded-md shadow">
+                            <Link to="/admin/program-materi" className="bg-slate-500 hover:bg-blue-700 text-white py-2 px-4 rounded-md shadow">
                                 Kembali
                             </Link>
                            

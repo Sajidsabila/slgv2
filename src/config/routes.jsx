@@ -18,12 +18,21 @@ import DetailProgramMateri from "../pages/Admin/detailClassFormat.jsx";
 import HistoryAbsensi from "../pages/historyAbsensi.jsx";
 import EvaluasiSemester from "../pages/Admin/evaluasiSemester.jsx";
 import DetailEvaluasiSemester from "../pages/Admin/detailEvaluasiSemester.jsx";
+import AuthTeacher from "../pages/Auth/teacher.jsx";
 
 
 const routes = createBrowserRouter([
   {
     path: "/",
     element: <GuestStudent><AuthStudent /></GuestStudent>,
+  },
+  {
+    path: "login-teacher",
+    element: (
+      <GuestStudent>
+        <AuthTeacher />
+      </GuestStudent>
+    ),
   },
   {
     path: "/home",
