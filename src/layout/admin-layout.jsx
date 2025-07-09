@@ -7,12 +7,9 @@ const AdminLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  // Toggle Profile
-  const handleProfileOpen = () => {
-    setIsProfileOpen((prev) => !prev);
-  };
+  const handleProfileOpen = () => setIsProfileOpen((prev) => !prev);
 
-  // Mencegah scroll saat sidebar terbuka
+  // Cegah scroll saat sidebar terbuka
   useEffect(() => {
     document.body.style.overflow = isSidebarOpen ? "hidden" : "auto";
     return () => {
@@ -20,7 +17,7 @@ const AdminLayout = ({ children }) => {
     };
   }, [isSidebarOpen]);
 
-
+  // Tutup sidebar saat klik di luar
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (
@@ -33,36 +30,36 @@ const AdminLayout = ({ children }) => {
     };
 
     document.addEventListener("click", handleOutsideClick);
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
+    return () => document.removeEventListener("click", handleOutsideClick);
   }, [isSidebarOpen]);
 
-  // Menutup dropdown profil saat klik di luar
+  // Tutup profile dropdown saat klik di luar
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (
-        isProfileOpen &&
-        !event.target.closest(".profile-menu")
-      ) {
+      if (isProfileOpen && !event.target.closest(".profile-menu")) {
         setIsProfileOpen(false);
       }
     };
 
     document.addEventListener("click", handleOutsideClick);
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
+    return () => document.removeEventListener("click", handleOutsideClick);
   }, [isProfileOpen]);
+
+  const navLinks = [
+    { to: "/admin", label: "Home" },
+    { to: "/admin/program-materi", label: "Learning Materi" },
+    { to: "/admin/book-menu", label: "Book Menu" },
+    { to: "/admin/evaluasi-semester", label: "Evaluasi Semester" },
+  ];
 
   return (
     <div className="flex h-screen relative">
-      {/* Overlay untuk mobile */}
+      {/* Overlay mobile */}
       {isSidebarOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden" />
       )}
 
- 
+      {/* Sidebar */}
       <aside
         className={`fixed md:relative bg-slate-900 text-white h-full md:w-[15%] w-64 transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -72,58 +69,31 @@ const AdminLayout = ({ children }) => {
           Sekolah Musik
         </h2>
         <ul className="mt-4">
-          <li className="border-b border-gray-700">
-            <NavLink
-              to="/admin"
-              end
-              className={({ isActive }) =>
-                `block py-3 px-6 transition duration-300 ${
-                  isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
-                }`
-              }
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsSidebarOpen(false);
-              }}
-            >
-              Home
-            </NavLink>
-          </li>
-          <li className="border-b border-gray-700">
-          <NavLink
-        to="/admin/program-materi"
-         className={({ isActive }) =>
-        `block py-3 px-6 transition duration-300 ${
-          isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
-    }`
-  }
-  onClick={(e) => {
-    e.stopPropagation();
-    setIsSidebarOpen(false);
-  }}
->
-Learning  Materi
-        </NavLink>
-          </li>
-             <li className="border-b border-gray-700">
-          <NavLink
-        to="/admin/evaluasi-semester"
-         className={({ isActive }) =>
-        `block py-3 px-6 transition duration-300 ${
-          isActive ? "bg-slate-700 text-gray-300" : "hover:text-gray-300"
-    }`
-  }
-  onClick={(e) => {
-    e.stopPropagation();
-    setIsSidebarOpen(false);
-  }}
->
-Evaluasi Semester
-        </NavLink>
-          </li>
+          {navLinks.map((link, idx) => (
+            <li key={idx} className="border-b border-gray-700">
+              <NavLink
+                to={link.to}
+                end={link.to === "/admin"}
+                className={({ isActive }) =>
+                  `block py-3 px-6 transition duration-300 ${
+                    isActive
+                      ? "bg-slate-700 text-gray-300"
+                      : "hover:text-gray-300"
+                  }`
+                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsSidebarOpen(false);
+                }}
+              >
+                {link.label}
+              </NavLink>
+            </li>
+          ))}
         </ul>
       </aside>
 
+      {/* Content */}
       <div className="flex flex-col flex-1 md:w-[85%] w-full relative z-40">
         <nav className="bg-white text-black py-4 px-6 shadow-md flex justify-between items-center sticky top-0 z-50">
           <button
@@ -148,7 +118,11 @@ Evaluasi Semester
               }}
             >
               <i className="fa fa-user" aria-hidden="true"></i>
-              <i className={`fa-solid fa-chevron-${isProfileOpen ? 'up' : 'down'}`}></i>
+              <i
+                className={`fa-solid fa-chevron-${
+                  isProfileOpen ? "up" : "down"
+                }`}
+              ></i>
             </button>
 
             {isProfileOpen && (
@@ -159,11 +133,14 @@ Evaluasi Semester
                 >
                   Profile
                 </Link>
-                <button className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                onClick={ () => {
-                  if(window.confirm('Apakah anda yakin ingin logout?'))
-                  {Logout()}}}
-              >
+                <button
+                  className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                  onClick={() => {
+                    if (window.confirm("Apakah anda yakin ingin logout?")) {
+                      Logout();
+                    }
+                  }}
+                >
                   Logout
                 </button>
               </div>

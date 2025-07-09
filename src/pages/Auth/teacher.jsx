@@ -1,6 +1,8 @@
 import { useState } from "react";
 import LandingPageLayout from "../../layout/landing-page";
 import { Link } from "react-router-dom";
+import { urlLink } from "../../config/config";
+
 
 const AuthTeacher = () => {
     const [formData, setFormData] = useState({
@@ -8,84 +10,119 @@ const AuthTeacher = () => {
         password: "",
     });
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [loading, setIsLoading] = useState(false);
+    const headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+    console.log(formData)
 
-     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsLoading(true)
-        setError(null);
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
-        if (!email || !password) {
+    const { username, password } = formData;
+    if (!username || !password) {
+        setIsLoading(false);
+        setError("Username dan Password tidak boleh kosong");
+        return;
+    }
+
+    try {
+        const loginResponse = await fetch(`${urlLink.url}/api/method/smi.api.login`, {
+            method: "POST",
+            headers,
+            body: new URLSearchParams({
+                usr: username,
+                pwd: password,
+            }),
+        });
+
+        const loginData = await loginResponse.json();
+        console.log("Login response:", loginData);
+
+        if (!loginResponse.ok) {
             setIsLoading(false);
-            setError("Email dan Password tidak boleh kosong");
-            return;
+            throw new Error(loginData.message);
         }
 
-        try {
-            const response = await fetch(`${urlLink.url}/api/method/login`, {
-                method: "POST",
-                headers: headers,
-                body: new URLSearchParams({ usr: email, pwd: password }),
-                credentials: "include", 
-            });
-            const data = await response.json();
-            if(!response.ok){
-                setIsLoading(false)
-                throw new Error(data.message);
-         
+        const { api_key, api_secret, email } = loginData.message;
+
+        sessionStorage.setItem(
+            "credentials",
+            JSON.stringify({ api_key, api_secret })
+        );
+
+        const authHeader = {
+            "Content-Type": "application/json",
+            Authorization: `token ${api_key}:${api_secret}`,
+        };
+
+        const userResponse = await fetch(
+            `${urlLink.url}/api/resource/User/${email}`,
+            {
+                method: "GET",
+                credentials: "include",
+                headers: authHeader,
+                mode: "cors",
             }
-           const getLoggedUser = await fetch(`${urlLink.url}/api/method/frappe.auth.get_logged_user`, {
-                 method: "POST",
-                 credentials: "include",
+        );
 
-                 headers: headers,
-                 mode: "cors",
-           });
-            const user = await  getLoggedUser.json();
-            const userData = await fetch(`${urlLink.url}/api/resource/User/${user.message}`, {
-                     method: "GET",
-                     credentials: "include",
-                     headers: headers,
-                     mode: "cors",
-                 });
-                 const dataUser = await userData.json();
-                 const getUser = {
-                    full_name: dataUser.data.full_name,
-                    user_image: dataUser.data.user_image,
-                    email: dataUser.data.email,
-                    roles: dataUser.data.roles,
-                    mobile_no: dataUser.data.mobile_no,
-                };
-                
-                 const roles = Array.isArray(dataUser.data.roles) ? dataUser.data.roles : [];
-                 const isInstructor = roles.some(roleObj => roleObj.role === "Instructor");
-                 if (!isInstructor) {
-                     localStorage.clear();
-                     setIsLoading(false)
-                     throw new Error("Username dan Password Salah")
-                 } 
-                   
-                     localStorageExpired("user", getUser, 7200000);
-                     window.location.href = "/teacher-page";
-        } catch (err) {
-            setError(err.message || "Terjadi kesalahan");
-            setIsLoading(false)
+        const instructorResponse = await fetch(
+            `${urlLink.url}api/resource/Instructor?fields=["*"]&filters=[["instructor_email","=","${email}"]]`,
+            {
+                method: "GET",
+                credentials: "include",
+                headers: authHeader,
+                mode: "cors",
+            }
+        );
+
+        const userData = await userResponse.json();
+        const instructorData = await instructorResponse.json();
+
+        const roles = Array.isArray(userData.data.roles)
+            ? userData.data.roles
+            : [];
+
+        const isInstructor = roles.some(
+            (roleObj) => roleObj.role === "Instructor"
+        );
+
+        if (!isInstructor) {
+            sessionStorage.clear();
+            setIsLoading(false);
+            throw new Error("Username dan Password Salah");
         }
-    };
 
+        const profileInstructor = {
+            instructor_name: instructorData.data[0].instructor_name,
+            instructor_email: instructorData.data[0].instructor_email,
+        };
+
+        sessionStorage.setItem(
+            "profileInstructor",
+            JSON.stringify(profileInstructor)
+        );
+
+        window.location.href = "/teacher";
+        setIsLoading(false);
+    } catch (err) {
+        setError(err.message || "Terjadi kesalahan");
+        setIsLoading(false);
+    }
+};
     return (
           <LandingPageLayout title="Welcome to SMI">
             <div className="flex flex-col w-full justify-center items-center bg-white-50 ">
                 <div className="flex flex-row w-auto justify-center items-center h-auto gap-3  rounded-lg p-1 bg-white">
-                    <Link to="/" className="border-1  py-3 px-6 font-bold rounded-l-lg">Student</Link>
+                    <Link to="/" className="border-1 xl:py-3 2xl:py-3 lg:py-2 py-2 px-6 font-bold rounded-l-lg">Student</Link>
                     <div className="w-px h-8 bg-gray-300"></div>
 
-                    <Link to="/login-teacher" className="bg-blue-600 text-white border-1 border-white  py-3 px-6 font-bold rounded-r-lg">Teacher</Link>
+                    <Link to="/login-teacher" className="bg-blue-600 text-white border-1 border-white xl:py-3 2xl:py-3 lg:py-2 py-2 px-6 font-bold rounded-r-lg">Teacher</Link>
                 </div>
 
                 <div className="w-100 h-auto rounded-lg flex-row px-4">
@@ -97,17 +134,17 @@ const AuthTeacher = () => {
                     )}
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4 md:mx-0 mx-5">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="id_siswa">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="usr">
                                Username
                             </label>
                             <input
                                 type="text"
-                                name="id_siswa"
-                                id="id_siswa"
+                                name="username"
+                                id="username"
                                 placeholder="Input Username ..."
                                 maxLength={25}
                                 onChange={handleChange}
-                                value={formData.id_siswa}
+                                value={formData.username}
                                 autoComplete="off"
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                                 autoFocus
@@ -120,22 +157,22 @@ const AuthTeacher = () => {
                             <input
                                 type="password"
                                 placeholder="Input Password ...."
-                                id="tanggal_lahir"
-                                name="tanggal_lahir"
+                                id="password"
+                                name="password"
                                 onChange={handleChange}
-                                value={formData.tanggal_lahir}
+                                value={formData.password}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                             />
                         </div>
-                        <div className="flex items-center justify-center">
-                            <button
-                                className="bg-blue-500 my-2 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                type="submit"
-                                disabled={loading}
-                            >
-                                {loading ? "Loading..." : "Login"}
-                            </button>
-                        </div>
+                        <div className="mb-4 md:mx-0 mx-5">
+  <button
+    className="bg-blue-500 my-2 w-full hover:bg-blue-700 text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline"
+    type="submit"
+    disabled={loading}
+  >
+    {loading ? "Loading..." : "Login"}
+  </button>
+</div>
                     </form>
                 </div>
             </div>

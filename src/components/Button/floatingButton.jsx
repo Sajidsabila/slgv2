@@ -62,8 +62,6 @@ const FloatingChatButton = () => {
       };
 
       const response = await postIssue(data);
-      console.log(response);
-
       if (response && response.data) {
         const message =
           `Halo ${nama},\n\n` +

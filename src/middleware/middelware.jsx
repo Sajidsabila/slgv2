@@ -54,3 +54,21 @@ export const MiddlewareStudent = () => {
 
     return <Outlet />;
 }; 
+
+
+export const MiddlewareTeacher = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+    useEffect(() => {
+        const studentAuth = async () => {
+            const getStudentId = sessionStorage.getItem("credentials");
+            setIsAuthenticated(!!getStudentId);
+        };
+        studentAuth();
+    }, []);
+
+    if (isAuthenticated === null) return null;
+    if (!isAuthenticated) return <Navigate to="/login-teacher" replace />;
+
+    return <Outlet />;
+};

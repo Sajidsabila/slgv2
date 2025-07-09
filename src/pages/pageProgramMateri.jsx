@@ -37,9 +37,6 @@ const PageProgramMateri = () => {
         typeof item.class_grading === 'string' ? item.class_grading: ''
     );
 
-    console.log("wjuhsduy", enrollClassGrade);
-   
-  console.log("enrollClassCourse", enrollClassCourse);
     const handleSelectionChange = (event, setSelected) => {
         const { value } = event.target;
         setSelected((prev) => (prev.includes(value) ? [] : [value]));

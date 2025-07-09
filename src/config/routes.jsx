@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 
-import { MiddlewareStudent, Middleware } from "../middleware/middelware.jsx";
+import { MiddlewareStudent, MiddlewareTeacher,Middleware } from "../middleware/middelware.jsx";
 import { GuestStudent, Guest } from "../middleware/isGuest.jsx";
 
 import Index from "../pages/index.jsx";
@@ -10,7 +10,6 @@ import ClassCourseDetail from "../pages/class.jsx";
 import AuthStudent from "../pages/Auth/student.jsx";
 import Login from "../pages/Auth/index.jsx";
 import Page404 from "../pages/404.jsx";
-
 import Dashboard from "../pages/Admin/dashboard.jsx";
 import Profile from "../pages/Admin/profile.jsx";
 import ProgramMateri from "../pages/Admin/programMateri.jsx";
@@ -19,6 +18,12 @@ import HistoryAbsensi from "../pages/historyAbsensi.jsx";
 import EvaluasiSemester from "../pages/Admin/evaluasiSemester.jsx";
 import DetailEvaluasiSemester from "../pages/Admin/detailEvaluasiSemester.jsx";
 import AuthTeacher from "../pages/Auth/teacher.jsx";
+import IndexTeacher from "../pages/Teacher/index.jsx";
+import PageProgramMateriTeacher from "../pages/Teacher/pagePRogramMateriTeacher.jsx";
+import ClassGradeTeacher from "../pages/Teacher/classGrade.jsx";
+import BookMenu from "../pages/Admin/bookMenu.jsx";
+import DetailBookMenu from "../pages/Admin/detailBookMenu.jsx";
+
 
 
 const routes = createBrowserRouter([
@@ -34,35 +39,28 @@ const routes = createBrowserRouter([
       </GuestStudent>
     ),
   },
-  {
-    path: "/home",
-    element: <MiddlewareStudent />,
-    children: [
-        { path: "", element: <Index /> }
-    ],
-    errorElement: <Page404 />,
-  },
-  {
-    path: "/program-materi/:id",
-    element:<MiddlewareStudent />,
-    children: [
-        { path: "", element: <PageProgramMateri /> }
-    ],
-  },
-  {
-    path: "/class-course/:abbr_course",
-    element: <MiddlewareStudent />,
-    children: [
-        { path: "", element: <ClassCourseDetail /> }
-    ]
-  },
-   {
-    path: "/history-absensi",
-    element: <MiddlewareStudent />,
-    children: [
-        { path: "", element: <HistoryAbsensi /> }
-    ]
-  },
+ {
+  element: <MiddlewareStudent />,
+  errorElement: <Page404 />,
+  children: [
+    {
+      path: "/home",
+      element: <Index />,
+    },
+    {
+      path: "/program-materi/:id",
+      element: <PageProgramMateri />,
+    },
+    {
+      path: "/class-course/:abbr_course",
+      element: <ClassCourseDetail />,
+    },
+    {
+      path: "/history-absensi",
+      element: <HistoryAbsensi />,
+    },
+  ]
+},
   {
     path: "/login",
     element: (
@@ -70,6 +68,15 @@ const routes = createBrowserRouter([
         <Login />
       </Guest>
     ),
+  },
+  {
+    path: "/teacher",
+    element: <MiddlewareTeacher />,
+    children:[
+      {path: "", element: <IndexTeacher />},
+      {path: "class-course/:abbr_course", element: <ClassGradeTeacher />},
+      {path: "program-materi/:id", element: <PageProgramMateriTeacher />},
+    ]
   },
   {
     path: "/admin",
@@ -82,7 +89,8 @@ const routes = createBrowserRouter([
       { path: "evaluasi-semester", element: <EvaluasiSemester /> },
       { path: "evaluasi-semester/:id", element: <DetailEvaluasiSemester /> },
       { path: "*", element: <Page404 /> },
-
+      {path: "book-menu", element: <BookMenu />},
+      {path: "detail-book-menu", element: <DetailBookMenu />}
     ],
   },
   {

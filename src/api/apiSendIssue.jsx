@@ -11,7 +11,6 @@ export const getIssueTypeList = async () => {
           },
         }
       );
-      console.log(response.data);
       return response.data?.data || []; 
  
     } catch (error) {

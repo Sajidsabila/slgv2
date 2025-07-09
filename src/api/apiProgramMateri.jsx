@@ -220,6 +220,8 @@ export const updateFileToProgramMateri = async (id, newFile) => {
   }
 };
 
+
+
 // end
 
 
@@ -321,3 +323,40 @@ export const uploadFileProgramMateri = async (file, folder = "") => {
 
 
 // end
+
+export const getModulTraining = async () => {
+  try {
+    const response = await axios.get(
+      `${urlLink.url}/api/resource/Modul%20Training?fields=["*"]`,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Terjadi kesalahan", error?.response?.data || error.message);
+    return [];
+  }
+}
+
+export const postModulTraining = async (data) => {
+  try {
+    const response = await axios.post(
+      `${urlLink.url}/api/resource/Modul%20Training`,
+      data,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    throw error;
+  }
+
+}

@@ -20,7 +20,7 @@ const  replaceTitle2 = (title) => {
 };
 
 const logoutStudent = () => {
-  sessionStorage.removeItem("token");
+  sessionStorage.clear();
   window.location.href = "/";
 }
   
@@ -43,7 +43,7 @@ const logoutStudent = () => {
        <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
           <Link to="/">Home</Link>
         </li>
-        {sessionStorage.getItem("token") && (
+        {sessionStorage.getItem("token")  && (
            <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
           <Link to="/history-absensi">History Absensi</Link>
         </li>
@@ -68,7 +68,7 @@ const logoutStudent = () => {
       <li className="hover:text-blue-600 cursor-pointer px-2 py-1 py-2 border-b border-gray-900 text-xs font-semibold">
         <Link to="/">Home</Link>
       </li>
-  {sessionStorage.getItem("token") && (
+  {sessionStorage.getItem("token")  || sessionStorage.getItem("credentials")  && (
       <li className="hover:text-blue-600 cursor-pointer px-2 py-1 py-2 border-b border-gray-900 text-xs font-semibold">
         <Link to="/history-absensi">History Absensi</Link>
       </li>
