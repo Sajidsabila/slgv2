@@ -14,14 +14,13 @@ import {
 } from "../../api/apiProgramMateri";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
-
-const BookMenu = () => {
-  const [bookMenu, setBookMenu] = useState([]);
+const ModulTraining = () => {
+    const [modulTraining, setModulTraining] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState({
     description: "",
     file: null,
-    type: "Book Menu",
+    type: "Modul Training",
   });
   const [editId, setEditId] = useState(null);
   const [error, setError] = useState(null);
@@ -37,7 +36,7 @@ const BookMenu = () => {
     const fetchModulTraining = async () => {
       try {
         const response = await getModulTraining();
-        setBookMenu(response);
+        setModulTraining(response);
       } catch (error) {
         console.error("Terjadi kesalahan", error?.response?.data || error.message);
       }
@@ -55,7 +54,7 @@ const BookMenu = () => {
   };
 
   const handleEdit = (name) => {
-    const dataToEdit = bookMenu.find((item) => item.name === name);
+    const dataToEdit = modulTraining.find((item) => item.name === name);
     if (!dataToEdit) return;
 
     setFormData({
@@ -64,7 +63,7 @@ const BookMenu = () => {
       oldFileName: dataToEdit.file || "",
       oldTitle: dataToEdit.title || "",
       oldFileUrl: dataToEdit.file_url || "",
-      type: dataToEdit.type || "Book Menu",
+      type: dataToEdit.type || "Modul Training",
     });
 
     setEditId(dataToEdit.name);
@@ -72,10 +71,10 @@ const BookMenu = () => {
     setIsOpen(true);
   };
 
-  const filteredData = bookMenu.filter(
+  const filteredData = modulTraining.filter(
     (item) =>
       item?.description?.toLowerCase().includes(search.toLowerCase()) &&
-      item.type === "Book Menu"
+      item.type === "Modul Training"
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
@@ -98,7 +97,7 @@ const BookMenu = () => {
       if (deleteResponse) {
         setSuccess("Data berhasil dihapus.");
         const deleteFile = await deleteFileProgramMateri(name);
-        setBookMenu((prevData) => prevData.filter((item) => item.name !== name));
+        setModulTraining((prevData) => prevData.filter((item) => item.name !== name));
       }
     } catch (error) {
       setError(`Error: ${error.response.data.exc_type || error.response.data.exception || error.message}`);
@@ -119,9 +118,10 @@ const BookMenu = () => {
     const file = formData.file;
 
     if (file) {
-      const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
+        const allowedTypes = ["application/pdf", "video/mp4", "video/avi", "video/quicktime", "video/x-matroska"];
+
       if (!allowedTypes.includes(file.type)) {
-        alert("File harus berformat PNG, JPG, atau JPEG!");
+        alert("File harus berformat PDF atau Vidio");
         return;
       }
     }
@@ -141,7 +141,7 @@ const BookMenu = () => {
           file: uploadedFile.name,
           title: uploadedFile.file_name,
           file_url: uploadedFile.file_url,
-          type: formData.type || "Book Menu",
+          type: formData.type || "Modul Training",
           description: formData.description || ""
         };
 
@@ -164,7 +164,7 @@ const BookMenu = () => {
       }
 
       const updatedData = await getModulTraining();
-      setBookMenu(updatedData);
+      setModulTraining(updatedData);
 
       setSuccess(`File berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
       setFormData({
@@ -173,7 +173,7 @@ const BookMenu = () => {
         oldTitle: "",
         oldFileUrl: "",
         description: "",
-        type: "Book Menu"
+        type: "Modul Training"
       });
       setIsEditMode(false);
       setEditId(null);
@@ -185,9 +185,9 @@ const BookMenu = () => {
     }
   };
 
-  return (
+    return (
     <AdminLayout>
-      <h3 className="font-bold py-7 text-lg">Book Menu</h3>
+      <h3 className="font-bold py-7 text-lg">Modul Training</h3>
 
       {error && <p className="bg-red-700 text-sm text-white py-3 px-4 my-3">{error}</p>}
       {success && <p className="bg-green-700 text-sm text-white py-3 px-4 my-3">{success}</p>}
@@ -197,7 +197,7 @@ const BookMenu = () => {
           <button
             onClick={() => {
               setIsEditMode(false);
-              setFormData({ description: "", file: null, type: "Book Menu" });
+              setFormData({ description: "", file: null, type: "Modul Training" });
               setIsOpen(true);
             }}
             className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow"
@@ -284,7 +284,7 @@ const BookMenu = () => {
                         <Trash size={16} /> Delete
                       </button>
                       <Link
-                        to={`/admin/book-menu//${item.name}`}
+                        to={`/admin/modul-training/${item.name}`}
                         className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 flex items-center gap-1 px-3 py-1 rounded-md"
                       >
                         <Eye size={16} /> Detail
@@ -343,6 +343,6 @@ const BookMenu = () => {
       </div>
     </AdminLayout>
   );
-};
+}
 
-export default BookMenu;
+export default ModulTraining;

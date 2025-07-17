@@ -220,14 +220,6 @@ export const updateFileToProgramMateri = async (id, newFile) => {
   }
 };
 
-
-
-// end
-
-
-
-
-// apiii folde and file 
 export const createFolderProgramMateri = async (folderName) => {
   try {
     const response = await axios.post(
@@ -321,9 +313,6 @@ export const uploadFileProgramMateri = async (file, folder = "") => {
 };
 
 
-
-// end
-
 export const getModulTraining = async () => {
   try {
     const response = await axios.get(
@@ -342,6 +331,46 @@ export const getModulTraining = async () => {
   }
 }
 
+
+export const getModulTrainingPublic = async (token) => {
+  try {
+    const response = await axios.get(
+      `${urlLink.url}/api/resource/Modul%20Training?fields=["*"]`,
+      {
+ 
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `token ${token}`,
+        },
+      }
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Terjadi kesalahan", error?.response?.data || error.message);
+    return [];
+  }
+
+}
+
+export const getDetailModulTrainingPublic = async (token, id) => {
+  try {
+    const response = await axios.get(
+      `${urlLink.url}/api/resource/Modul%20Training/${id}`,
+      {
+ 
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `token ${token}`,
+        },
+      }
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Terjadi kesalahan", error?.response?.data || error.message);
+    return [];
+  }
+
+}
 export const postModulTraining = async (data) => {
   try {
     const response = await axios.post(
@@ -359,4 +388,56 @@ export const postModulTraining = async (data) => {
     throw error;
   }
 
+}
+
+export const deleteModulTraining = async (id) => {
+  try {
+    const response = await axios.delete(
+      `${urlLink.url}/api/resource/Modul%20Training/${id}`,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const updateModulTraining = async (id, data) =>{
+  try {
+    const response = await axios.put(
+      `${urlLink.url}/api/resource/Modul%20Training/${id}`,
+      data,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const detailModulTraining = async (id) => {
+  try {
+    const response = await axios.get(
+      `${urlLink.url}/api/resource/Modul%20Training/${id}?fields=["*"]`,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    throw error;
+  }
 }

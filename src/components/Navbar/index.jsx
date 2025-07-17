@@ -41,7 +41,7 @@ const logoutStudent = () => {
    <ul className="hidden md:flex text-base text-gray-800 w-full ">
     <ul className=" xl:ms-[-25%] 2xl:ms-[-30%] xl:text-xl flex gap-3">
        <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
-          <Link to="/">Home</Link>
+          <Link to={`${!sessionStorage.getItem("profileInstructor") ? "/" : "/teacher"}`}>Home</Link>
         </li>
         {sessionStorage.getItem("token")  && (
            <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
@@ -52,7 +52,7 @@ const logoutStudent = () => {
     </ul>
       
 
-      {sessionStorage.getItem("token") && (
+    {(sessionStorage.getItem("token") || sessionStorage.getItem("credentials"))  && (
           <li className="hover:text-blue-600 cursor-pointer px-2 py-1 ml-auto xl:me-[-30%] xl:me-[-30%]">
              <button onClick ={ () => {if (window.confirm("Are you sure you want to logout?")) {logoutStudent()}}}  className="text-md font-semibold bg-red-500 py-2 px-2 text-white rounded-md hover:bg-red-600">Logout</button>
           </li>
@@ -62,21 +62,36 @@ const logoutStudent = () => {
       </div>
 
       {/* Mobile Menu */}
-      {isOpen && (
+   {isOpen && (
   <div className="md:hidden bg-white shadow-lg p-1 border-t-2 border-orange-700">
     <ul className="space-y-1">
-      <li className="hover:text-blue-600 cursor-pointer px-2 py-1 py-2 border-b border-gray-900 text-xs font-semibold">
+      <li className="hover:text-blue-600 cursor-pointer px-2 py-2 border-b border-gray-900 text-xs font-semibold">
         <Link to="/">Home</Link>
       </li>
-  {sessionStorage.getItem("token")  || sessionStorage.getItem("credentials")  && (
-      <li className="hover:text-blue-600 cursor-pointer px-2 py-1 py-2 border-b border-gray-900 text-xs font-semibold">
-        <Link to="/history-absensi">History Absensi</Link>
-      </li>
-  )}
-    
+
+      {sessionStorage.getItem("token") && (
+        <>
+          <li className="hover:text-blue-600 cursor-pointer px-2 py-2 border-b border-gray-900 text-xs font-semibold">
+            <Link to="/history-absensi">History Absensi</Link>
+          </li>
+          <li className="px-2 py-2">
+            <button
+              onClick={() => {
+                if (window.confirm("Are you sure you want to logout?")) {
+                  logoutStudent();
+                }
+              }}
+              className="w-full text-xs font-semibold bg-red-500 py-2 px-4 text-white rounded-md hover:bg-red-600"
+            >
+              Logout
+            </button>
+          </li>
+        </>
+      )}
     </ul>
   </div>
 )}
+
 
 
     </nav>

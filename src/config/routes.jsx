@@ -23,6 +23,14 @@ import PageProgramMateriTeacher from "../pages/Teacher/pagePRogramMateriTeacher.
 import ClassGradeTeacher from "../pages/Teacher/classGrade.jsx";
 import BookMenu from "../pages/Admin/bookMenu.jsx";
 import DetailBookMenu from "../pages/Admin/detailBookMenu.jsx";
+import CalenderAcademic from "../pages/Admin/calenderAcademic.jsx";
+import ModulTraining from "../pages/Admin/modulTraining.jsx";
+import DetailModulTraining from "../pages/Admin/detailModulTraining.jsx";
+import CourseTeacher from "../pages/Teacher/course.jsx";
+import { Book } from "lucide-react";
+import BookMenuTeacher from "../pages/Teacher/bookMenu.jsx";
+import CalenderAcademicTeacher from "../pages/Teacher/calenderAcademic.jsx";
+import ModulTrainingTeacher from "../pages/Teacher/modulTraining.jsx";
 
 
 
@@ -74,8 +82,12 @@ const routes = createBrowserRouter([
     element: <MiddlewareTeacher />,
     children:[
       {path: "", element: <IndexTeacher />},
+      {path: "learning-materi", element: <CourseTeacher />},
+      {path: "book-menu", element: <BookMenuTeacher />},
+      {path: "calender-academic", element: <CalenderAcademicTeacher />},
       {path: "class-course/:abbr_course", element: <ClassGradeTeacher />},
       {path: "program-materi/:id", element: <PageProgramMateriTeacher />},
+      {path: "modul-training", element: <ModulTrainingTeacher/>},
     ]
   },
   {
@@ -90,7 +102,10 @@ const routes = createBrowserRouter([
       { path: "evaluasi-semester/:id", element: <DetailEvaluasiSemester /> },
       { path: "*", element: <Page404 /> },
       {path: "book-menu", element: <BookMenu />},
-      {path: "detail-book-menu", element: <DetailBookMenu />}
+      {path: "book-menu/:id", element: <DetailBookMenu />},
+      {path: "calender-academic", element: <CalenderAcademic />},
+      {path: "modul-training", element: <ModulTraining />},
+      {path: "modul-training/:id", element: <DetailModulTraining />}
     ],
   },
   {

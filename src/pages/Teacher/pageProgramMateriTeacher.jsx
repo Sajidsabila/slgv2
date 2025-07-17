@@ -164,7 +164,7 @@ const PageProgramMateriTeacher = () => {
         "Data Tidak Ditemukan"
       }
     >
-      <div key={id} className="flex flex-col w-full gap-10 px-4 md:px-10">
+      <div key={id} className="container mx-auto flex flex-col w-full gap-10 px-4 md:px-10">
         <div className="flex flex-row items-center justify-center w-full">
           <input
             className="w-full max-w-lg md:max-w-[800px] h-[50px] rounded-lg bg-white placeholder:text-gray-500 text-gray-800 text-base border border-gray-300 px-4 pr-28 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-blue-500 hover:border-gray-400 shadow-md focus:shadow-lg"

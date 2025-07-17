@@ -30,7 +30,6 @@ const AuthTeacher = () => {
         setError("Username dan Password tidak boleh kosong");
         return;
     }
-
     try {
         const loginResponse = await fetch(`${urlLink.url}/api/method/smi.api.login`, {
             method: "POST",
@@ -49,17 +48,22 @@ const AuthTeacher = () => {
             throw new Error(loginData.message);
         }
 
-        const { api_key, api_secret, email } = loginData.message;
-
+        const email = loginData.message.email;
+       const apiKey = loginData.message.api_key;
+       const apiSecret = loginData.message.api_secret;
+       const credentials = `${apiKey}:${apiSecret}`;
+       const encodedCredentials = btoa(credentials);
         sessionStorage.setItem(
-            "credentials",
-            JSON.stringify({ api_key, api_secret })
-        );
+            "credentials",  encodedCredentials);
 
+        const getCredentials = sessionStorage.getItem("credentials");
+        const decodedCredentials = atob(getCredentials);
         const authHeader = {
             "Content-Type": "application/json",
-            Authorization: `token ${api_key}:${api_secret}`,
+            Authorization: `token ${decodedCredentials}`,
         };
+
+        console.log(loginData.message);
 
         const userResponse = await fetch(
             `${urlLink.url}/api/resource/User/${email}`,
@@ -166,7 +170,7 @@ const AuthTeacher = () => {
                         </div>
                         <div className="mb-4 md:mx-0 mx-5">
   <button
-    className="bg-blue-500 my-2 w-full hover:bg-blue-700 text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline"
+    className="bg-blue-500 my-2 w-full hover:bg-blue-700  hover:cursor-pointer text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline"
     type="submit"
     disabled={loading}
   >

@@ -15,13 +15,13 @@ import {
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
 
-const BookMenu = () => {
-  const [bookMenu, setBookMenu] = useState([]);
+const CalenderAcademic = () => {
+  const [calenderAcademic, seCalenderAcademic] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState({
     description: "",
     file: null,
-    type: "Book Menu",
+    type: "Calender Academic",
   });
   const [editId, setEditId] = useState(null);
   const [error, setError] = useState(null);
@@ -37,7 +37,7 @@ const BookMenu = () => {
     const fetchModulTraining = async () => {
       try {
         const response = await getModulTraining();
-        setBookMenu(response);
+        seCalenderAcademic(response);
       } catch (error) {
         console.error("Terjadi kesalahan", error?.response?.data || error.message);
       }
@@ -55,7 +55,7 @@ const BookMenu = () => {
   };
 
   const handleEdit = (name) => {
-    const dataToEdit = bookMenu.find((item) => item.name === name);
+    const dataToEdit = calenderAcademic.find((item) => item.name === name);
     if (!dataToEdit) return;
 
     setFormData({
@@ -64,7 +64,7 @@ const BookMenu = () => {
       oldFileName: dataToEdit.file || "",
       oldTitle: dataToEdit.title || "",
       oldFileUrl: dataToEdit.file_url || "",
-      type: dataToEdit.type || "Book Menu",
+      type: dataToEdit.type || "Calender Academic",
     });
 
     setEditId(dataToEdit.name);
@@ -72,10 +72,10 @@ const BookMenu = () => {
     setIsOpen(true);
   };
 
-  const filteredData = bookMenu.filter(
+  const filteredData = calenderAcademic.filter(
     (item) =>
       item?.description?.toLowerCase().includes(search.toLowerCase()) &&
-      item.type === "Book Menu"
+      item.type === "Calender Academic"
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
@@ -98,7 +98,7 @@ const BookMenu = () => {
       if (deleteResponse) {
         setSuccess("Data berhasil dihapus.");
         const deleteFile = await deleteFileProgramMateri(name);
-        setBookMenu((prevData) => prevData.filter((item) => item.name !== name));
+        seCalenderAcademic((prevData) => prevData.filter((item) => item.name !== name));
       }
     } catch (error) {
       setError(`Error: ${error.response.data.exc_type || error.response.data.exception || error.message}`);
@@ -141,7 +141,7 @@ const BookMenu = () => {
           file: uploadedFile.name,
           title: uploadedFile.file_name,
           file_url: uploadedFile.file_url,
-          type: formData.type || "Book Menu",
+          type: formData.type || "Calender Academic",
           description: formData.description || ""
         };
 
@@ -164,7 +164,7 @@ const BookMenu = () => {
       }
 
       const updatedData = await getModulTraining();
-      setBookMenu(updatedData);
+      seCalenderAcademic(updatedData);
 
       setSuccess(`File berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
       setFormData({
@@ -173,7 +173,7 @@ const BookMenu = () => {
         oldTitle: "",
         oldFileUrl: "",
         description: "",
-        type: "Book Menu"
+        type: "Calender Academic"
       });
       setIsEditMode(false);
       setEditId(null);
@@ -187,7 +187,7 @@ const BookMenu = () => {
 
   return (
     <AdminLayout>
-      <h3 className="font-bold py-7 text-lg">Book Menu</h3>
+      <h3 className="font-bold py-7 text-lg">Calender Academic</h3>
 
       {error && <p className="bg-red-700 text-sm text-white py-3 px-4 my-3">{error}</p>}
       {success && <p className="bg-green-700 text-sm text-white py-3 px-4 my-3">{success}</p>}
@@ -197,10 +197,10 @@ const BookMenu = () => {
           <button
             onClick={() => {
               setIsEditMode(false);
-              setFormData({ description: "", file: null, type: "Book Menu" });
+              setFormData({ description: "", file: null, type: "Calender Academic" });
               setIsOpen(true);
             }}
-            className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow"
+            className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow hover:cursor-pointer"
           >
             Insert Data
           </button>
@@ -218,7 +218,7 @@ const BookMenu = () => {
           <Modal
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
-            titleModal={isEditMode ? "Edit Program Materi" : "Add Program Materi"}
+            titleModal={isEditMode ? "Edit Calender Academic" : "Add Calender Academic"}
             onSubmit={handleSubmit}
           >
             <InputModal
@@ -279,19 +279,19 @@ const BookMenu = () => {
                           window.confirm("Apakah anda yakin ingin menghapus data ini?") &&
                           handleDelete(item.name)
                         }
-                        className="bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 flex items-center gap-1 px-3 py-1 rounded-md"
+                        className="bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 flex items-center gap-1 px-3 py-1 rounded-md hover:cursor-pointer"
                       >
                         <Trash size={16} /> Delete
                       </button>
                       <Link
-                        to={`/admin/book-menu//${item.name}`}
-                        className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 flex items-center gap-1 px-3 py-1 rounded-md"
+                        to={`/admin/book-menu/${item.name}`}
+                        className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 flex items-center gap-1 px-3 py-1 rounded-md hover:cursor-pointer"
                       >
                         <Eye size={16} /> Detail
                       </Link>
                       <button
                         onClick={() => handleEdit(item.name)}
-                        className="bg-orange-100 text-orange-600 hover:bg-orange-200 hover:text-orange-800 flex items-center gap-1 px-3 py-1 rounded-md"
+                        className="bg-orange-100 text-orange-600 hover:bg-orange-200 hover:text-orange-800 flex items-center gap-1 px-3 py-1 rounded-md hover:cursor-pointer"
                       >
                         <Pencil size={16} /> Edit
                       </button>
@@ -345,4 +345,4 @@ const BookMenu = () => {
   );
 };
 
-export default BookMenu;
+export default CalenderAcademic;

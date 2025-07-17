@@ -106,7 +106,7 @@ const AuthStudent = () => {
                         </div>
                          <div className="mb-4 md:mx-0 mx-5">
                             <button
-                                className="bg-blue-500 my-2 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                className="bg-blue-500 my-2 w-full  hover:cursor-pointer hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 type="submit"
                                 disabled={loading}
                             >

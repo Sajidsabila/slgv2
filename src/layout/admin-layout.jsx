@@ -47,9 +47,11 @@ const AdminLayout = ({ children }) => {
 
   const navLinks = [
     { to: "/admin", label: "Home" },
-    { to: "/admin/program-materi", label: "Learning Materi" },
+    { to: "/admin/calender-academic", label: "Calender Academic" },
     { to: "/admin/book-menu", label: "Book Menu" },
+    { to: "/admin/program-materi", label: "Learning Materi" },
     { to: "/admin/evaluasi-semester", label: "Evaluasi Semester" },
+    { to: "/admin/modul-training", label: "Modul Training" },
   ];
 
   return (

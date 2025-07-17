@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import LandingPageLayout from "../../layout/landing-page";
 import { apiGetProgramMateriPublic } from "../../api/apiPublic";
-import { getEnrollment } from "../../helper/helper";
+
 
 const ClassGradeTeacher = () => {
   const { abbr_course } = useParams();
@@ -46,21 +46,22 @@ const ClassGradeTeacher = () => {
 
   return (
     <LandingPageLayout title={abbr_course}>
-      <div className="flex justify-center h-auto px-4 py-6">
-        <div className="max-w-3xl w-full">
-          <h2 className="text-xl font-bold text-center text-gray-800 mb-4">
+      <div className="container mx-auto px-4 py-10">
+     
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
             Data Class Grade
           </h2>
           {error && <p className="text-red-500 text-center">{error}</p>}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {classGrades.length > 0 ? (
               classGrades.map((gradeData, i) => (
                 <Link
                   key={i}
                   to={`/teacher/program-materi/${gradeData.name}`}
-                  className="p-3 bg-white border border-gray-200 rounded-md shadow-sm text-center text-blue-600 hover:underline text-md"
+                  className="p-5 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
                 >
-                  {gradeData.class_grade}
+                   <p className="text-lg font-semibold text-gray-700 text-center">
+                  {gradeData.class_grade}</p>
                 </Link>
               ))
             ) : (
@@ -72,7 +73,7 @@ const ClassGradeTeacher = () => {
             )}
           </div>
         </div>
-      </div>
+    
       <div className="flex justify-center">
         <Link
           to="/teacher"

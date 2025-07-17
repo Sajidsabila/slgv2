@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { detailModulTraining } from "../../api/apiProgramMateri";
 import { urlLink } from "../../config/config";
 
-const DetailBookMenu = () => {
+const DetaiCalenderAcademic = () => {
   const { id } = useParams();
   const [detailmodulTrainingBookMenu, setModulTrainingBookMenu] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -81,4 +81,4 @@ const DetailBookMenu = () => {
   );
 };
 
-export default DetailBookMenu;
+export default DetaiCalenderAcademic;

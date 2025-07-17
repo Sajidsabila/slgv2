@@ -112,7 +112,7 @@ const Login = () => {
                     </div>
                     <button type="submit"
                     disabled={loading}
-                     className="bg-slate-800 text-white w-full h-10 rounded-lg hover:bg-slate-900 transition">
+                     className="bg-slate-800 text-white w-full h-10 rounded-lg hover:bg-slate-900 transition hover:cursor-pointer">
                        {loading ? 'loading...' : 'login' }
                     </button>
                 </form>

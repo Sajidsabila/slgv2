@@ -22,7 +22,7 @@ const DetailClassFormat = () => {
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
     const [currentPage, setCurrentPage] = useState(1)
-  const [isEditMode, setIsEditMode] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
     const [search, setSearch] = useState("");
     const [currentTrackIndex, setCurrentTrackIndex] = useState(null);
     const audioRefs = useRef([]);
@@ -350,7 +350,7 @@ const DetailClassFormat = () => {
              onPlay={() => playTrack(index)}
            >
              <source
-               src={`${import.meta.env.VITE_SISTER_URL}/${fileItem.file_url}`}
+               src={`${urlLink.url}/${fileItem.file_url}`}
                type="video/mp4"
              />
              Browser Anda tidak mendukung pemutar video.

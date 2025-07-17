@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { detailModulTraining } from "../../api/apiProgramMateri";
 import { urlLink } from "../../config/config";
 
-const DetailBookMenu = () => {
+const DetailModulTraining = () => {
   const { id } = useParams();
   const [detailmodulTrainingBookMenu, setModulTrainingBookMenu] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -26,11 +26,13 @@ const DetailBookMenu = () => {
   }, [id]);
 
   const file_url  =`${urlLink.url}/${detailmodulTrainingBookMenu.file_url}`;
+  const fileType = file_url.split(".").pop()?.toLowerCase();
+  console.log(fileType);
 
   return (
     <AdminLayout>
       <div className="px-4 md:px-9 py-6">
-        <h3 className="font-bold py-7 text-lg">Detail Program Materi</h3>
+        <h3 className="font-bold py-7 text-lg">Detail Modul Training</h3>
 
         {loading ? (
           <div className="flex justify-center items-center h-40">
@@ -60,20 +62,26 @@ const DetailBookMenu = () => {
                 {detailmodulTrainingBookMenu.type || "-"}
               </p>
             </div>
+{detailmodulTrainingBookMenu.file_url ? (
+  fileType === "pdf" ? (
+    <iframe
+      src={file_url}
+      title="PDF Viewer"
+      className="w-full h-[500px] rounded-md border"
+    />
+  ) : (
+    <video
+      src={file_url}
+      controls
+      className="w-full h-[500px] rounded-md"
+    />
+  )
+) : (
+  <p className="text-gray-400 italic text-center">
+  File Tidak Tersedia
+  </p>
+)}
 
-            {detailmodulTrainingBookMenu.file_url ? (
-            
-                <img
-                  src={file_url}
-                  alt="Ilustrasi Program Materi"
-                  className="rounded-xl object-cover shadow my-5"
-                />
-
-            ) : (
-              <p className="text-gray-400 italic text-center">
-                Gambar tidak tersedia
-              </p>
-            )}
           </div>
         )}
       </div>
@@ -81,4 +89,4 @@ const DetailBookMenu = () => {
   );
 };
 
-export default DetailBookMenu;
+export default DetailModulTraining

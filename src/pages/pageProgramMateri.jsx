@@ -184,7 +184,7 @@ const PageProgramMateri = () => {
                         {renderFilterSection("Class Format", isFormatOpen, setIsFormatOpen, filteredClassFormatStudent, selectedFormat, setSelectedFormat, "abbr_format", "class_format")}
                         {renderFilterSection("Class Grade", isGradeOpen, setIsGradeOpen, filteredClassGradeStudent, selectedGrade, setSelectedGrade, "class_grade", "class_grade")}
                     </div>
-                    <div className="musik flex flex-col w-full md:max-w-[800px] gap-7 py-3">
+                    <div className="musik flex flex-col w-full gap-7 py-3">
                         <div className="flex-col">
                             <p className="text-white font-md font-semi-bold md:text-lg md:font-semibold px-3 tracking-wide bg-slate-600 p-2 rounded-lg">Program Materi</p>
                             <ul className="pt-3 ps-2">
