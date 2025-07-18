@@ -10,7 +10,7 @@ const IndexTeacher = () => {
         {id: 1, title: "Calender Academic", url: "/teacher/calender-academic"},
         {id: 2, title: "Book Menu", url: "/teacher/book-menu"},
         {id: 3, title: "Learning Materi", url: "/teacher/learning-materi"},
-        {id: 4, title: "Evaluation Semester", url: "/teacher/profile"},
+        {id: 4, title: "Evaluation Semester", url: "/teacher/evaluation-semester"},
         {id: 5, title: "Modul Training", url: "/teacher/modul-training"},
     ]
       return (

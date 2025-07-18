@@ -7,7 +7,7 @@ import {
 } from "../../api/apiPublic";
 import { urlLink } from "../../config/config";
 
-const PageProgramMateriTeacher = () => {
+const PageProgramMateriTeacher = ({filterFile, url}) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(true);
   const [isFormatOpen, setIsFormatOpen] = useState(true);
   const [isGradeOpen, setIsGradeOpen] = useState(true);
@@ -36,7 +36,7 @@ const PageProgramMateriTeacher = () => {
     if (selectedCategories.length && selectedFormat.length && selectedGrade.length) {
       const newId = `${selectedCategories[0]}${selectedFormat[0]}${selectedGrade[0]}`.replaceAll("%20", "");
       if (newId !== id) {
-        navigate(`/teacher/program-materi/${newId}`, { replace: true });
+        navigate(`/teacher/${url}/${newId}`, { replace: true });
       }
     }
   }, [selectedCategories, selectedFormat, selectedGrade, navigate, id]);
@@ -44,7 +44,8 @@ const PageProgramMateriTeacher = () => {
   const getFilteredFiles = useMemo(() => {
     return search
       ? programById?.file?.filter((item) =>
-          item.title.toLowerCase().includes(search.toLowerCase())
+          item.title.toLowerCase().includes(search.toLowerCase()) &&
+          item.type === filterFile
         )
       : programById?.file || [];
   }, [search, programById]);
@@ -230,9 +231,9 @@ const PageProgramMateriTeacher = () => {
                     );
                   })
                 ) : (
-                  <li className="text-slate-700 text-sm md:text-m font-bold tracking-wide text-center py-3 ">
-                    Tidak ada data
-                  </li>
+                   <p className="text-red-500 text-center bg-red-200 text-base md:text-lg font-bold px-3 py-2 rounded-lg tracking-wide my-7 mx-6">
+                      Data tidak ditemukan...
+                  </p>
                 )}
               </ul>
             </div>

@@ -10,8 +10,9 @@ const Page404 = () => {
            className="text-6xl text-red-800 font-extrabold py-2">404</h2>
            <h4
             className="text-2xl font-bold py-3">oops! Page not found</h4>
-           <Link to="/"
-            className="bg-blue-800 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow-md my-2">Back to Home</Link>
+           <button 
+            onClick={() => window.history.back()}
+            className="bg-blue-800 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow-md my-2 hover:cursor-pointer">Back to Home</button>
         </div>
     </div>
     

@@ -4,7 +4,7 @@ import LandingPageLayout from "../../layout/landing-page";
 import { apiGetProgramMateriPublic } from "../../api/apiPublic";
 
 
-const ClassGradeTeacher = () => {
+const ClassGradeTeacher = ({url}) => {
   const { abbr_course } = useParams();
   const [programs, setPrograms] = useState([]);
   const [error, setError] = useState(null);
@@ -57,7 +57,7 @@ const ClassGradeTeacher = () => {
               classGrades.map((gradeData, i) => (
                 <Link
                   key={i}
-                  to={`/teacher/program-materi/${gradeData.name}`}
+                  to={`/teacher/${url}/${gradeData.name}`}
                   className="p-5 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
                 >
                    <p className="text-lg font-semibold text-gray-700 text-center">

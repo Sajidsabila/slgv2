@@ -53,7 +53,7 @@ const logoutStudent = () => {
       
 
     {(sessionStorage.getItem("token") || sessionStorage.getItem("credentials"))  && (
-          <li className="hover:text-blue-600 cursor-pointer px-2 py-1 ml-auto xl:me-[-30%] xl:me-[-30%]">
+          <li className="hover:text-blue-600 hover:cursor-pointer px-2 py-1 ml-auto xl:me-[-30%] xl:me-[-30%]">
              <button onClick ={ () => {if (window.confirm("Are you sure you want to logout?")) {logoutStudent()}}}  className="text-md font-semibold bg-red-500 py-2 px-2 text-white rounded-md hover:bg-red-600">Logout</button>
           </li>
       )} 
@@ -81,7 +81,7 @@ const logoutStudent = () => {
                   logoutStudent();
                 }
               }}
-              className="w-full text-xs font-semibold bg-red-500 py-2 px-4 text-white rounded-md hover:bg-red-600"
+              className="w-full text-xs font-semibold bg-red-500 py-2 px-4 text-white rounded-md hover:bg-red-600 hover:cursor-pointer"
             >
               Logout
             </button>

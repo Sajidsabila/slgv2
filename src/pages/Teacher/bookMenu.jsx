@@ -8,6 +8,12 @@ const BookMenuTeacher = () => {
   const [filteredMenu, setFilteredMenu] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const ChangePage = (page) => {
+    setCurrentPage(page);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +69,7 @@ const BookMenuTeacher = () => {
               <p className="text-center text-gray-600 py-5">Memuat data...</p>
             ) : filteredMenu.length > 0 ? (
               filteredMenu.map((book, index) => (
-                <Link to="/" key={book.id || index}>
+                <Link to={`/teacher/book-menu/${book.name}`} key={book.id || index}>
                   <div className="w-full bg-white rounded-lg shadow px-6 py-4 mt-4 hover:bg-gray-50 transition flex items-start gap-5">
                     <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 font-bold text-gray-700 text-lg">
                       #{index + 1}

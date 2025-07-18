@@ -14,11 +14,13 @@ import {
 } from "../../api/apiProgramMateri";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
+import { title } from "framer-motion/client";
 const ModulTraining = () => {
     const [modulTraining, setModulTraining] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState({
     description: "",
+    title: "",
     file: null,
     type: "Modul Training",
   });
@@ -64,6 +66,7 @@ const ModulTraining = () => {
       oldTitle: dataToEdit.title || "",
       oldFileUrl: dataToEdit.file_url || "",
       type: dataToEdit.type || "Modul Training",
+      title: dataToEdit.title || "",
     });
 
     setEditId(dataToEdit.name);
@@ -221,6 +224,15 @@ const ModulTraining = () => {
             titleModal={isEditMode ? "Edit Program Materi" : "Add Program Materi"}
             onSubmit={handleSubmit}
           >
+            <InputModal
+              label="Title"
+              type="text"
+              name="title"
+              value={formData.title}
+              placeholder="Type ....."
+              autoFocus
+              onChange={handleChange}
+            />
             <InputModal
               label="Description"
               type="text"

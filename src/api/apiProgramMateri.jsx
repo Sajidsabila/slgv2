@@ -352,7 +352,7 @@ export const getModulTrainingPublic = async (token) => {
 
 }
 
-export const getDetailModulTrainingPublic = async (token, id) => {
+export const getDetailModulTrainingPublic = async (id, token) => {
   try {
     const response = await axios.get(
       `${urlLink.url}/api/resource/Modul%20Training/${id}`,

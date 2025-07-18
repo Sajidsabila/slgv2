@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 
 import { MiddlewareStudent, MiddlewareTeacher,Middleware } from "../middleware/middelware.jsx";
-import { GuestStudent, Guest } from "../middleware/isGuest.jsx";
+import { Guest, GuestOnly } from "../middleware/isGuest.jsx";
 
 import Index from "../pages/index.jsx";
 import PageProgramMateri from "../pages/pageProgramMateri.jsx";
@@ -27,24 +27,23 @@ import CalenderAcademic from "../pages/Admin/calenderAcademic.jsx";
 import ModulTraining from "../pages/Admin/modulTraining.jsx";
 import DetailModulTraining from "../pages/Admin/detailModulTraining.jsx";
 import CourseTeacher from "../pages/Teacher/course.jsx";
-import { Book } from "lucide-react";
 import BookMenuTeacher from "../pages/Teacher/bookMenu.jsx";
 import CalenderAcademicTeacher from "../pages/Teacher/calenderAcademic.jsx";
 import ModulTrainingTeacher from "../pages/Teacher/modulTraining.jsx";
-
-
+import DetailModulTrainingTeacher from "../pages/Teacher/detailModulTraining.jsx";
+import EvaluationSemesterTeacher from "../pages/Teacher/evaluationSemester.jsx";
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <GuestStudent><AuthStudent /></GuestStudent>,
+    element: <GuestOnly><AuthStudent /></GuestOnly>,
   },
   {
     path: "login-teacher",
     element: (
-      <GuestStudent>
+      <GuestOnly>
         <AuthTeacher />
-      </GuestStudent>
+      </GuestOnly>
     ),
   },
  {
@@ -85,9 +84,16 @@ const routes = createBrowserRouter([
       {path: "learning-materi", element: <CourseTeacher />},
       {path: "book-menu", element: <BookMenuTeacher />},
       {path: "calender-academic", element: <CalenderAcademicTeacher />},
-      {path: "class-course/:abbr_course", element: <ClassGradeTeacher />},
-      {path: "program-materi/:id", element: <PageProgramMateriTeacher />},
+      {path: "class-course/:abbr_course", element: <ClassGradeTeacher url="program-materi"/>},
+      {path: "program-materi/:id", element: <PageProgramMateriTeacher filter="Program Materi" url="program-materi" />},
       {path: "modul-training", element: <ModulTrainingTeacher/>},
+      {path: "modul-training/:id", element: <DetailModulTrainingTeacher title="Detail Modul Training"/>},
+      {path: "calender-academic/:id", element: <DetailModulTrainingTeacher title="Detail Calender Academic"/>},
+      {path: "book-menu/:id", element: <DetailModulTrainingTeacher title="Detail Book Menu"/>},
+      {path: "evaluation-semester", element: <EvaluationSemesterTeacher />},
+      {path: "evaluation-semester/class-course/:abbr_course", element: <ClassGradeTeacher url="evaluation-semester-materi" />},
+      {path: "evaluation-semester-materi/:id", element: <PageProgramMateriTeacher filter="Evaluasi Semester" url="evaluation-semester-materi"/>},
+      
     ]
   },
   {
@@ -108,7 +114,7 @@ const routes = createBrowserRouter([
       {path: "modul-training/:id", element: <DetailModulTraining />}
     ],
   },
-  {
+    {
     path: "*",
     element: <Page404 />,
   },

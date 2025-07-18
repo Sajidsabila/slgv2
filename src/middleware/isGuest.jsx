@@ -33,22 +33,24 @@ export const Guest = ({ children }) => {
     return isGuest ? children : <Navigate to="/admin" replace />;
 };
 
-export const GuestStudent = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(null);
+export const GuestOnly = ({ children }) => {
+  const [isChecking, setIsChecking] = useState(true);
+  const [isStudent, setIsStudent] = useState(false);
+  const [isTeacher, setIsTeacher] = useState(false);
 
-    useEffect(() => {
-        const checkStudentAuth = () => {
-            const getStudentId = sessionStorage.getItem("token");
-            setIsAuthenticated(!!getStudentId);
-        };
-        checkStudentAuth();
-    }, []);
+  useEffect(() => {
+    const studentToken = sessionStorage.getItem("token");
+    const teacherToken = sessionStorage.getItem("credentials");
 
-    if (isAuthenticated === null) return null;
+    setIsStudent(!!studentToken);
+    setIsTeacher(!!teacherToken);
+    setIsChecking(false);
+  }, []);
 
-    if (isAuthenticated) {
-        return <Navigate to="/home" replace />;
-    }
+  if (isChecking) return null;
 
-    return children;
+  if (isStudent) return <Navigate to="/home" replace />;
+  if (isTeacher) return <Navigate to="/teacher" replace />;
+
+  return children;
 };

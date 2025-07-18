@@ -266,7 +266,7 @@ const filteredProgramMateri = programMateri.filter((item) =>
   
     return (
       <AdminLayout>
-        <h3 className="font-bold py-7 text-lg">Program Materi</h3>
+        <h3 className="font-bold py-7 text-lg">Learning  Materi</h3>
         {error && <p className="bg-red-700 text-sm text-white py-3 px-4 my-3">{error}</p>}
         {success && <p className="bg-green-700 text-sm text-white py-3 px-4 my-3">{success}</p>}
         <div className="flex flex-col w-full p-4 bg-white rounded-xl shadow-lg">

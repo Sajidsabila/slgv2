@@ -61,7 +61,7 @@ const CalenderAcademicTeacher = () => {
             ) : 
             filteredMenu.length > 0 ? (
                  filteredMenu.map((book, index) => (
-  <Link to="/" key={index}>
+  <Link to={`/teacher/calender-academic/${book.name}`} key={index}>
     <div className="w-full bg-white rounded-lg shadow px-6 py-4 mt-4 hover:bg-gray-50 transition flex items-start gap-5">
       
  
