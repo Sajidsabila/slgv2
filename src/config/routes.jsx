@@ -27,8 +27,7 @@ import CalenderAcademic from "../pages/Admin/calenderAcademic.jsx";
 import ModulTraining from "../pages/Admin/modulTraining.jsx";
 import DetailModulTraining from "../pages/Admin/detailModulTraining.jsx";
 import CourseTeacher from "../pages/Teacher/course.jsx";
-import BookMenuTeacher from "../pages/Teacher/bookMenu.jsx";
-import CalenderAcademicTeacher from "../pages/Teacher/calenderAcademic.jsx";
+
 import ModulTrainingTeacher from "../pages/Teacher/modulTraining.jsx";
 import DetailModulTrainingTeacher from "../pages/Teacher/detailModulTraining.jsx";
 import EvaluationSemesterTeacher from "../pages/Teacher/evaluationSemester.jsx";
@@ -82,11 +81,11 @@ const routes = createBrowserRouter([
     children:[
       {path: "", element: <IndexTeacher />},
       {path: "learning-materi", element: <CourseTeacher />},
-      {path: "book-menu", element: <BookMenuTeacher />},
-      {path: "calender-academic", element: <CalenderAcademicTeacher />},
+      {path: "book-menu", element: <ModulTrainingTeacher url="book-menu" title="Book Menu" placeholder="Book Menu" />},
+      {path: "calender-academic", element: <ModulTrainingTeacher url="calender-academic"  title="Calender Academic" placeholder="Calender Academic"/>},
       {path: "class-course/:abbr_course", element: <ClassGradeTeacher url="program-materi"/>},
       {path: "program-materi/:id", element: <PageProgramMateriTeacher filter="Program Materi" url="program-materi" />},
-      {path: "modul-training", element: <ModulTrainingTeacher/>},
+      {path: "modul-training", element: <ModulTrainingTeacher url="modul-training" title="Modul Training" placeholder="Modul Training"/>},
       {path: "modul-training/:id", element: <DetailModulTrainingTeacher title="Detail Modul Training"/>},
       {path: "calender-academic/:id", element: <DetailModulTrainingTeacher title="Detail Calender Academic"/>},
       {path: "book-menu/:id", element: <DetailModulTrainingTeacher title="Detail Book Menu"/>},

@@ -2,11 +2,17 @@ import { useEffect, useState } from "react";
 import { getModulTrainingPublic } from "../../api/apiProgramMateri";
 import LandingPageLayout from "../../layout/landing-page";
 import { Link } from "react-router-dom";
-const ModulTrainingTeacher = () => {
+const ModulTrainingTeacher = ({url, placeholder, title}) => {
   const [bookMenu, setBookMenu] = useState([]);
   const [filteredMenu, setFilteredMenu] = useState([]);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const itemsPerPage = 10;
+
+  const changePage = () => {
+    
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,13 +38,13 @@ const ModulTrainingTeacher = () => {
   useEffect(() => {
     const filtered = bookMenu.filter((book) =>
       book?.title?.toLowerCase().includes(search.toLowerCase()) && 
-      book?.type === "Modul Training"
+      book?.type === title
     );
     setFilteredMenu(filtered);
   }, [search, bookMenu]);
 
   return (
-    <LandingPageLayout title="Modul Training">
+    <LandingPageLayout title={title}>
       <div className="container mx-auto w-full flex-col gap-10 px-4 md:px-10">
         <div className="flex justify-center w-full my-6">
           <input
@@ -46,14 +52,14 @@ const ModulTrainingTeacher = () => {
             value={search}
             autoFocus
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Pencarian Materi ..."
+            placeholder={`Pencarian ${placeholder}...`}
           />
         </div>
 
         <div className="w-full flex flex-col gap-7 py-3 mx-3">
           <div>
             <p className="text-white bg-slate-600 text-base md:text-lg font-semibold px-3 py-2 rounded-lg tracking-wide">
-              Modul Training
+              {title}
             </p>
             
             {loading ? (
@@ -62,7 +68,7 @@ const ModulTrainingTeacher = () => {
             filteredMenu.length > 0 ? 
             (
                   filteredMenu.map((book, index) => (
- <Link to={`/teacher/modul-training/${book.name}`} key={index}>
+ <Link to={`/teacher/${url}/${book.name}`} key={index}>
     <div className="w-full bg-white rounded-lg shadow px-6 py-4 mt-4 hover:bg-gray-50 transition flex items-start gap-5">
       
       {/* Nomor urutan */}
