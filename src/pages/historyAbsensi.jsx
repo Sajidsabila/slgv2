@@ -94,9 +94,8 @@ const HistoryAbsensi = () => {
 
     return (
         <LandingPageLayout title="History Absensi">
-            <div className="px-4 py-6 xl:mx-20 2xl:mx-20">
- 
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div className="px-4 py-6  container mx-auto">
+               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                     <div className="flex flex-col md:flex-row gap-4 w-full md:w-2/3">
                         <input
                             type="date"
@@ -130,6 +129,13 @@ const HistoryAbsensi = () => {
                 </div>
 
                 {/* DATA */}
+               <div className="flex justify-end my-5">
+                    <div className="text-lg font-semibold">
+                        Total Data: <span className="text-gray-700 font-normal">{filteredData.length}</span>
+                        </div>
+                </div>
+
+
                 {paginatedData.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                         {paginatedData.map((e, idx) => (

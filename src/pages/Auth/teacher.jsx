@@ -49,6 +49,7 @@ const AuthTeacher = () => {
         }
 
         const email = loginData.message.email;
+        console.log(email);
        const apiKey = loginData.message.api_key;
        const apiSecret = loginData.message.api_secret;
        const credentials = `${apiKey}:${apiSecret}`;
@@ -58,13 +59,11 @@ const AuthTeacher = () => {
 
         const getCredentials = sessionStorage.getItem("credentials");
         const decodedCredentials = atob(getCredentials);
+        console.log(decodedCredentials);
         const authHeader = {
             "Content-Type": "application/json",
             Authorization: `token ${decodedCredentials}`,
         };
-
-        console.log(loginData.message);
-
         const userResponse = await fetch(
             `${urlLink.url}/api/resource/User/${email}`,
             {
@@ -74,9 +73,12 @@ const AuthTeacher = () => {
                 mode: "cors",
             }
         );
+        console.log(userResponse);
+  
+
 
         const instructorResponse = await fetch(
-            `${urlLink.url}api/resource/Instructor?fields=["*"]&filters=[["instructor_email","=","${email}"]]`,
+            `${urlLink.url}/api/resource/Instructor?fields=["*"]&filters=[["instructor_email", "=", "instructor@smitest.com"]]`,
             {
                 method: "GET",
                 credentials: "include",
@@ -85,8 +87,11 @@ const AuthTeacher = () => {
             }
         );
 
+        console.log(instructorResponse);
+
         const userData = await userResponse.json();
         const instructorData = await instructorResponse.json();
+        console.log(instructorData);
 
         const roles = Array.isArray(userData.data.roles)
             ? userData.data.roles
@@ -101,10 +106,10 @@ const AuthTeacher = () => {
             setIsLoading(false);
             throw new Error("Username dan Password Salah");
         }
-
+        console.log(instructorData);
         const profileInstructor = {
-            instructor_name: instructorData.data[0].instructor_name,
-            instructor_email: instructorData.data[0].instructor_email,
+            instructor_name: instructorData.data[0].name,
+            instructor_email: instructorData.data[0].email,
         };
 
         sessionStorage.setItem(
