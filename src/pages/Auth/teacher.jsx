@@ -2,6 +2,7 @@ import { useState } from "react";
 import LandingPageLayout from "../../layout/landing-page";
 import { Link } from "react-router-dom";
 import { urlLink } from "../../config/config";
+import { ins } from "framer-motion/client";
 
 
 const AuthTeacher = () => {
@@ -49,7 +50,7 @@ const AuthTeacher = () => {
         }
 
         const email = loginData.message.email;
-        console.log(email);
+
        const apiKey = loginData.message.api_key;
        const apiSecret = loginData.message.api_secret;
        const credentials = `${apiKey}:${apiSecret}`;
@@ -74,11 +75,9 @@ const AuthTeacher = () => {
             }
         );
         console.log(userResponse);
-  
-
 
         const instructorResponse = await fetch(
-            `${urlLink.url}/api/resource/Instructor?fields=["*"]&filters=[["instructor_email", "=", "instructor@smitest.com"]]`,
+            `${urlLink.url}/api/resource/Instructor?fields=["*"]&filters=[["instructor_email", "=", "${email}"]]`,
             {
                 method: "GET",
                 credentials: "include",
@@ -101,17 +100,18 @@ const AuthTeacher = () => {
             (roleObj) => roleObj.role === "Instructor"
         );
 
+        console.log(instructorData);
+
         if (!isInstructor) {
             sessionStorage.clear();
             setIsLoading(false);
             throw new Error("Username dan Password Salah");
         }
-        console.log(instructorData);
-        const profileInstructor = {
-            instructor_name: instructorData.data[0].name,
-            instructor_email: instructorData.data[0].email,
-        };
 
+        const profileInstructor = {
+            instructor_name: instructorData.data[0].instructor_name,
+            instructor_email: instructorData.data[0].instructor_email,
+        };
         sessionStorage.setItem(
             "profileInstructor",
             JSON.stringify(profileInstructor)
@@ -174,14 +174,14 @@ const AuthTeacher = () => {
                             />
                         </div>
                         <div className="mb-4 md:mx-0 mx-5">
-  <button
-    className="bg-blue-500 my-2 w-full hover:bg-blue-700  hover:cursor-pointer text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline"
-    type="submit"
-    disabled={loading}
-  >
-    {loading ? "Loading..." : "Login"}
-  </button>
-</div>
+             <button
+                className="bg-blue-500 my-2 w-full hover:bg-blue-700  hover:cursor-pointer text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+                disabled={loading}
+                >
+                {loading ? "Loading..." : "Login"}
+            </button>
+        </div>
                     </form>
                 </div>
             </div>

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LandingPageLayout from "../../layout/landing-page";
 import { checkStudent } from "../../api/apiPublic";
 import { convertDate } from "../../helper/helper";
 import { Link } from "react-router-dom";
+import { form } from "framer-motion/client";
 
 const AuthStudent = () => {
     const [formData, setFormData] = useState({
@@ -11,6 +12,14 @@ const AuthStudent = () => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [limitRequest, setLimitRequest] = useState(0);
+
+    useEffect(() => {
+        if (limitRequest >= 5) {
+            const timeout = setTimeout(() => setLimitRequest(0), 60000); 
+            return () => clearTimeout(timeout);
+        }
+    }, [limitRequest]);
 
     const handleChange = (e) => {
         setFormData({
@@ -21,77 +30,109 @@ const AuthStudent = () => {
 
     const handleCheckStudent = async (e) => {
         e.preventDefault();
+
         if (!formData.id_siswa || !formData.tanggal_lahir) {
             setError("ID Siswa dan Tanggal Lahir harus diisi");
             return;
         }
+
+        if (limitRequest >= 5) {
+            setError("Terlalu banyak percobaan login. Coba lagi dalam 1 menit.");
+            return;
+        }
+
         try {
             setLoading(true);
             setError("");
 
             const data = {
-                name: formData.id_siswa,
-                date_of_birth: convertDate(formData.tanggal_lahir)
+                name: formData.id_siswa.trim(),
+                date_of_birth: convertDate(formData.tanggal_lahir),
             };
-            const response = await checkStudent(data);
-            const status = response.message;
 
-            if (status.status === "failed") {
-                setError(status.message);
-                return;
-            }else if(status.student_status === "Out"){
-                setError(status.message);
+            const response = await checkStudent(data);
+            const status = response?.message;
+
+            if (!status || typeof status !== "object") {
+                setLimitRequest(prev => prev + 1);
+                setError("Respon dari server tidak valid");
                 return;
             }
-         
+
+            if (status.status === "failed") {
+                setError(status.message || "Login gagal");
+                setFormData({
+                   id_siswa: formData.id_siswa,
+                    tanggal_lahir: "",
+                })
+                setLimitRequest(prev => prev + 1);
+                return;
+            }
+
+            if (status.student_status === "Out") {
+                setError(status.message || "Siswa tidak aktif");
+                return;
+            }
+
+            console.log(response.message);
+
             sessionStorage.setItem("token", JSON.stringify(response.message));
             window.location.href = "/home";
-
         } catch (error) {
-            console.error(error);
+            setLimitRequest(prev => prev + 1);
+           setFormData({
+                   id_siswa: formData.id_siswa,
+                    tanggal_lahir: "",
+                })
             setError(error.message || "Terjadi kesalahan saat login");
         } finally {
             setLoading(false);
-            setFormData({ id_siswa: "", tanggal_lahir: "" });
+            setFormData({
+                id_siswa: "",
+                tanggal_lahir: "",
+            });
         }
     };
 
     return (
         <LandingPageLayout title="Welcome to SMI">
-            <div className="flex flex-col w-full justify-center items-center bg-white-50 ">
-                <div className="flex flex-row w-auto justify-center items-center h-auto gap-3  rounded-lg p-1 bg-white">
-                    <Link to="/" className="bg-blue-600 text-white border-1 border-white xl:py-3 2xl:py-3 lg:py-2 py-2 px-6 font-bold rounded-l-lg">Student</Link>
-                    <div className="w-px h-8 bg-gray-300"></div>
-
-                    <Link to="/login-teacher" className="border-1 xl:py-3 2xl:py-3 lg:py-2 py-2 px-6 font-bold rounded-r-lg">Teacher</Link>
+            <div className="flex flex-col w-full justify-center items-center bg-white-50">
+                <div className="flex flex-row w-auto justify-center items-center gap-3 rounded-lg p-1 bg-white">
+                    <Link to="/" className="bg-blue-600 text-white border border-white py-2 px-6 font-bold rounded-l-lg">
+                        Student
+                    </Link>
+                    <div className="w-px h-8 bg-gray-300" />
+                    <Link to="/login-teacher" className="border py-2 px-6 font-bold rounded-r-lg">
+                        Teacher
+                    </Link>
                 </div>
 
-              <div className="w-full max-w-md h-auto rounded-lg px-5 py-4">
+                <div className="w-full max-w-md h-auto rounded-lg px-5 py-4">
                     <h1 className="text-xl font-semibold text-center py-4">Silahkan Login</h1>
                     {error && (
-                        <p className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-5 font-bold">
+                        <p className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded my-5 font-bold">
                             {error}
                         </p>
                     )}
                     <form onSubmit={handleCheckStudent}>
-                        <div className="mb-4 md:mx-0 mx-5">
+                        <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="id_siswa">
-                                NIS 
+                                NIS
                             </label>
                             <input
                                 type="text"
-                                name="id_siswa"
                                 id="id_siswa"
-                                placeholder="Input Nis Siswa"
+                                name="id_siswa"
+                                placeholder="Input NIS Siswa"
                                 maxLength={25}
                                 onChange={handleChange}
                                 value={formData.id_siswa}
                                 autoComplete="off"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                                 autoFocus
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                             />
                         </div>
-                        <div className="mb-4 md:mx-0 mx-5">
+                        <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="tanggal_lahir">
                                 Tanggal Lahir Siswa
                             </label>
@@ -104,9 +145,9 @@ const AuthStudent = () => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                             />
                         </div>
-                         <div className="mb-4 md:mx-0 mx-5">
+                        <div className="mb-4">
                             <button
-                                className="bg-blue-500 my-2 w-full  hover:cursor-pointer hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                className="bg-blue-500 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 type="submit"
                                 disabled={loading}
                             >

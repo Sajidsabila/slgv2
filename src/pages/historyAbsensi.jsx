@@ -60,8 +60,6 @@ const HistoryAbsensi = () => {
         return true;
     };
 
-    console.log(isInRange());
-
     const filteredData = attendanceData.filter((e) => {
         const searchContent = [
             e.program,
@@ -137,7 +135,7 @@ const HistoryAbsensi = () => {
 
 
                 {paginatedData.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                         {paginatedData.map((e, idx) => (
                             <div
                                 key={idx}
@@ -168,13 +166,19 @@ const HistoryAbsensi = () => {
                                         <span className="font-medium">Instruktur:</span>{" "}
                                         {e.instructor_name || "-"}
                                     </p>
+                                <div className="space-y-1">
+  <p className="break-words">
+    <span className="font-medium">Materi:</span>{" "}
+  </p>
+  <span className="block font-mono text-gray-800 break-words max-w-full">
+    {e.lesson || "-"}
+  </span>
+</div>
+
+
                                     <p>
-                                        <span className="font-medium">Materi:</span>{" "}
-                                        {e.lesson || "-"}
-                                    </p>
-                                    <p>
-                                        <span className="font-medium">Catatan:</span>{" "}
-                                        {e.comment || "-"}
+                                          <span className="font-medium">Catatan:</span>
+                                        <pre className="whitespace-pre  text-gray-800">{e.comment || "-"}</pre>
                                     </p>
                                     <p>
                                         <span className="font-medium">Video:</span>{" "}
