@@ -40,7 +40,6 @@ const AuthStudent = () => {
             setError("Terlalu banyak percobaan login. Coba lagi dalam 1 menit.");
             return;
         }
-
         try {
             setLoading(true);
             setError("");
@@ -62,7 +61,7 @@ const AuthStudent = () => {
             if (status.status === "failed") {
                 setError(status.message || "Login gagal");
                 setFormData({
-                   id_siswa: formData.id_siswa,
+                    id_siswa: formData.id_siswa,
                     tanggal_lahir: "",
                 })
                 setLimitRequest(prev => prev + 1);
@@ -74,15 +73,13 @@ const AuthStudent = () => {
                 return;
             }
 
-            console.log(response.message);
-
             sessionStorage.setItem("token", JSON.stringify(response.message));
             window.location.href = "/home";
         } catch (error) {
             setLimitRequest(prev => prev + 1);
-           setFormData({
-                   id_siswa: formData.id_siswa,
-                    tanggal_lahir: "",
+            setFormData({
+                id_siswa: formData.id_siswa,
+                tanggal_lahir: "",
                 })
             setError(error.message || "Terjadi kesalahan saat login");
         } finally {

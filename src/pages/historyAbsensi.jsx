@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import LandingPageLayout from "../layout/landing-page";
 import { convertDate } from "../helper/helper";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
+import { getPointStudent } from "../api/apiPublic";
 
 const HistoryAbsensi = () => {
     const [attendanceData, setAttendanceData] = useState([]);
@@ -33,7 +34,7 @@ const HistoryAbsensi = () => {
                     instructor_name: e.instructorlink_name,
                     point: e.growth_point,
                     program: e.sg_program,
-                    video: e.vidio_url,
+                    video: e.video_url,
                     lesson: e.lesson,
                     comment: e.comment,
                     student_group: e.student_group,
@@ -45,38 +46,56 @@ const HistoryAbsensi = () => {
         };
 
         setAttendanceData(getAttendance());
-    }, []);
+    }, []); 
+
+    useEffect(() => {
+        try{
+            const nameStudent = sessionStorage.getItem("token");
+            const name = nameStudent ? JSON.parse(nameStudent).student_id : "";
+            const response = getPointStudent(name);
+            console.log(response);
+        }catch (error) {
+            console.error("Gagal ambil data absensi dari session:", error);
+            return [];
+        }
+    })
+
+
 
     const isInRange = (dateStr) => {
         if (!startDate && !endDate) return true;
 
-        const date = convertDate(dateStr);
-        const start = startDate ? convertDate(startDate) : null;
-        const end = endDate ? convertDate(endDate) : null;
-        if (!date) return false;
-        if (start && date <= start) return false;
-        if (end && date >= end) return false;
+        const date = new Date(dateStr);
+        const start = startDate ? new Date(startDate) : null;
+        const end = endDate ? new Date(endDate) : null;
+
+        if (start && date < start) return false;
+        if (end && date > end) return false;
 
         return true;
     };
 
-    const filteredData = attendanceData.filter((e) => {
-        const searchContent = [
-            e.program,
-            e.student_group,
-            e.instructor_name,
-            e.lesson,
-        ]
-            .join(" ")
-            .toLowerCase();
-        const matchSearch = searchContent.includes(searchTerm.toLowerCase());
+    const filteredData = useMemo(() => {
+        return attendanceData.filter((e) => {
+            const searchContent = [
+                e.program,
+                e.student_group,
+                e.instructor_name,
+                e.lesson,
+                e.comment,
+                e.video,
+            ]
+                .join(" ")
+                .toLowerCase();
+            const matchSearch = searchContent.includes(searchTerm.toLowerCase());
 
-        return (
-            matchSearch &&
-            isInRange(e.schedule_date) &&
-            isInRange(e.absensi_date)
-        );
-    });
+            return (
+                matchSearch &&
+                isInRange(e.schedule_date) &&
+                isInRange(e.absensi_date)
+            );
+        });
+    }, [attendanceData, searchTerm, startDate, endDate]);
 
     const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
     const paginatedData = filteredData.slice(
@@ -92,8 +111,9 @@ const HistoryAbsensi = () => {
 
     return (
         <LandingPageLayout title="History Absensi">
-            <div className="px-4 py-6  container mx-auto">
-               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div className="px-4 py-6 container mx-auto">
+                {/* Filter */}
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                     <div className="flex flex-col md:flex-row gap-4 w-full md:w-2/3">
                         <input
                             type="date"
@@ -126,29 +146,22 @@ const HistoryAbsensi = () => {
                     />
                 </div>
 
-                {/* DATA */}
-               <div className="flex justify-end my-5">
+                {/* Total */}
+                <div className="flex justify-end my-5">
                     <div className="text-lg font-semibold">
                         Total Data: <span className="text-gray-700 font-normal">{filteredData.length}</span>
-                        </div>
+                    </div>
                 </div>
 
-
+                {/* Card */}
                 {paginatedData.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {paginatedData.map((e, idx) => (
-                            <div
-                                key={idx}
-                                className="bg-white border border-gray-200 shadow-md rounded-xl p-6 space-y-4"
-                            >
+                            <div key={idx} className="bg-white border border-gray-200 shadow-md rounded-xl p-6 space-y-4">
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <h2 className="text-lg font-bold text-gray-800">
-                                            {e.program || "-"}
-                                        </h2>
-                                        <p className="text-sm text-gray-500">
-                                            Group: {e.student_group || "-"}
-                                        </p>
+                                        <h2 className="text-lg font-bold text-gray-800">{e.program || "-"}</h2>
+                                        <p className="text-sm text-gray-500">Group: {e.student_group || "-"}</p>
                                     </div>
                                     <span
                                         className={`px-3 py-1 text-sm font-medium rounded-full ${
@@ -162,75 +175,47 @@ const HistoryAbsensi = () => {
                                 </div>
 
                                 <div className="text-sm text-gray-700 space-y-2">
-                                    <p>
-                                        <span className="font-medium">Instruktur:</span>{" "}
-                                        {e.instructor_name || "-"}
-                                    </p>
-                                <div className="space-y-1">
-  <p className="break-words">
-    <span className="font-medium">Materi:</span>{" "}
-  </p>
-  <span className="block font-mono text-gray-800 break-words max-w-full">
-    {e.lesson || "-"}
-  </span>
-</div>
-
-
-                                    <p>
-                                          <span className="font-medium">Catatan:</span>
-                                        <pre className="whitespace-pre  text-gray-800">{e.comment || "-"}</pre>
-                                    </p>
+                                    <p><span className="font-medium">Instructor:</span> {e.instructor_name || "-"}</p>
+                                    <div>
+                                        <p className="font-medium">Materi:</p>
+                                        <pre className="block font-mono text-gray-800 break-words whitespace-pre-wrap">{e.lesson || "-"}</pre>
+                                    </div>
+                                    <div>
+                                        <p className="font-medium">Catatan:</p>
+                                        <pre className="block font-mono text-gray-800 break-words whitespace-pre-wrap">{e.comment || "-"}</pre>
+                                    </div>
                                     <p>
                                         <span className="font-medium">Video:</span>{" "}
                                         {e.video ? (
-                                            <a
-                                                href={e.video}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 hover:underline"
-                                            >
-                                                Lihat Video Latihan
+                                            <a href={e.video} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                                {e.video}
                                             </a>
-                                        ) : (
-                                            "-"
-                                        )}
+                                        ) : "-"}
                                     </p>
-                                    <p>
-                                        <span className="font-medium">Tanggal Kelas:</span>{" "}
-                                        {e.schedule_date || "-"}
-                                    </p>
-                                    <p>
-                                        <span className="font-medium">Tanggal Absensi:</span>{" "}
-                                        {e.absensi_date || "-"}
-                                    </p>
-                                    <p>
-                                        <span className="font-medium">Jam:</span>{" "}
-                                        {`${e.from_time} - ${e.to_time}`}
-                                    </p>
-                                     <p>
-                                        <span className="font-medium">Point:</span>{" "}
-            
-                                <div className="flex items-center">
-                                {[...Array(5)].map((_, i) => (
-                                 i < e.point ? (
-                                       <StarFilled key={i} style={{ color: 'gold', fontSize: '24px' }} />
-                               ) : (
-                                       <StarOutlined key={i} style={{ color: 'gray', fontSize: '24px' }} />
-                                )
-                                ))}
-                          </div>   
-                                    </p>
+                                    <p><span className="font-medium">Tanggal Kelas:</span> {e.schedule_date || "-"}</p>
+                                    <p><span className="font-medium">Tanggal Absensi:</span> {e.absensi_date || "-"}</p>
+                                    <p><span className="font-medium">Jam:</span> {`${e.from_time} - ${e.to_time}`}</p>
+                                    <div>
+                                        <span className="font-medium">Point:</span>
+                                        <div className="flex items-center mt-1">
+                                            {[...Array(5)].map((_, i) =>
+                                                i < e.point ? (
+                                                    <StarFilled key={i} style={{ color: "gold", fontSize: "20px" }} />
+                                                ) : (
+                                                    <StarOutlined key={i} style={{ color: "gray", fontSize: "20px" }} />
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         ))}
                     </div>
                 ) : (
-                    <div className="text-center text-gray-500 py-4">
-                        Tidak ada data ditemukan.
-                    </div>
+                    <div className="text-center text-gray-500 py-4">Tidak ada data ditemukan.</div>
                 )}
 
-                {/* PAGINATION */}
+                {/* Pagination */}
                 {totalPages > 1 && (
                     <div className="flex justify-center items-center gap-2 mt-6 flex-wrap">
                         <button

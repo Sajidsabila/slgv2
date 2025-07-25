@@ -36,3 +36,21 @@ export const checkStudent = async(data) => {
     }
 };
 
+export const getPointStudent = async (filters) => {
+  try {
+    const response = await axios.get(
+      `${urlLink.url}/api/resource/Point%20Reward?fields=["point"]&filters=[["student", "=", "${filters}"]]`,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+          Authorization: `bearer ${import.meta.env.VITE_API_SECRET}`,
+        },
+      }
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    throw error;
+  }
+};
+

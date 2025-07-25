@@ -9,7 +9,7 @@ const ModulTrainingTeacher = ({ url, placeholder, title }) => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const itemsPerPage = 1;
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchData = async () => {
