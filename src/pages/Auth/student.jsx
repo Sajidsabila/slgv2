@@ -72,7 +72,6 @@ const AuthStudent = () => {
                 setError(status.message || "Siswa tidak aktif");
                 return;
             }
-
             sessionStorage.setItem("token", JSON.stringify(response.message));
             window.location.href = "/home";
         } catch (error) {
@@ -93,7 +92,7 @@ const AuthStudent = () => {
 
     return (
         <LandingPageLayout title="Welcome to SMI">
-            <div className="flex flex-col w-full justify-center items-center bg-white-50">
+            <div className="flex flex-col w-full justify-center items-center bg-white-50 transition-all duration-500">
                 <div className="flex flex-row w-auto justify-center items-center gap-3 rounded-lg p-1 bg-white">
                     <Link to="/" className="bg-blue-600 text-white border border-white py-2 px-6 font-bold rounded-l-lg">
                         Student
@@ -144,7 +143,7 @@ const AuthStudent = () => {
                         </div>
                         <div className="mb-4">
                             <button
-                                className="bg-blue-500 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                className="bg-blue-500 hover:cursor-pointer w-full hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 type="submit"
                                 disabled={loading}
                             >

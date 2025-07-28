@@ -176,14 +176,7 @@ const HistoryAbsensi = () => {
 
                                 <div className="text-sm text-gray-700 space-y-2">
                                     <p><span className="font-medium">Instructor:</span> {e.instructor_name || "-"}</p>
-                                    <div>
-                                        <p className="font-medium">Materi:</p>
-                                        <pre className="block font-mono text-gray-800 break-words whitespace-pre-wrap">{e.lesson || "-"}</pre>
-                                    </div>
-                                    <div>
-                                        <p className="font-medium">Catatan:</p>
-                                        <pre className="block font-mono text-gray-800 break-words whitespace-pre-wrap">{e.comment || "-"}</pre>
-                                    </div>
+                                   
                                     <p>
                                         <span className="font-medium">Video:</span>{" "}
                                         {e.video ? (
@@ -195,6 +188,14 @@ const HistoryAbsensi = () => {
                                     <p><span className="font-medium">Tanggal Kelas:</span> {e.schedule_date || "-"}</p>
                                     <p><span className="font-medium">Tanggal Absensi:</span> {e.absensi_date || "-"}</p>
                                     <p><span className="font-medium">Jam:</span> {`${e.from_time} - ${e.to_time}`}</p>
+                                     <div className="h-70 overflow-y-auto scrollbar">
+                                        <p className="font-medium">Materi:</p>
+                                        <pre className="block font-mono text-gray-800 break-words whitespace-pre-wrap">{e.lesson || "-"}</pre>
+                                
+                                  
+                                        <p className="font-medium">Catatan:</p>
+                                        <pre className="block font-mono text-gray-800 break-words whitespace-pre-wrap">{e.comment || "-"}</pre>
+                                    </div>
                                     <div>
                                         <span className="font-medium">Point:</span>
                                         <div className="flex items-center mt-1">

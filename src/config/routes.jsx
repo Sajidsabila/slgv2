@@ -31,6 +31,7 @@ import CourseTeacher from "../pages/Teacher/course.jsx";
 import ModulTrainingTeacher from "../pages/Teacher/modulTraining.jsx";
 import DetailModulTrainingTeacher from "../pages/Teacher/detailModulTraining.jsx";
 import EvaluationSemesterTeacher from "../pages/Teacher/evaluationSemester.jsx";
+import ProfileStudents from "../pages/profileStudent.jsx";
 
 const routes = createBrowserRouter([
   {
@@ -64,7 +65,7 @@ const routes = createBrowserRouter([
     {
       path: "/history-absensi",
       element: <HistoryAbsensi />,
-    },
+    }
   ]
 },
   {
