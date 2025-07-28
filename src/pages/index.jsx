@@ -8,7 +8,7 @@ import { capitalAtWords, getEnrollment } from "../helper/helper";
 const Index = () => {
   const [programs, setPrograms] = useState([]);
   const enroll = getEnrollment();
-  const getName =  capitalAtWords(JSON.parse(sessionStorage.getItem("token"))?.student_name || "");;
+  const getName =  capitalAtWords(JSON.parse(sessionStorage.getItem("token"))?.student_name || "");
   const enrollClassCourse = enroll.map(item =>
       typeof item.program === 'string' ? item.course : ''
   );

@@ -15,9 +15,7 @@ const Navbar = () => {
     window.location.href = "/";
   };
 
-const point =  JSON.parse(sessionStorage.getItem("token"))?.total_point || "0";
- 
-
+const point =  JSON.parse(sessionStorage.getItem("token"))?.total_point ;
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50">
       <div className="max-w-screen-lg mx-auto px-1 flex justify-between items-center py-3">
@@ -47,7 +45,9 @@ const point =  JSON.parse(sessionStorage.getItem("token"))?.total_point || "0";
 
           {(sessionStorage.getItem("token") || sessionStorage.getItem("credentials")) && (
             <li className="hover:text-blue-600 px-2 py-1 ml-auto xl:me-[-30%] flex gap-2 items-center">
-              <p className="py-2 px-3 text-sm bg-slate-700 text-white rounded-full">{point} poin</p>
+              {point && (
+                   <p className="py-2 px-3 text-sm bg-slate-700 text-white rounded-full">{point} poin</p>
+              )}
               <button
                 onClick={() => {
                   if (window.confirm("Are you sure you want to logout?")) logoutStudent();
