@@ -19,7 +19,7 @@ import EvaluasiSemester from "../pages/Admin/evaluasiSemester.jsx";
 import DetailEvaluasiSemester from "../pages/Admin/detailEvaluasiSemester.jsx";
 import AuthTeacher from "../pages/Auth/teacher.jsx";
 import IndexTeacher from "../pages/Teacher/index.jsx";
-import PageProgramMateriTeacher from "../pages/Teacher/pagePRogramMateriTeacher.jsx";
+import PageProgramMateriTeacher from "../pages/Teacher/pageProgramMateriTeacher.jsx";
 import ClassGradeTeacher from "../pages/Teacher/classGrade.jsx";
 import BookMenu from "../pages/Admin/bookMenu.jsx";
 import DetailBookMenu from "../pages/Admin/detailBookMenu.jsx";
