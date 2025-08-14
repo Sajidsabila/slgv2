@@ -44,7 +44,7 @@ const Index = () => {
         to="/history-absensi"
         className="text-white bg-blue-500 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition"
       >
-        History Absensi
+        History Attendance
       </Link>
     </div>
     <h1 className="text-3xl font-bold text-center text-sky-700 mb-2">
