@@ -4,6 +4,8 @@ import { checkStudent } from "../../api/apiPublic";
 import { convertDate } from "../../helper/helper";
 import { Link } from "react-router-dom";
 import { form } from "framer-motion/client";
+import { useStudents } from "../../context/studentsContext";
+import { useNavigate } from "react-router-dom";
 
 const AuthStudent = () => {
     const [formData, setFormData] = useState({
@@ -13,6 +15,9 @@ const AuthStudent = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [limitRequest, setLimitRequest] = useState(0);
+    const {dataContext, setDataContext} = useStudents();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (limitRequest >= 5) {
@@ -45,13 +50,14 @@ const AuthStudent = () => {
             setError("");
 
             const data = {
-                name: formData.id_siswa.trim(),
+                name: "0062-" +  formData.id_siswa.trim(),
                 date_of_birth: convertDate(formData.tanggal_lahir),
             };
 
             const response = await checkStudent(data);
             const status = response?.message;
-
+            console.log(status);
+            
             if (!status || typeof status !== "object") {
                 setLimitRequest(prev => prev + 1);
                 setError("Respon dari server tidak valid");
@@ -72,15 +78,18 @@ const AuthStudent = () => {
                 setError(status.message || "Siswa tidak aktif");
                 return;
             }
-            sessionStorage.setItem("token", JSON.stringify(response.message));
-            window.location.href = "/home";
+            console.log(response.message);
+        //     sessionStorage.setItem("token", JSON.stringify(response.message));
+        //     setDataContext(response.message);      
+        //    navigate("/home");
         } catch (error) {
             setLimitRequest(prev => prev + 1);
             setFormData({
                 id_siswa: formData.id_siswa,
                 tanggal_lahir: "",
                 })
-            setError(error.message || "Terjadi kesalahan saat login");
+            setError(error.response.data.exception || "Terjadi kesalahan saat login");
+            console.error(error);
         } finally {
             setLoading(false);
             setFormData({

@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import LandingPageLayout from "../layout/landing-page";
 import { convertDate } from "../helper/helper";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
 import { getPointStudent } from "../api/apiPublic";
+import { useStudents } from "../context/studentsContext";
 
 const HistoryAbsensi = () => {
     const [attendanceData, setAttendanceData] = useState([]);
@@ -10,6 +11,8 @@ const HistoryAbsensi = () => {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const {data}  = useStudents();
+    console.log("pakai context ", data);
 
     const itemsPerPage = 9;
 
@@ -40,7 +43,6 @@ const HistoryAbsensi = () => {
                     student_group: e.student_group,
                 }));
             } catch (error) {
-                console.error("Gagal ambil data absensi dari session:", error);
                 return [];
             }
         };

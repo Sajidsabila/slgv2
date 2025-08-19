@@ -111,9 +111,9 @@ const AdminLayout = ({ children }) => {
           <h1 className="text-lg font-semibold">Admin Panel</h1>
 
           {/* Profile Dropdown */}
-          <div className="relative profile-menu">
+          <div className="relative profile-menu hover:cursor-pointer">
             <button
-              className="flex items-center gap-2 p-2"
+              className="flex items-center gap-2 p-2 hover:cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 handleProfileOpen();
@@ -131,12 +131,12 @@ const AdminLayout = ({ children }) => {
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden">
                 <Link
                   to="/admin/profile"
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                  className="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:cursor-pointer"
                 >
                   Profile
                 </Link>
                 <button
-                  className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                  className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 hover:cursor-pointer"
                   onClick={() => {
                     if (window.confirm("Apakah anda yakin ingin logout?")) {
                       Logout();

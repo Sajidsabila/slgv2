@@ -32,11 +32,17 @@ import ModulTrainingTeacher from "../pages/Teacher/modulTraining.jsx";
 import DetailModulTrainingTeacher from "../pages/Teacher/detailModulTraining.jsx";
 import EvaluationSemesterTeacher from "../pages/Teacher/evaluationSemester.jsx";
 import ProfileStudents from "../pages/profileStudent.jsx";
+import FeesList from "../pages/Student/feessList.jsx";
+import ParentsGuide from "../pages/Student/parentsGuide/index.jsx";
 
 const routes = createBrowserRouter([
   {
     path: "/",
     element: <GuestOnly><AuthStudent /></GuestOnly>,
+  },
+  {
+    path: "/parents-guide",
+    element: <ParentsGuide />
   },
   {
     path: "login-teacher",
@@ -65,6 +71,10 @@ const routes = createBrowserRouter([
     {
       path: "/history-absensi",
       element: <HistoryAbsensi />,
+    },
+    {
+      path: "/fees",
+      element: <FeesList />
     }
   ]
 },

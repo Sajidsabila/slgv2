@@ -85,16 +85,14 @@ const AuthTeacher = () => {
                 mode: "cors",
             }
         );
-
-        console.log(instructorResponse);
-
         const userData = await userResponse.json();
         const instructorData = await instructorResponse.json();
-        console.log(instructorData);
+       
 
         const roles = Array.isArray(userData.data.roles)
             ? userData.data.roles
             : [];
+            console.log(roles);
 
         const isInstructor = roles.some(
             (roleObj) => roleObj.role === "Instructor"

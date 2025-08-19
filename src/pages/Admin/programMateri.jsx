@@ -273,7 +273,7 @@ const filteredProgramMateri = programMateri.filter((item) =>
           <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center mb-4 gap-2">
             <button
               onClick={() => handleOpen()}
-              className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow"
+              className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow hover:cursor-pointer"
             >
               Insert Data
             </button>
@@ -406,11 +406,11 @@ const filteredProgramMateri = programMateri.filter((item) =>
                          onClick={ () => {
                           if(window.confirm('Apakah anda yakin ingin Menghapus data ini?'))
                           {handleDelete(item.name)}}}
-                          className="bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 flex items-center gap-1 px-3 py-1 rounded-md">
+                          className="bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 flex items-center gap-1 px-3 py-1 rounded-md hover:cursor-pointer">
                           <Trash  size={16} /> Delete
                         </button>
                         <Link to={`/admin/program-materi/${item.name}`}
-                        className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 hover:text-green-800 flex items-center gap-1 px-3 py-1 rounded-md">
+                        className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 hover:text-green-800 flex items-center gap-1 px-3 py-1 rounded-md hover:cursor-pointer">
                           <Pencil size={16} /> Detail
                         </Link>
                       </td>

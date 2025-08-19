@@ -37,9 +37,15 @@ const point =  JSON.parse(sessionStorage.getItem("token"))?.total_point ;
               <Link to={`${!sessionStorage.getItem("profileInstructor") ? "/" : "/teacher"}`}>Home</Link>
             </li>
             {sessionStorage.getItem("token") && (
+              <>
               <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
                 <Link to="/history-absensi">History Absensi</Link>
               </li>
+               <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
+                <Link to="/fees">Fees</Link>
+              </li>
+              </>
+              
             )}
           </ul>
 
@@ -52,7 +58,7 @@ const point =  JSON.parse(sessionStorage.getItem("token"))?.total_point ;
                 onClick={() => {
                   if (window.confirm("Are you sure you want to logout?")) logoutStudent();
                 }}
-                className="text-sm font-semibold bg-red-500 py-2 px-3 text-white rounded-md hover:bg-red-600"
+                className="text-sm font-semibold bg-red-500 py-2 px-3 text-white rounded-md hover:bg-red-600 hover:cursor-pointer"
               >
                 Logout
               </button>
@@ -75,11 +81,11 @@ const point =  JSON.parse(sessionStorage.getItem("token"))?.total_point ;
                   <Link to="/history-absensi">History Absensi</Link>
                 </li>
 
-                {/* Tampilkan point di mobile */}
-                <li className="px-2 py-2 border-b border-gray-200 text-blue-700">
+             {point && (
+                 <li className="px-2 py-2 border-b border-gray-200 text-blue-700">
                   Total Poin: <span className="font-bold">{point}</span>
                 </li>
-
+             )}
                 <li className="px-2 py-2">
                   <button
                     onClick={() => {

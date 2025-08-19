@@ -43,3 +43,7 @@ export const capitalAtWords = (string) => {
   if (typeof string !== 'string') return '';
   return string.toLowerCase().replace(/(?:^|\s)\S/g, a => a.toUpperCase());
 }
+
+export const currencyFormat = (number) => {
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number);
+}

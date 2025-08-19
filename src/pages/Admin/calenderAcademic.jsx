@@ -22,6 +22,10 @@ const CalenderAcademic = () => {
     description: "",
     file: null,
     type: "Calender Academic",
+    file_url: "",
+    is_active: false,
+    useFileUrl: false,
+    title: "",
   });
   const [editId, setEditId] = useState(null);
   const [error, setError] = useState(null);
@@ -34,6 +38,8 @@ const CalenderAcademic = () => {
   const itemsPerPage = 5;
 
   useEffect(() => {
+    fetchModulTraining();
+  }, []);
     const fetchModulTraining = async () => {
       try {
         const response = await getModulTraining();
@@ -42,29 +48,59 @@ const CalenderAcademic = () => {
         console.error("Terjadi kesalahan", error?.response?.data || error.message);
       }
     };
-    fetchModulTraining();
-  }, []);
-
-  const handleChange = (e) => {
+  const toggleUseFileUrl = (checked) => {
+  setFormData(prev => ({
+    ...prev,
+    useFileUrl: checked,
+    file: checked ? null : prev.file
+  }));
+};
+   const handleChange = (e) => {
     const { name, value, files, type } = e.target;
-    const newValue = type === "file" ? files[0] : value;
+    let newValue;
+
+    if (type === "file") {
+      newValue = files && files.length > 0 ? files[0] : null;
+    } else {
+      newValue = value;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: newValue
+    }));
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
     setFormData({
-      ...formData,
-      [name]: newValue,
+      description: "",
+      title: "",
+      file: null,
+      file_url: "",
+      type: "Modul Training",
+      is_active: false,
+      useFileUrl: false
     });
+    setEditId(null);
+    setIsEditMode(false);
   };
 
   const handleEdit = (name) => {
-    const dataToEdit = calenderAcademic.find((item) => item.name === name);
+    const dataToEdit = modulTraining.find((item) => item.name === name);
     if (!dataToEdit) return;
+
+    const isUrl = dataToEdit.file_url?.startsWith("http://") || dataToEdit.file_url?.startsWith("https://");
 
     setFormData({
       description: dataToEdit.description || "",
       file: null,
+      file_url: dataToEdit.file_url || "",
       oldFileName: dataToEdit.file || "",
-      oldTitle: dataToEdit.title || "",
-      oldFileUrl: dataToEdit.file_url || "",
-      type: dataToEdit.type || "Calender Academic",
+      title: dataToEdit.title || "",
+      type: dataToEdit.type || "Modul Training",
+      is_active: dataToEdit.is_active || false,
+      useFileUrl: isUrl
     });
 
     setEditId(dataToEdit.name);
@@ -108,75 +144,56 @@ const CalenderAcademic = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.file && !isEditMode && !formData.oldFileName) {
-      alert("File masih kosong!");
+    if (!formData.file && !formData.file_url && !isEditMode) {
+      alert("File atau URL masih kosong!");
       return;
-    }
-
-    const file = formData.file;
-
-    if (file) {
-      const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
-      if (!allowedTypes.includes(file.type)) {
-        alert("File harus berformat PNG, JPG, atau JPEG!");
-        return;
-      }
     }
 
     try {
       setIsLoading(true);
       setIsOpen(false);
 
-      let newFile = null;
-      const folderPath = `Home/Program Materi`;
+      let payload = {
+        description: formData.description,
+        title: formData.title,
+        type: formData.type || "Modul Training",
+        file: formData.is_active == true ? null : formData.file,
+        is_active: formData.is_active
+      };
 
-      if (!isEditMode || file) {
-        const uploadedFile = await uploadFileProgramMateri(file, folderPath);
-        if (!uploadedFile?.name) throw new Error("File tidak dikembalikan oleh server.");
+      if (formData.useFileUrl && formData.file_url) {
+        payload.file_url = formData.file_url;
+      } else if (formData.file) {
+        const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
+        if (!allowedTypes.includes(file.type)) {
+        alert("File harus berformat PNG, JPG, atau JPEG!");
+        return;
+      }
+        const uploadedFile = await uploadFileProgramMateri(formData.file, "Home/Program Materi");
+        payload.file = uploadedFile.name;
+        payload.file_url = uploadedFile.file_url;
 
-        newFile = {
-          file: uploadedFile.name,
-          title: uploadedFile.file_name,
-          file_url: uploadedFile.file_url,
-          type: formData.type || "Calender Academic",
-          description: formData.description || ""
-        };
-
-        if (!isEditMode) {
-          await postModulTraining(newFile);
-        } else {
-          await updateModulTraining(editId, {
-            ...newFile,
-            oldFileName: formData.oldFileName || ""
-          });
-
-          if (formData.oldFileName) {
-            try {
-              await deleteFileProgramMateri(editId, formData.oldFileName);
-            } catch (deleteErr) {
-              console.error("Gagal menghapus file lama:", deleteErr);
-            }
+        if (isEditMode && formData.oldFileName) {
+          try {
+            await deleteFileProgramMateri(editId, formData.oldFileName);
+          } catch (deleteErr) {
+            console.error("Gagal menghapus file lama:", deleteErr);
           }
         }
       }
 
-      const updatedData = await getModulTraining();
-      seCalenderAcademic(updatedData);
+      if (isEditMode) {
+        await updateModulTraining(editId, payload);
+      } else {
+        await postModulTraining(payload);
+      }
 
-      setSuccess(`File berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
-      setFormData({
-        file: null,
-        oldFileName: "",
-        oldTitle: "",
-        oldFileUrl: "",
-        description: "",
-        type: "Calender Academic"
-      });
-      setIsEditMode(false);
-      setEditId(null);
+      await fetchModulTraining();
+      setSuccess(`Data berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
+      handleCloseModal();
     } catch (error) {
       setError(`Terjadi kesalahan: ${error.response?.data?.exception || error.message}`);
       setSuccess("");
@@ -217,26 +234,60 @@ const CalenderAcademic = () => {
         {isOpen && !loading && (
           <Modal
             isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
+            onClose={handleCloseModal}
             titleModal={isEditMode ? "Edit Calender Academic" : "Add Calender Academic"}
             onSubmit={handleSubmit}
           >
+            <InputModal
+              label="Title"
+              type="text"
+              name="title"
+              value={formData.title}
+              placeholder="Title..."
+              autoFocus
+              onChange={handleChange}
+            />
             <InputModal
               label="Description"
               type="text"
               name="description"
               value={formData.description}
-              placeholder="Description ....."
-              autoFocus
+              placeholder="Description..."
               onChange={handleChange}
             />
-            <InputModal
-              label="Image"
-              type="file"
-              name="file"
-              placeholder="Image ....."
-              onChange={handleChange}
-            />
+
+            <div className="flex items-center space-x-2 mb-2">
+              <input
+                type="checkbox"
+                checked={formData.useFileUrl}
+                onChange={(e) => toggleUseFileUrl(e.target.checked)}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+              />
+              <label className="text-sm font-medium text-gray-700">Use File Url</label>
+            </div>
+
+            {formData.useFileUrl ? (
+              <InputModal
+                label="File URL"
+                type="text"
+                name="file_url"
+                value={formData.file_url}
+                placeholder="Masukkan URL file..."
+                onChange={handleChange}
+              />
+            ) : (
+              <>
+                <InputModal
+                  label="File"
+                  type="file"
+                  name="file"
+                  onChange={handleChange}
+                />
+                {isEditMode && (
+                  <p className="text-sm text-gray-500">Kosongkan jika file tidak ingin diubah</p>
+                )}
+              </>
+            )}
           </Modal>
         )}
 

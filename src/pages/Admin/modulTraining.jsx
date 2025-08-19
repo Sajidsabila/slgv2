@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, Pencil, Trash } from "lucide-react";
 import { motion } from "framer-motion";
-
 import AdminLayout from "../../layout/admin-layout";
 import {
   getModulTraining,
@@ -14,15 +13,18 @@ import {
 } from "../../api/apiProgramMateri";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
-import { title } from "framer-motion/client";
+
 const ModulTraining = () => {
-    const [modulTraining, setModulTraining] = useState([]);
+  const [modulTraining, setModulTraining] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState({
     description: "",
     title: "",
     file: null,
+    file_url: "",
     type: "Modul Training",
+    is_active: false,
+    useFileUrl: false 
   });
   const [editId, setEditId] = useState(null);
   const [error, setError] = useState(null);
@@ -33,40 +35,73 @@ const ModulTraining = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const itemsPerPage = 5;
+  const toggleUseFileUrl = (checked) => {
+  setFormData(prev => ({
+    ...prev,
+    useFileUrl: checked,
+    file: checked ? null : prev.file
+  }));
+};
 
   useEffect(() => {
-    const fetchModulTraining = async () => {
-      try {
-        const response = await getModulTraining();
-        setModulTraining(response);
-      } catch (error) {
-        console.error("Terjadi kesalahan", error?.response?.data || error.message);
-      }
-    };
     fetchModulTraining();
   }, []);
 
+  const fetchModulTraining = async () => {
+    try {
+      const response = await getModulTraining();
+      setModulTraining(response);
+    } catch (error) {
+      console.error("Terjadi kesalahan", error?.response?.data || error.message);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value, files, type } = e.target;
-    const newValue = type === "file" ? files[0] : value;
+    let newValue;
+
+    if (type === "file") {
+      newValue = files && files.length > 0 ? files[0] : null;
+    } else {
+      newValue = value;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: newValue
+    }));
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
     setFormData({
-      ...formData,
-      [name]: newValue,
+      description: "",
+      title: "",
+      file: null,
+      file_url: "",
+      type: "Modul Training",
+      is_active: false,
+      useFileUrl: false
     });
+    setEditId(null);
+    setIsEditMode(false);
   };
 
   const handleEdit = (name) => {
     const dataToEdit = modulTraining.find((item) => item.name === name);
     if (!dataToEdit) return;
 
+    const isUrl = dataToEdit.file_url?.startsWith("http://") || dataToEdit.file_url?.startsWith("https://");
+
     setFormData({
       description: dataToEdit.description || "",
       file: null,
+      file_url: dataToEdit.file_url || "",
       oldFileName: dataToEdit.file || "",
-      oldTitle: dataToEdit.title || "",
-      oldFileUrl: dataToEdit.file_url || "",
-      type: dataToEdit.type || "Modul Training",
       title: dataToEdit.title || "",
+      type: dataToEdit.type || "Modul Training",
+      is_active: dataToEdit.is_active || false,
+      useFileUrl: isUrl
     });
 
     setEditId(dataToEdit.name);
@@ -93,17 +128,16 @@ const ModulTraining = () => {
   };
 
   const handleDelete = async (name) => {
-    try{
+    try {
       setIsLoading(true);
       const deleteResponse = await deleteModulTraining(name);
-      console.log(deleteResponse);
       if (deleteResponse) {
         setSuccess("Data berhasil dihapus.");
-        const deleteFile = await deleteFileProgramMateri(name);
+        await deleteFileProgramMateri(name);
         setModulTraining((prevData) => prevData.filter((item) => item.name !== name));
       }
     } catch (error) {
-      setError(`Error: ${error.response.data.exc_type || error.response.data.exception || error.message}`);
+      setError(`Error: ${error.response?.data?.exc_type || error.response?.data?.exception || error.message}`);
       setSuccess("");
     } finally {
       setIsLoading(false);
@@ -113,73 +147,59 @@ const ModulTraining = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.file && !isEditMode && !formData.oldFileName) {
-      alert("File masih kosong!");
+    if (!formData.file && !formData.file_url && !isEditMode) {
+      alert("File atau URL masih kosong!");
       return;
-    }
-
-    const file = formData.file;
-
-    if (file) {
-        const allowedTypes = ["application/pdf", "video/mp4", "video/avi", "video/quicktime", "video/x-matroska"];
-
-      if (!allowedTypes.includes(file.type)) {
-        alert("File harus berformat PDF atau Vidio");
-        return;
-      }
     }
 
     try {
       setIsLoading(true);
       setIsOpen(false);
 
-      let newFile = null;
-      const folderPath = `Home/Program Materi`;
+      let payload = {
+        description: formData.description,
+        title: formData.title,
+        type: formData.type || "Modul Training",
+        file: formData.is_active == true ? null : formData.file,
+        is_active: formData.is_active
+      };
 
-      if (!isEditMode || file) {
-        const uploadedFile = await uploadFileProgramMateri(file, folderPath);
-        if (!uploadedFile?.name) throw new Error("File tidak dikembalikan oleh server.");
+      if (formData.useFileUrl && formData.file_url) {
+        payload.file_url = formData.file_url;
+      } else if (formData.file) {
+        const allowedTypes = [
+          "application/pdf",
+          "video/mp4",
+          "video/avi",
+          "video/quicktime",
+          "video/x-matroska"
+        ];
+        if (!allowedTypes.includes(formData.file.type)) {
+          alert("File harus berformat PDF atau Video");
+          return;
+        }
+        const uploadedFile = await uploadFileProgramMateri(formData.file, "Home/Program Materi");
+        payload.file = uploadedFile.name;
+        payload.file_url = uploadedFile.file_url;
 
-        newFile = {
-          file: uploadedFile.name,
-          title: uploadedFile.file_name,
-          file_url: uploadedFile.file_url,
-          type: formData.type || "Modul Training",
-          description: formData.description || ""
-        };
-
-        if (!isEditMode) {
-          await postModulTraining(newFile);
-        } else {
-          await updateModulTraining(editId, {
-            ...newFile,
-            oldFileName: formData.oldFileName || ""
-          });
-
-          if (formData.oldFileName) {
-            try {
-              await deleteFileProgramMateri(editId, formData.oldFileName);
-            } catch (deleteErr) {
-              console.error("Gagal menghapus file lama:", deleteErr);
-            }
+        if (isEditMode && formData.oldFileName) {
+          try {
+            await deleteFileProgramMateri(editId, formData.oldFileName);
+          } catch (deleteErr) {
+            console.error("Gagal menghapus file lama:", deleteErr);
           }
         }
       }
 
-      const updatedData = await getModulTraining();
-      setModulTraining(updatedData);
+      if (isEditMode) {
+        await updateModulTraining(editId, payload);
+      } else {
+        await postModulTraining(payload);
+      }
 
-      setSuccess(`File berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
-      setFormData({
-        file: null,
-        oldFileName: "",
-        oldTitle: "",
-        oldFileUrl: "",
-        description: "",
-        type: "Modul Training"
-      });
-      setIsEditMode(false);
-      setEditId(null);
+      await fetchModulTraining();
+      setSuccess(`Data berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
+      handleCloseModal();
     } catch (error) {
       setError(`Terjadi kesalahan: ${error.response?.data?.exception || error.message}`);
       setSuccess("");
@@ -188,7 +208,7 @@ const ModulTraining = () => {
     }
   };
 
-    return (
+  return (
     <AdminLayout>
       <h3 className="font-bold py-7 text-lg">Modul Training</h3>
 
@@ -200,10 +220,10 @@ const ModulTraining = () => {
           <button
             onClick={() => {
               setIsEditMode(false);
-              setFormData({ description: "", file: null, type: "Modul Training" });
+              setFormData({ description: "", title: "", file: null, file_url: "", type: "Modul Training", is_active: false, useFileUrl: false });
               setIsOpen(true);
             }}
-            className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow"
+            className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow hover:cursor-pointer"
           >
             Insert Data
           </button>
@@ -220,8 +240,8 @@ const ModulTraining = () => {
         {isOpen && !loading && (
           <Modal
             isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-            titleModal={isEditMode ? "Edit Program Materi" : "Add Program Materi"}
+            onClose={handleCloseModal}
+            titleModal={isEditMode ? "Edit Modul Training" : "Add Modul Training"}
             onSubmit={handleSubmit}
           >
             <InputModal
@@ -229,7 +249,7 @@ const ModulTraining = () => {
               type="text"
               name="title"
               value={formData.title}
-              placeholder="Type ....."
+              placeholder="Title..."
               autoFocus
               onChange={handleChange}
             />
@@ -238,17 +258,42 @@ const ModulTraining = () => {
               type="text"
               name="description"
               value={formData.description}
-              placeholder="Description ....."
-              autoFocus
+              placeholder="Description..."
               onChange={handleChange}
             />
-            <InputModal
-              label="Image"
-              type="file"
-              name="file"
-              placeholder="Image ....."
-              onChange={handleChange}
-            />
+
+            <div className="flex items-center space-x-2 mb-2">
+              <input
+                type="checkbox"
+                checked={formData.useFileUrl}
+                onChange={(e) => toggleUseFileUrl(e.target.checked)}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+              />
+              <label className="text-sm font-medium text-gray-700">Use File Url</label>
+            </div>
+
+            {formData.useFileUrl ? (
+              <InputModal
+                label="File URL"
+                type="text"
+                name="file_url"
+                value={formData.file_url}
+                placeholder="Masukkan URL file..."
+                onChange={handleChange}
+              />
+            ) : (
+              <>
+                <InputModal
+                  label="File"
+                  type="file"
+                  name="file"
+                  onChange={handleChange}
+                />
+                {isEditMode && (
+                  <p className="text-sm text-gray-500">Kosongkan jika file tidak ingin diubah</p>
+                )}
+              </>
+            )}
           </Modal>
         )}
 
@@ -266,6 +311,7 @@ const ModulTraining = () => {
           </motion.div>
         )}
 
+        {/* Table */}
         <div className="relative overflow-x-auto rounded-xl shadow-md">
           <table className="w-full text-sm text-left text-gray-600">
             <thead className="text-xs text-gray-700 uppercase bg-gray-100">
@@ -291,19 +337,20 @@ const ModulTraining = () => {
                           window.confirm("Apakah anda yakin ingin menghapus data ini?") &&
                           handleDelete(item.name)
                         }
-                        className="bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 flex items-center gap-1 px-3 py-1 rounded-md"
+                        className="bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 flex items-center gap-1 px-3 py-1 rounded-md hover:cursor-pointer"
                       >
                         <Trash size={16} /> Delete
                       </button>
                       <Link
                         to={`/admin/modul-training/${item.name}`}
-                        className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 flex items-center gap-1 px-3 py-1 rounded-md"
+                        className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 flex items-center gap-1 px-3 py-1 rounded-md hover:cursor-pointer"
                       >
                         <Eye size={16} /> Detail
                       </Link>
                       <button
                         onClick={() => handleEdit(item.name)}
-                        className="bg-orange-100 text-orange-600 hover:bg-orange-200 hover:text-orange-800 flex items-center gap-1 px-3 py-1 rounded-md"
+                        className="bg-orange-100 text-orange-600 hover:bg-orange-200 hover:text-orange-800 flex items-center gap-1 px-3 py-1 rounded-md hover:cursor-pointer
+                        "
                       >
                         <Pencil size={16} /> Edit
                       </button>
@@ -321,6 +368,7 @@ const ModulTraining = () => {
           </table>
         </div>
 
+        {/* Pagination */}
         {filteredData.length > 0 && (
           <div className="flex mt-4 flex-wrap gap-2">
             <button
@@ -355,6 +403,6 @@ const ModulTraining = () => {
       </div>
     </AdminLayout>
   );
-}
+};
 
 export default ModulTraining;

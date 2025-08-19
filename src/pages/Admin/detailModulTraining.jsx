@@ -27,8 +27,6 @@ const DetailModulTraining = () => {
 
   const file_url  =`${urlLink.url}/${detailmodulTrainingBookMenu.file_url}`;
   const fileType = file_url.split(".").pop()?.toLowerCase();
-  console.log(fileType);
-
   return (
     <AdminLayout>
       <div className="px-4 md:px-9 py-6">
