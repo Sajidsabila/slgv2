@@ -1,22 +1,20 @@
-import Page1 from "./page/page1"
-import Page2 from "./page/page2"    
-import { useState } from "react"
+import Page1 from "./page/page1";
+import Page2 from "./page/page2";
+import { useState } from "react";
+
 const ParentsGuide = () => {
-    const [openPage2, setOpenPage2] = useState(false);
+  const [openPage2, setOpenPage2] = useState(false);
 
-    const handlePage2 = () => {
-        setOpenPage2(true);
-    }
-    return (
-        <>
-         <Page1 handleClick={handlePage2}/>
+  const handlePage2 = () => {
+    setOpenPage2(true);
+  };
 
-         {openPage2 && <Page2 />}
-        </>
-    
+  return (
+    <>
+      {!openPage2 && <Page1 handleClick={handlePage2} />}
+      {openPage2 && <Page2 />}
+    </>
+  );
+};
 
-    
-    )
-}
-
-export default ParentsGuide
+export default ParentsGuide;
