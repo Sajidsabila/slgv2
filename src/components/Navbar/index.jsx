@@ -39,7 +39,7 @@ const point =  JSON.parse(sessionStorage.getItem("token"))?.total_point ;
             {sessionStorage.getItem("token") && (
               <>
               <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
-                <Link to="/history-absensi">History Absensi</Link>
+                <Link to="/history-absensi">History Attendance</Link>
               </li>
                <li className="hover:text-blue-600 cursor-pointer px-2 py-1">
                 <Link to="/fees">Fees</Link>
@@ -78,7 +78,7 @@ const point =  JSON.parse(sessionStorage.getItem("token"))?.total_point ;
             {sessionStorage.getItem("token") && (
               <>
                 <li className="hover:text-blue-600 cursor-pointer px-2 py-2 border-b border-gray-200">
-                  <Link to="/history-absensi">History Absensi</Link>
+                  <Link to="/history-absensi">History Attendance</Link>
                 </li>
 
              {point && (

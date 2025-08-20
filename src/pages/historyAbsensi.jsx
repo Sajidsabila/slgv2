@@ -112,7 +112,7 @@ const HistoryAbsensi = () => {
     };
 
     return (
-        <LandingPageLayout title="History Absensi">
+        <LandingPageLayout title="History Attendance">
             <div className="px-4 py-6 container mx-auto">
                 {/* Filter */}
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
