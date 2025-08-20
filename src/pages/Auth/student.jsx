@@ -79,9 +79,13 @@ const AuthStudent = () => {
                 return;
             }
             console.log(response.message);
-        //     sessionStorage.setItem("token", JSON.stringify(response.message));
-        //     setDataContext(response.message);      
-        //    navigate("/home");
+            const api_key = JSON.stringify(response.message.student_user[0].api_key);
+            const api_secret = JSON.stringify(response.message.student_user[0].api_secret);
+
+            sessionStorage.setItem("token", JSON.stringify(response.message));
+            sessionStorage.setItem("api", `${api_key}:${api_secret}`);
+            setDataContext(response.message);      
+           navigate("/home");
         } catch (error) {
             setLimitRequest(prev => prev + 1);
             setFormData({

@@ -54,3 +54,20 @@ export const getPointStudent = async (filters) => {
   }
 };
 
+export const getFees = async (filters) => {
+  try {
+    const response = await axios.get(
+      `${urlLink.url}/api/resource/Fees?fields=["*"]&filters=[["student", "=", "${filters}"]]`,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+          Authorization: `bearer ${import.meta.env.VITE_API_SECRET}`,
+        },
+      }
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    throw error;
+  }
+};
