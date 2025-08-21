@@ -30,7 +30,9 @@ const Page1 = ({ handleClick }) => {
       {showButton && (
         <button
           onClick={handleClick}
-          className="px-12 py-3 rounded-2xl bg-red-600 text-white text-xl font-bold shadow-lg absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 hover:bg-red-700 hover:scale-105"
+          className="px-12 py-3 rounded-2xl bg-red-600 text-white 
+          text-xl font-bold shadow-lg absolute top-1/2 left-1/2 transform -translate-x-1/2
+           -translate-y-1/2 transition-all duration-300 hover:bg-red-700 hover:scale-105 fadeinanimation"
         >
           START
         </button>

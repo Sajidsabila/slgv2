@@ -48,7 +48,8 @@ export const currencyFormat = (number) => {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number);
 }
 
-export const getTokenStudent = () => 
-{
-  
-}
+export const formatDateIndonesia = (date) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(date).toLocaleDateString('id-ID', options);
+};
+

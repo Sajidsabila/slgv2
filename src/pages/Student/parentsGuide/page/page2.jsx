@@ -48,7 +48,7 @@ const Page2 = ({ handleClick}) => {
                 key={index}
                 onClick={() => handleSelect(option)}
                 className={`w-full max-w-md text-center text-sm sm:text-base md:text-lg lg:text-xl font-semibold 
-                  py-4 px-6 rounded-2xl shadow-lg transition-all duration-300 cursor-pointer
+                  py-4 px-6 rounded-2xl shadow-lg transition-all duration-300 cursor-pointer fadeinanimation
                   ${
                     selectedOption === option
                       ? "bg-blue-700 text-white"
@@ -66,7 +66,7 @@ const Page2 = ({ handleClick}) => {
                        hover:bg-blue-700 transition-all duration-300"
             onClick={handleClick}
           >
-            Next →
+            Next 
           </button>
         )}
           

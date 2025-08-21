@@ -115,38 +115,40 @@ const HistoryAbsensi = () => {
         <LandingPageLayout title="History Attendance">
             <div className="px-4 py-6 container mx-auto">
                 {/* Filter */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                    <div className="flex flex-col md:flex-row gap-4 w-full md:w-2/3">
-                        <input
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => {
-                                setStartDate(e.target.value);
-                                setCurrentPage(1);
-                            }}
-                            className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-md shadow-sm"
-                        />
-                        <input
-                            type="date"
-                            value={endDate}
-                            onChange={(e) => {
-                                setEndDate(e.target.value);
-                                setCurrentPage(1);
-                            }}
-                            className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-md shadow-sm"
-                        />
-                    </div>
-                    <input
-                        type="text"
-                        placeholder="Cari program, instruktur, materi..."
-                        value={searchTerm}
-                        onChange={(e) => {
-                            setSearchTerm(e.target.value);
-                            setCurrentPage(1);
-                        }}
-                        className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-md shadow-sm"
-                    />
-                </div>
+               <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex flex-col md:flex-row gap-4 w-full md:w-2/3">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => {
+                setStartDate(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-slate-500"
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => {
+                setEndDate(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-slate-500"
+            />
+          </div>
+          <input
+            type="text"
+            placeholder="🔍 Pencarian..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-slate-500"
+          />
+        </div>
+      </div>
 
                 {/* Total */}
                 <div className="flex justify-end my-5">
