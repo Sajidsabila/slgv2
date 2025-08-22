@@ -38,8 +38,7 @@ const Page2 = ({ handleClick}) => {
         playsInline
       />
 
-      <div className="absolute top-0 left-0 w-full h-full bg-black/40 -z-10" />
-
+    
       {options && (
         <div className="flex flex-row ms-auto items-center justify-center h-full gap-8 px-6">
           <div className="flex flex-col gap-6">

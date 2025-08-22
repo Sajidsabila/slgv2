@@ -71,3 +71,23 @@ export const getFees = async (filters) => {
     throw error;
   }
 };
+
+export const updateStudent = async (data, id) => {
+   try{
+    const token = sessionStorage.getItem("api_key");
+    console.log(token);
+    const response = await axios.put(
+      `${urlLink.url}/api/resource/Student/${id}`,
+      data,
+      {
+        headers: {
+           Accept: "application/json",
+          Authorization: `token ${token}`,
+        },
+      }
+    );
+    return response.data?.data || [];
+   }catch(error){
+    throw error;
+   }
+} 

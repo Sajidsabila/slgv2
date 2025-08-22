@@ -79,11 +79,12 @@ const AuthStudent = () => {
                 return;
             }
             console.log(response.message);
-            const api_key = JSON.stringify(response.message.student_user[0].api_key);
-            const api_secret = JSON.stringify(response.message.student_user[0].api_secret);
+            const api_key = response.message.student_user.api_key;
+            const api_secret = response.message.student_user.api_secret;
 
             sessionStorage.setItem("token", JSON.stringify(response.message));
-            sessionStorage.setItem("api", `${api_key}:${api_secret}`);
+        sessionStorage.setItem("api_key", `${api_key}:${api_secret}`);
+          
             setDataContext(response.message);      
            navigate("/home");
         } catch (error) {
@@ -92,8 +93,8 @@ const AuthStudent = () => {
                 id_siswa: formData.id_siswa,
                 tanggal_lahir: "",
                 })
-            setError(error.response.data.exception || "Terjadi kesalahan saat login");
-            console.error(error);
+            setError( error.message || "Terjadi kesalahan saat login");
+         
         } finally {
             setLoading(false);
             setFormData({

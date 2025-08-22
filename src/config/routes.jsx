@@ -40,10 +40,7 @@ const routes = createBrowserRouter([
     path: "/",
     element: <GuestOnly><AuthStudent /></GuestOnly>,
   },
-  {
-    path: "/parents-guide",
-    element: <ParentsGuide />
-  },
+
   {
     path: "login-teacher",
     element: (
@@ -75,7 +72,11 @@ const routes = createBrowserRouter([
     {
       path: "/fees",
       element: <FeesList />
-    }
+    },
+      {
+    path: "/parents-guide",
+    element: <ParentsGuide />
+  },
   ]
 },
   {
