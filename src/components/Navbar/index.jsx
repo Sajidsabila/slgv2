@@ -80,6 +80,9 @@ const point =  JSON.parse(sessionStorage.getItem("token"))?.total_point ;
                 <li className="hover:text-blue-600 cursor-pointer px-2 py-2 border-b border-gray-200">
                   <Link to="/history-absensi">History Attendance</Link>
                 </li>
+                <li className="hover:text-blue-600 cursor-pointer px-2 py-2 border-b border-gray-200">
+                  <Link to="/fees">Fees</Link>
+                </li>
 
              {point && (
                  <li className="px-2 py-2 border-b border-gray-200 text-blue-700">

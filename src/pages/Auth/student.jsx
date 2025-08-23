@@ -125,10 +125,16 @@ const AuthStudent = () => {
                         </p>
                     )}
                     <form onSubmit={handleCheckStudent}>
-                        <div className="mb-4">
+                        <div className="mb-4 flex flex-col">
+                       
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="id_siswa">
                                 NIS
                             </label>
+                             <div className="flex flex-row items-center justify-start">
+                                <input type="text" className="font-bold w-15 bg-slate-200 py-2 ps-2 rounded-sm" value="0062 - " disabled></input>
+                       
+                           
+                            
                             <input
                                 type="text"
                                 id="id_siswa"
@@ -141,6 +147,9 @@ const AuthStudent = () => {
                                 autoFocus
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                             />
+                        </div>
+
+                       
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="tanggal_lahir">

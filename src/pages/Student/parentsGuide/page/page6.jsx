@@ -1,10 +1,14 @@
 import Swal from "sweetalert2";
 import { updateStudent } from "../../../../api/apiPublic";
+import { Spin } from "antd";
+import { useState } from "react";
 
 const Page6 = () => {
+    const [loading, setLoading] = useState(false);
 
     const handlePost = async (e) => { 
         e.preventDefault();
+          setLoading(true);
         try{
             const token = sessionStorage.getItem("key");
             console.log(token);
@@ -17,6 +21,7 @@ const Page6 = () => {
             const response = await updateStudent(data, id);
             sessionStorage.removeItem("selectedOption1");
             sessionStorage.removeItem("selectedOption2");
+            setLoading(false);
              Swal.fire({
            title: "Success!",   
            text: "Data berhasil di simpan",
@@ -24,6 +29,7 @@ const Page6 = () => {
            confirmButtonText: "OK"
        });
         }catch(error){
+            setLoading(false);
             console.log(error);
               Swal.fire({
            title: "Gagal !",   
@@ -35,6 +41,11 @@ const Page6 = () => {
     };
    
     return (
+        <>
+      
+        {loading && (
+            <Spin fullscreen size="large" />
+        )}
         <div className="container mx-auto flex flex-col justify-center items-center text-center min-h-screen px-4 fadeinanimation">
             <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4">
                 SO... ARE YOU READY?
@@ -47,6 +58,7 @@ const Page6 = () => {
                 Yes, Let's go!
             </button>
         </div>
+          </>
     );
 };
 
