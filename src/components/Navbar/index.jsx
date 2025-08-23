@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import hamburgerIcon from "../../assets/icons8-hamburger.svg";
 import closeIcon from "../../assets/close.svg";
+import { p } from "framer-motion/client";
 
 const Navbar = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -19,7 +20,10 @@ const point =  JSON.parse(sessionStorage.getItem("token"))?.total_point ;
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50">
       <div className="max-w-screen-lg mx-auto px-1 flex justify-between items-center py-3">
-          <p className="md:hidden py-2 px-3 text-sm bg-slate-700 text-white rounded-full mx-7">{point} poin</p>
+        {point && (
+           <p className="md:hidden py-2 px-3 text-sm bg-slate-700 text-white rounded-full mx-7">{point} poin</p>
+        )}
+         
         <div className="md:hidden ml-auto px-4">
           <img
             src={isOpen ? closeIcon : hamburgerIcon}
@@ -52,7 +56,7 @@ const point =  JSON.parse(sessionStorage.getItem("token"))?.total_point ;
           {(sessionStorage.getItem("token") || sessionStorage.getItem("credentials")) && (
             <li className="hover:text-blue-600 px-2 py-1 ml-auto xl:me-[-30%] flex gap-2 items-center">
               {point && (
-                   <p className="py-2 px-3 text-sm bg-slate-700 text-white rounded-full">{point} poin</p>
+                   <p className="py-2 px-3 text-sm bg-slate-700 text-white rounded-full ">{point} poin</p>
               )}
               <button
                 onClick={() => {
