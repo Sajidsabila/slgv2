@@ -139,7 +139,7 @@ const HistoryAbsensi = () => {
           </div>
           <input
             type="text"
-            placeholder="🔍 Pencarian..."
+            placeholder="Pencarian..."
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
