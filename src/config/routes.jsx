@@ -14,7 +14,7 @@ import Dashboard from "../pages/Admin/dashboard.jsx";
 import Profile from "../pages/Admin/profile.jsx";
 import ProgramMateri from "../pages/Admin/programMateri.jsx";
 import DetailProgramMateri from "../pages/Admin/detailClassFormat.jsx";
-import HistoryAbsensi from "../pages/historyAbsensi.jsx";
+import HistoryAbsensi from "../pages/Student/historyAbsensi.jsx";
 import EvaluasiSemester from "../pages/Admin/evaluasiSemester.jsx";
 import DetailEvaluasiSemester from "../pages/Admin/detailEvaluasiSemester.jsx";
 import AuthTeacher from "../pages/Auth/teacher.jsx";

@@ -1,13 +1,13 @@
 import { use } from "react";
 import axios from "axios";
 import { urlLink } from "../config/config";
-export const  useResourceGet = (doctype) => {
+export const  useResourceGet = async (doctype) => {
     try{
         const token = sessionStorage.getItem("api_key");
-        const response = axios.get(`${urlLink.url}/api/resource/${doctype}?fields=["*"]`,{
+        const response = await axios.get(`${urlLink.url}/api/resource/${doctype}?fields=["*"]&limit_page_length=0&order_by=creation desc`,{
         headers: {
-            "Content-Type": "application/json",
-            "Authorization": `token ${token}`,
+             Accept: "application/json",
+             Authorization: `token ${token}`,
           },
      });
      return response.data?.data || [];
