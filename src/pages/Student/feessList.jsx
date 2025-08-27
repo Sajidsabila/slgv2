@@ -301,17 +301,17 @@ const FeesList = () => {
               <hr className="my-2"/>
 
               <div className="flex flex-col py-2 gap-2 ms-4">
-                <p className="text-sm text-gray-500">
+                <p className="text-sm">
                   Nomor Tagihan {" "} : {" "}
                   <span className="font-medium">SPP {detail.name || "-"}</span>
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm">
                   Grand Total{" "} : {" "}
                   <span className="font-medium">
                     {currencyFormat(detail.grand_total)}
                   </span>
                 </p>
-                 <p className="text-sm text-gray-500">
+                 <p className="text-sm ">
                   Total Terbayar{" "} : {" "}
                   <span className="font-medium text-green-600">
                     {currencyFormat(detail.grand_total - detail.outstanding_amount)}
@@ -325,6 +325,14 @@ const FeesList = () => {
                 </p>
                 <hr className="mt-2 border-gray-300 border-2"/>
                 <p className="font-bold">History Pembayaran</p>
+
+                <div className="w-full bg-gray-500 h-20 rounded-xl">
+                <div className="flex flex-col  justify-center h-full gap-2">
+                    <p className="text-sm ms-6  text-white font-semibold">Tanggal Pembayaran : 8 Agustus 2019 </p>
+                   <p className="text-sm ms-6 text-white font-semibold">Jumlah Pembayaran : Rp. 100.000</p>
+                </div>
+                  </div>
+                
               </div>
           </div>
         ) : (

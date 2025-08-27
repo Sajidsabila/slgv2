@@ -236,7 +236,8 @@ const HistoryAbsensi = () => {
 
          
                 <div className="h-40 overflow-y-auto scrollbar space-y-3">
-                  <div>
+                  {e.video && (
+                          <div>
                     <p className="font-extrabold">Video</p>
                     {e.video ? (
                       <a
@@ -251,20 +252,26 @@ const HistoryAbsensi = () => {
                       "-"
                     )}
                   </div>
-
-                  <div>
+                  )}
+              
+                  {e.lesson && (
+                       <div>
                     <p className="font-extrabold">Materi</p>
                     <pre className="block font-mono text-gray-800 whitespace-pre-wrap break-words">
                       {e.lesson || "-"}
                     </pre>
                   </div>
-
+                    )}
+               
+                  {e.comment && (
                   <div>
                     <p className="font-extrabold">Catatan</p>
                     <pre className="block font-mono text-gray-800 whitespace-pre-wrap break-words">
                       {e.comment || "-"}
                     </pre>
                   </div>
+                    )}
+                 
                 </div>
               </div>
             </div>
