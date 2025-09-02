@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react"
 import AdminLayout from "../../layout/admin-layout"
-import { a } from "framer-motion/client"
+
 import { apiGetProgramMateriPublic } from "../../api/apiPublic"
-import { getClassFormat } from "../../api/apiClassFormat";
-import { getCourse } from "../../api/apiCourse";
-import { getClassGrading } from "../../api/apiClassGrade";
+
 import { Link } from "react-router-dom";
+import { useResourceAdmin } from "../../api/userResourceAdmin";
 
 const Dashboard = () => {
     const [program, setProgram] = useState([]);
@@ -25,7 +24,7 @@ const Dashboard = () => {
 
         const countClassFormat = async () => {
             try {
-                const resFormat = await getClassFormat();
+                const resFormat = await useResourceAdmin({doctype: "Program Class Format"});
                 const countFormat  = resFormat.length;
                 setFormat(countFormat);
         }catch(error) {
@@ -35,7 +34,7 @@ const Dashboard = () => {
 
     const classCourse = async () => {
         try {
-            const resCourse = await getCourse();
+            const resCourse = await useResourceAdmin({doctype: "Program Class Course"});
             const count = resCourse.length;
             setCourse(count);
         }catch (error) {
@@ -45,7 +44,7 @@ const Dashboard = () => {
 
     const classGrading = async () => {
         try {
-            const resGrading = await getClassGrading();
+            const resGrading = await useResourceAdmin({doctype: "Program Class Grading"});
             const count = resGrading.length;
             setGrading(count);
         }catch (error) {
@@ -72,7 +71,7 @@ const Dashboard = () => {
                     <div className="flex flex-row px-6 py-4 justify-between">
                         <div className="text-l font-semibold">Jumlah Data</div>
                         <div className="bg-slate-800 text-white px-6 py-3 font-semibold rounded-md w-fit">
-                            {course ?? 0}
+                            {course || "0"}
                         </div>
                     </div>
                 </Link>

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 body {
   margin: 0;
   padding: 0;
@@ -11,14 +12,26 @@ body {
 @keyframes fadeInAnimation {
   0% {
     opacity: 0;
-    transform: scale(0.95); /* sedikit mengecil */
+    transform: scale(0.95); 
   }
   50% {
     opacity: 0.7;
-    transform: scale(1.02); /* efek membesar sebentar */
+    transform: scale(1.02); 
   }
   100% {
     opacity: 1;
-    transform: scale(1); /* kembali normal */
+    transform: scale(1); 
   }
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.text-outline {
+  color: #dc2626; 
+  -webkit-text-stroke: 18px white; 
+  paint-order: stroke fill;
 }

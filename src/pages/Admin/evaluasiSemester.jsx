@@ -11,13 +11,10 @@ import { createFolderProgramMateri,
         postProgramMateri, 
         deleteProgramMateri,
         checkFolderExists} from "../../api/apiProgramMateri";
-
-
-import { getClassFormat } from "../../api/apiClassFormat";
-import { getClassGrading } from "../../api/apiClassGrade";
 import { motion } from "framer-motion";
-import { getCourse } from "../../api/apiCourse";
+
 import { Link } from "react-router-dom";
+import { useResourceAdmin } from "../../api/userResourceAdmin";
 
 const EvaluasiSemester = () => {
    const [isOpen, setIsOpen] = useState(false);
@@ -74,8 +71,7 @@ const EvaluasiSemester = () => {
     
       const fetchCourse = async () => {
         try {
-          const course = await getCourse();
-          setCourseData(course);
+          const course = await useResourceAdmin({doctype: "Program Course"});
         } catch (error) {
         setError("Error fetching course:", error);
         }
@@ -83,7 +79,7 @@ const EvaluasiSemester = () => {
   
       const fetchClasssFormat = async () => {
         try {
-          const classFormat = await getClassFormat();
+          const classFormat = await useResourceAdmin({doctype: "Program Class Format"});
           setClassFormat(classFormat);
         } catch (error) {
         setError("Error fetching class format:", error);
@@ -92,7 +88,7 @@ const EvaluasiSemester = () => {
   
       const fetchClassGrading = async () => {
         try {
-          const classGrading = await getClassGrading();
+          const classGrading = await useResourceAdmin({doctype: "Program Class Grading"});
           setClassGrading(classGrading);
         } catch (error) {
         setError("Error fetching class grading:", error);

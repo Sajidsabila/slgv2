@@ -4,7 +4,6 @@ import { Eye, Pencil, Trash } from "lucide-react";
 import { motion } from "framer-motion";
 import AdminLayout from "../../layout/admin-layout";
 import {
-  getModulTraining,
   postModulTraining,
   uploadFileProgramMateri,
   deleteFileProgramMateri,
@@ -13,6 +12,7 @@ import {
 } from "../../api/apiProgramMateri";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
+import { useResourceAdmin } from "../../api/userResourceAdmin";
 
 const ModulTraining = () => {
   const [modulTraining, setModulTraining] = useState([]);
@@ -43,18 +43,22 @@ const ModulTraining = () => {
   }));
 };
 
+  const fetchModulTraining = async () => {
+  try {
+    const response = await useResourceAdmin({
+      doctype: "Modul Training",
+      filters: [["type", "=", "Modul Training"]],
+    });
+    setModulTraining(response);
+  } catch (error) {
+    console.error("Terjadi kesalahan", error?.response?.data || error.message);
+  }
+};
   useEffect(() => {
     fetchModulTraining();
   }, []);
 
-  const fetchModulTraining = async () => {
-    try {
-      const response = await getModulTraining();
-      setModulTraining(response);
-    } catch (error) {
-      console.error("Terjadi kesalahan", error?.response?.data || error.message);
-    }
-  };
+
 
   const handleChange = (e) => {
     const { name, value, files, type } = e.target;

@@ -13,11 +13,9 @@ import { createFolderProgramMateri,
         checkFolderExists} from "../../api/apiProgramMateri";
 
 
-import { getClassFormat } from "../../api/apiClassFormat";
-import { getClassGrading } from "../../api/apiClassGrade";
 import { motion } from "framer-motion";
-import { getCourse } from "../../api/apiCourse";
 import { Link } from "react-router-dom";
+import { useResourceAdmin } from "../../api/userResourceAdmin";
 
 const ProgramMateri = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -74,7 +72,7 @@ const ProgramMateri = () => {
   
     const fetchCourse = async () => {
       try {
-        const course = await getCourse();
+        const course = await useResourceAdmin({doctype: "Course"});
         setCourseData(course);
       } catch (error) {
       setError("Error fetching course:", error);
@@ -83,7 +81,7 @@ const ProgramMateri = () => {
 
     const fetchClasssFormat = async () => {
       try {
-        const classFormat = await getClassFormat();
+        const classFormat = await useResourceAdmin({doctype: "Program Class Format"});
         setClassFormat(classFormat);
       } catch (error) {
       setError("Error fetching class format:", error);
@@ -92,7 +90,7 @@ const ProgramMateri = () => {
 
     const fetchClassGrading = async () => {
       try {
-        const classGrading = await getClassGrading();
+        const classGrading = await useResourceAdmin({doctype: "Program Class Grading"});
         setClassGrading(classGrading);
       } catch (error) {
       setError("Error fetching class grading:", error);

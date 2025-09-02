@@ -1,65 +1,53 @@
-import Swal from "sweetalert2";
-import { updateStudent } from "../../../../api/apiPublic";
-import { Spin } from "antd";
-import { useState } from "react";
+import { image } from "framer-motion/client"
 
 const Page6 = () => {
-    const [loading, setLoading] = useState(false);
-
-    const handlePost = async (e) => { 
-        e.preventDefault();
-          setLoading(true);
-        try{
-            const token = sessionStorage.getItem("key");
-            console.log(token);
-            const id = JSON.parse(sessionStorage.getItem("token"))?.student_id || "";
-            const data = {
-                reason_for_join: sessionStorage.getItem("selectedOption1"),
-                reason_for_priority: sessionStorage.getItem("selectedOption2"),
-            }
-
-            const response = await updateStudent(data, id);
-            sessionStorage.removeItem("selectedOption1");
-            sessionStorage.removeItem("selectedOption2");
-            setLoading(false);
-             Swal.fire({
-           title: "Success!",   
-           text: "Data berhasil di simpan",
-           icon: "success",
-           confirmButtonText: "OK"
-       });
-        }catch(error){
-            setLoading(false);
-            console.log(error);
-              Swal.fire({
-           title: "Gagal !",   
-           text: error.message,
-           icon: "error",
-           confirmButtonText: "OK"
-       });
-        }
-    };
-   
-    return (
-        <>
+    const images = [
+        {
+            image: "parents_guide1.webp",
+            value: "Mengikuti Kompetensi"
+        },
+        {
+            image: "parents_guide2.webp",
+            value: "Tampil dalam konser"
+        },
+        {
+            image: "parents_guide3.webp",
+            value: "Bermain dalam Ensemble/Band"
+        },
+        {
+            image: "parents_guide4.webp",
+            value: "Belajar Bikin Music"
+        },
+       
+       {
+           image: "parents_guide5.webp",
+           value: "Rekaman"
+       },
+       {
+        image: "parents_guide6.webp",
+        value: "Mengikuti Ujian Musik"
+       },
       
-        {loading && (
-            <Spin fullscreen size="large" />
-        )}
-        <div className="container mx-auto flex flex-col justify-center items-center text-center min-h-screen px-4 fadeinanimation">
-            <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4">
-                SO... ARE YOU READY?
-            </h1>
-            <p className="text-lg md:text-xl text-gray-600 mb-12">
-                to support your child in this music learning journey
-            </p>
-
-            <button onClick={handlePost} className="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-lg shadow-lg transition duration-300">
-                Yes, Let's go!
-            </button>
+    ]
+      
+    
+    return (
+        <div className="w-full h-screen bg-red-900">
+            <div className="container mx-auto ">
+                <div className="grid grid-cols-3 gap-4 place-items-center content-center py-20">
+                    {images.map((item, index) => (
+                        <img
+                            key={index}
+                            src={`/images/${item.image}`}
+                            alt={`Image ${index + 1}`}
+                            className="w-full h-auto rounded-lg "
+                        />
+                    ))}
+                </div>
+            </div>
+          
         </div>
-          </>
-    );
-};
+    )
+}
 
-export default Page6;
+export default Page6

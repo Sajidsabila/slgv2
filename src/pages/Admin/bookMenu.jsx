@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 import AdminLayout from "../../layout/admin-layout";
 import {
-  getModulTraining,
+
   postModulTraining,
   uploadFileProgramMateri,
   deleteFileProgramMateri,
@@ -14,6 +14,7 @@ import {
 } from "../../api/apiProgramMateri";
 import Modal from "../../components/Modal/modal";
 import InputModal from "../../components/InputModal";
+import { useResourceAdmin } from "../../api/userResourceAdmin";
 
 const BookMenu = () => {
   const [bookMenu, setBookMenu] = useState([]);
@@ -36,21 +37,23 @@ const BookMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const itemsPerPage = 5;
-
-  useEffect(() => {
-  
-    fetchModulTraining();
-  }, []);
-
-   const fetchModulTraining = async () => {
+const fetchModulTraining = async () => {
       try {
-        const response = await getModulTraining();
+        const response = await useResourceAdmin({
+           doctype: "Modul Training",
+          filters: [["type", "=", "Book Menu"]],
+        });
         setBookMenu(response);
       } catch (error) {
         console.error("Terjadi kesalahan", error?.response?.data || error.message);
       }
     };
 
+  useEffect(() => {
+    fetchModulTraining();
+  }, []);
+
+   
   const toggleUseFileUrl = (checked) => {
   setFormData(prev => ({
     ...prev,

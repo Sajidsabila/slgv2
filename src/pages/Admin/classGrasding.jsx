@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import AdminLayout from "../../layout/admin-layout";
-import { getClassGrading } from "../../api/apiClassGrade";
+
+import { useResourceAdmin } from "../../api/userResourceAdmin";
 
 const ClassGrading = () => {
    
@@ -13,7 +14,7 @@ const ClassGrading = () => {
   
     useEffect(() => {
       const fetchClassGrading = async () => {
-        const classGrading = await getClassGrading();
+        const classGrading = await useResourceAdmin({doctype: "Program Class Grading"});
         setclassGrading(classGrading); 
       };
   

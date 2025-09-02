@@ -13,7 +13,6 @@ const Page1 = ({ handleClick }) => {
 
   return (
     <div className="w-screen h-screen relative overflow-hidden">
-      {/* Fullscreen video */}
       <video
         className="absolute top-0 left-0 w-full h-full md:object-cover object-contain"
         src="/0.mp4"
@@ -22,11 +21,6 @@ const Page1 = ({ handleClick }) => {
         muted
         playsInline
       />
-
-     
-   
-
-    
       {showButton && (
         <button
           onClick={handleClick}

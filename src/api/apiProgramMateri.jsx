@@ -313,23 +313,6 @@ export const uploadFileProgramMateri = async (file, folder = "") => {
 };
 
 
-export const getModulTraining = async () => {
-  try {
-    const response = await axios.get(
-      `${urlLink.url}/api/resource/Modul%20Training?fields=["*"]`,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data?.data || [];
-  } catch (error) {
-    console.error("Terjadi kesalahan", error?.response?.data || error.message);
-    return [];
-  }
-}
 
 
 export const getModulTrainingPublic = async (token) => {

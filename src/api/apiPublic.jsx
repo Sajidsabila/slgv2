@@ -27,6 +27,7 @@ export const checkStudent = async(data) => {
                headers:  {
                     "Content-Type": "application/json",
                 },
+                withCredentials: true
             }
         );    
         console.log(response.data);

@@ -27,7 +27,7 @@ const Page3 = ({ handleClick }) => {
 
   return (
     <div className="w-screen h-screen flex flex-col overflow-hidden relative">
-      {/* Background video */}
+ 
       <video
         className="absolute top-0 left-0 w-full h-full md:object-cover object-contain"
         src="/2.mp4"
@@ -39,7 +39,14 @@ const Page3 = ({ handleClick }) => {
       {/* Pilihan muncul setelah delay */}
       {showOptions && (
         <div className="relative flex flex-col items-center justify-center h-full gap-10 px-6 z-10">
-          {/* List pilihan */}
+          <div className="flex flex-col space-y-10 item-center justify-center">
+            <p className="text-outline text-xl md:text-6xl font-extrabold text-center">Apa Prioritas Utama Tujuan </p>
+
+            <p className="text-outline text-xl md:text-6xl font-extrabold  text-center">Anak/Diri Anda Belajar Music</p>
+
+        
+          </div>
+              <p className="w-auto px-10 bg-red-600 text-xl md:text-3xl font-medium py-2 text-white rounded-xl">Anak/Diri Anda Belajar Music</p>
           <div className="flex flex-col md:flex-row gap-6">
             {listOptions2.map((option, index) => (
               <p
@@ -59,13 +66,13 @@ const Page3 = ({ handleClick }) => {
           </div>
 
           {/* Tombol Next */}
-          {sessionStorage.getItem("selectedOption1") && (
+          {sessionStorage.getItem("selectedOption2") && (
             <button
-              className="bg-blue-600 text-white font-semibold py-4 px-8 rounded-2xl shadow-lg 
-                         hover:bg-blue-700 transition-all duration-300"
+              className="bg-red-600  text-white font-semibold py-4 px-8 rounded-2xl shadow-lg 
+                         hover:bg-red-700 transition-all duration-300"
               onClick={handleClick}
             >
-              Next 
+             Lanjut 
             </button>
           )}
         </div>

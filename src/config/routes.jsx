@@ -35,7 +35,16 @@ import ProfileStudents from "../pages/profileStudent.jsx";
 import FeesList from "../pages/Student/feessList.jsx";
 import ParentsGuide from "../pages/Student/parentsGuide/index.jsx";
 
+
 const routes = createBrowserRouter([
+  // {
+  //     path: "/parents-page7",
+  //     element: <Page7 />
+  // },
+   {
+    path: "/parents-guide",
+    element: <ParentsGuide />
+  },
   {
     path: "/",
     element: <GuestOnly><AuthStudent /></GuestOnly>,
@@ -73,10 +82,7 @@ const routes = createBrowserRouter([
       path: "/fees",
       element: <FeesList />
     },
-      {
-    path: "/parents-guide",
-    element: <ParentsGuide />
-  },
+     
   ]
 },
   {

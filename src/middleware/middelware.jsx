@@ -1,74 +1,95 @@
-
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { urlLink } from "../config/config";
+import { Spin } from "antd";
 
 export const Middleware = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const response = await fetch(`${urlLink.url}/api/method/frappe.auth.get_logged_user`, {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
+  useEffect(() => {
+    let isMounted = true;
 
-                if (!response.ok) {
-                    throw new Error("Unauthorized");
-                }
+    const checkAuth = async () => {
+      try {
+        const response = await fetch(
+          `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-                setIsAuthenticated(true);
-            } catch (error) {
-                console.error("Auth Error:");
-                localStorage.clear();
-                setIsAuthenticated(false);
-            }
-        };
+        if (!response.ok) throw new Error("Unauthorized");
 
-        checkAuth();
-    }, []);
+        if (isMounted) setIsAuthenticated(true);
+      } catch (error) {
+        console.error("Auth Error:", error);
+        localStorage.clear();
+        if (isMounted) setIsAuthenticated(false);
+      }
+    };
 
-    if (isAuthenticated === null) return null;
-    if (!isAuthenticated) return <Navigate to="/login" replace />;
+    checkAuth();
 
-    return <Outlet />;
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+  return <Outlet />;
 };
 
 export const MiddlewareStudent = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
-    useEffect(() => {
-        const studentAuth = async () => {
-            const getStudentId = sessionStorage.getItem("token");
-            setIsAuthenticated(!!getStudentId);
-        };
-        studentAuth();
-    }, []);
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    setIsAuthenticated(!!token);
+  }, []);
 
-    if (isAuthenticated === null) return null;
-    if (!isAuthenticated) return <Navigate to="/" replace />;
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
-    return <Outlet />;
-}; 
+  if (!isAuthenticated) return <Navigate to="/" replace />;
 
+  return <Outlet />;
+};
 
 export const MiddlewareTeacher = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
-    useEffect(() => {
-        const studentAuth = async () => {
-            const getStudentId = sessionStorage.getItem("credentials");
-            setIsAuthenticated(!!getStudentId);
-        };
-        studentAuth();
-    }, []);
+  useEffect(() => {
+    const credentials = sessionStorage.getItem("credentials");
+    setIsAuthenticated(!!credentials);
+  }, []);
 
-    if (isAuthenticated === null) return null;
-    if (!isAuthenticated) return <Navigate to="/login-teacher" replace />;
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
-    return <Outlet />;
+  if (!isAuthenticated) return <Navigate to="/login-teacher" replace />;
+
+  return <Outlet />;
 };
