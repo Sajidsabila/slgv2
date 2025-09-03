@@ -1,83 +1,93 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 const Page7 = () => {
-  const [answers, setAnswers] = useState(false);
+  const [answers, setAnswers] = useState(true);
   const [showVidio, setShowVidio] = useState(false);
-  const [playAudio, setPlayAudio] = useState(false);
-  const [pageButton, setPageButton] = useState(true);
-  const audio = useRef(null);
 
-  const handlePlay = () => {
-    if (audio.current) {
-      audio.current.play();
-      setPlayAudio(true);
-      setPageButton(false);
-      setAnswers(true);
-    }
-  };
+  // Kalau mau pakai auto switch ke video:
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setShowVidio(true);
+  //     setAnswers(false);
+  //   }, 9000);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowVidio(true);
-      setAnswers(false);
-    }, 7000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const options1 = sessionStorage.getItem("selectedOption1");
+  const options2 = sessionStorage.getItem("selectedOption2");
 
   return (
-    <div className="w-full h-screen container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
-      <audio ref={audio} loop>
-        <source src="/5.mp3" type="audio/mpeg" />
-        Browser kamu tidak mendukung audio.
-      </audio>
-
-      {pageButton && (
-        <button
-          className="px-5 bg-blue-600 py-2 rounded-lg text-white font-bold hover:bg-blue-700 hover:cursor-pointer"
-          onClick={handlePlay}
-        >
-          Please Play Audio
-        </button>
-      )}
-
+    <div className="w-full h-screen flex items-center justify-center relative overflow-hidden">
       {answers && (
         <>
-          <div className="text-center mb-8 max-w-3xl mx-auto">
-            <h1 className="text-base sm:text-lg md:text-2xl lg:text-2xl font-bold">
-              MARI KITA KEMBALI KE ALASAN & TUJUAN ANAK ANDA
-            </h1>
-            <h2 className="text-base sm:text-lg md:text-2xl lg:text-2xl font-bold mt-2">
-              BELAJAR MUSIK :
-            </h2>
-          </div>
+          <audio autoPlay loop>
+            <source src="/backsound/5.mp3" type="audio/mpeg" />
+            Browser kamu tidak mendukung audio.
+          </audio>
 
-          <div className="flex flex-col gap-6 w-full mx-auto">
-            <div className="answer-1">
-              <label className="block mb-2 font-bold text-sm sm:text-base md:text-lg">
-                Mengapa anda mengirimkan anak anda les musik?
-              </label>
-              <input
-                type="text"
-                value="test question"
-                readOnly
-                className="w-full h-10 sm:h-12 bg-stone-300 rounded-full px-4 text-sm sm:text-base font-medium"
-              />
+          {/* Konten utama */}
+          <div className="xl:w-[85dvw] lg:-w-[80dvw] md:w-[75dvw]  text-center space-y-6">
+            <div>
+              <h1 className="text-base sm:text-lg md:text-2xl lg:text-4xl font-extrabold text-red-600">
+                MARI KITA KEMBALI KE ALASAN & TUJUAN ANAK ANDA
+              </h1>
+              <h2 className="text-base sm:text-lg md:text-2xl lg:text-4xl font-extrabold mt-2 text-red-600">
+                BELAJAR MUSIK :
+              </h2>
             </div>
 
-            <div className="answer-2">
-              <label className="block mb-2 font-bold text-sm sm:text-base md:text-lg">
-                Apa tujuan utama anak anda belajar musik?
-              </label>
-              <input
-                type="text"
-                value="test question"
-                readOnly
-                className="w-full h-10 sm:h-12 bg-stone-300 rounded-full px-4 text-sm sm:text-base font-medium"
-              />
+            <div className="flex flex-col gap-6 text-left w-[100%]">
+              <div>
+                <label className="block mb-2 font-bold text-sm sm:text-base md:text-lg">
+                  Mengapa anda mengirimkan anak anda les musik?
+                </label>
+                <input
+                  type="text"
+                  value={options1 || "test question"}
+                  readOnly
+                  className="w-full bg-stone-300 rounded-full px-4 text-sm sm:text-base font-medium py-7 ps-10"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 font-bold text-sm sm:text-base md:text-lg">
+                  Apa tujuan utama anak anda belajar musik?
+                </label>
+                <input
+                  type="text"
+                  value={options2 || "test question"}
+                  readOnly
+                  className="w-full bg-stone-300 rounded-full px-4 text-sm sm:text-base font-medium py-7 ps-10"
+                />
+              </div>
             </div>
           </div>
+
+          {/* Gambar kiri */}
+          <img
+            src="/images/image_page_7.1.png"
+            alt=""
+            className="absolute xl:w-60 lg:w-60 sm:w-40  -translate-x-1/2 xl:top-90  left-15 lg:top-55 z-1"
+          />
+
+          {/* Gambar kanan */}
+          <img
+            src="/images/image_page_7.2.png"
+            alt=""
+            className="absolute xl:w-60 lg:w-60 sm:w-40  translate-x-1/2 xl:top-90 right-20 lg:top-55 z-0"
+          />
         </>
+      )}
+
+      {showVidio && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <video
+            className="w-full h-full object-cover"
+            src="/videos/7.mp4"
+            autoPlay
+            playsInline
+          />
+        </div>
       )}
     </div>
   );

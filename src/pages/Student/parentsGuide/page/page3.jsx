@@ -30,7 +30,7 @@ const Page3 = ({ handleClick }) => {
  
       <video
         className="absolute top-0 left-0 w-full h-full md:object-cover object-contain"
-        src="/2.mp4"
+        src="/videos/2.mp4"
         autoPlay
         playsInline
         muted
@@ -39,21 +39,21 @@ const Page3 = ({ handleClick }) => {
       {/* Pilihan muncul setelah delay */}
       {showOptions && (
         <div className="relative flex flex-col items-center justify-center h-full gap-10 px-6 z-10">
-          <div className="flex flex-col space-y-10 item-center justify-center">
-            <p className="text-outline text-xl md:text-6xl font-extrabold text-center">Apa Prioritas Utama Tujuan </p>
+          <div className="flex flex-col space-y-10 item-center justify-center fadeinanimation">
+            <p className="text-outline text-xl md:text-6xl font-extrabold text-center gotham">Apa Prioritas Utama Tujuan </p>
 
-            <p className="text-outline text-xl md:text-6xl font-extrabold  text-center">Anak/Diri Anda Belajar Music</p>
+            <p className="text-outline text-xl md:text-6xl font-extrabold  text-center gotham">Anak/Diri Anda Belajar Music</p>
 
         
           </div>
-              <p className="w-auto px-10 bg-red-600 text-xl md:text-3xl font-medium py-2 text-white rounded-xl">Anak/Diri Anda Belajar Music</p>
+              <p className="w-auto px-10 bg-red-600 text-xl md:text-3xl font-medium py-2 text-white rounded-xl gotham">Anak/Diri Anda Belajar Music</p>
           <div className="flex flex-col md:flex-row gap-6">
             {listOptions2.map((option, index) => (
               <p
                 key={index}
                 onClick={() => handleSelect(option)}
                 className={`w-full max-w-md text-center text-sm sm:text-base md:text-lg lg:text-xl font-semibold 
-                  py-4 px-6 rounded-2xl shadow-lg transition-all duration-300 cursor-pointer fadeinanimation
+                  py-4 px-6 rounded-2xl shadow-lg transition-all duration-300 cursor-pointer 
                   ${
                     selectedOption2 === option
                       ? "bg-blue-700 text-white"

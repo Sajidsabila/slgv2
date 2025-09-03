@@ -69,13 +69,7 @@ const EvaluasiSemester = () => {
         }
       };
     
-      const fetchCourse = async () => {
-        try {
-          const course = await useResourceAdmin({doctype: "Program Course"});
-        } catch (error) {
-        setError("Error fetching course:", error);
-        }
-      };
+    
   
       const fetchClasssFormat = async () => {
         try {

@@ -7,6 +7,8 @@ import Page6 from "./page/page6";
 import RotateVidio from "./page/rotateVidio";
 import Page2a from "./page/page2.a";
 import Page5 from "./page/page5";
+import Page7 from "./page/page7";
+import Page8 from "./page/page8";
 
 const ParentsGuide = () => {
   const [page, setPage] = useState(0);
@@ -62,10 +64,25 @@ const ParentsGuide = () => {
   }, [page]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    let timer;
+    if(page === 5 ){
+     timer = setTimeout(() => {
       setPage(6); 
     }, 146500); 
     return () => clearTimeout(timer);
+    }
+ 
+    });
+
+    useEffect(() => {
+      let timer; 
+      if(page === 7) {
+      timer = setTimeout(() => {
+        setPage(8); 
+      },171000); 
+      return () => clearTimeout(timer);
+      }
+     
     })
   
 
@@ -84,7 +101,9 @@ const ParentsGuide = () => {
       )}
 
       {page === 5 && <Page5 />}
-      {page === 6 && <Page6 />}
+      {page === 6 && <Page6 handleClick={() => setPage(7)}/>}
+      {page === 7 && <Page7 />}
+      {page === 8 && <Page8 />}
     </>
   );
 };

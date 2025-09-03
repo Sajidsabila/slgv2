@@ -34,13 +34,19 @@ import EvaluationSemesterTeacher from "../pages/Teacher/evaluationSemester.jsx";
 import ProfileStudents from "../pages/profileStudent.jsx";
 import FeesList from "../pages/Student/feessList.jsx";
 import ParentsGuide from "../pages/Student/parentsGuide/index.jsx";
+import Page7 from "../pages/Student/parentsGuide/page/page7.jsx";
+import Page8 from "../pages/Student/parentsGuide/page/page8.jsx";
 
 
 const routes = createBrowserRouter([
-  // {
-  //     path: "/parents-page7",
-  //     element: <Page7 />
-  // },
+{
+  path: "/page-7",
+  element: <Page7 />
+},
+{
+  path: "/page-8",
+  element: <Page8 />
+},
    {
     path: "/parents-guide",
     element: <ParentsGuide />

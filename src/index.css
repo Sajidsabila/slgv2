@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+
+@font-face {
+  font-family: 'GothamRndBold';
+  src: url('/fonts/GOTHAMRND-BOLD.otf') format('opentype');
+}
+
+.gotham{
+  font-family: 'GothamRndBold';
+}
 body {
   margin: 0;
   padding: 0;

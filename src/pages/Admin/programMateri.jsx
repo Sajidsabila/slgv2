@@ -117,8 +117,8 @@ const ProgramMateri = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
   
-      if (!selectedCourse || !selectedClassFormat || !selectedClassGrading) {
-        alert("Pilih format, grade, dan kursus terlebih dahulu!");
+      if (!selectedCourse || !selectedClassGrading) {
+        alert("Pilih  grade, dan kursus terlebih dahulu!");
         return;
       }
     if (!isEditMode && programMateri.some(
@@ -133,8 +133,8 @@ const ProgramMateri = () => {
     try {
         setIsLoading(true);
         const data = {
-            title: `${selectedCourse}${selectedClassFormat}${selectedClassGrading}`,
-            class_format: classFormat.find(f => f.abbr === selectedClassFormat)?.name || "",
+            title: `${selectedCourse}${selectedClassGrading}`,
+           
             class_grade: selectedClassGrading || "",
             class_course: courseData.find(c => c.abbr === selectedCourse)?.name || ""
         };
@@ -150,8 +150,8 @@ const ProgramMateri = () => {
             const folderPaths = [
                 "Home/Program Materi",
                 `Home/Program Materi/${response.abbr_course}`,
-                `Home/Program Materi/${response.abbr_course}/${response.abbr_format}`,
-                `Home/Program Materi/${response.abbr_course}/${response.abbr_format}/${response.class_grade}`
+           
+                `Home/Program Materi/${response.abbr_course}/${response.class_grade}`
             ];
 
             for (let i = 0; i < folderPaths.length; i++) {
@@ -284,75 +284,53 @@ const filteredProgramMateri = programMateri.filter((item) =>
               className="border border-gray-300 rounded-lg px-4 py-2  focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-  
-       
           {isOpen && !loading && (
-       <Modal
-        isOpen={isOpen}
-        onClose={handleClose}
-        titleModal={isEditMode ? "Edit Program Materi" : "Add Program Materi"}
-        onSubmit={handleSubmit}
-      >
-     <label htmlFor="course" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Course
-    </label>
-  <Select
-    showSearch
-    id="course"
-    name="course"
-    placeholder="Select Course"
-    value={selectedCourse}
-    onChange={(value) => setSelectedCourse(value)}
-    filterOption={(input, option) =>
-      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-    }
-    options={courseData.map((course) => ({
-      value: course.abbr,
-      label: course.name
-    }))}
-    style={{ width: '100%', height: '40px' }}
-  />
+              <Modal
+                isOpen={isOpen}
+                onClose={handleClose}
+                titleModal={isEditMode ? "Edit Program Materi" : "Add Program Materi"}
+                onSubmit={handleSubmit}
+              >
+            <label htmlFor="course" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Course
+            </label>
+          <Select
+            showSearch
+            id="course"
+            name="course"
+            placeholder="Select Course"
+            value={selectedCourse}
+            onChange={(value) => setSelectedCourse(value)}
+            filterOption={(input, option) =>
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            options={courseData.map((course) => ({
+              value: course.abbr,
+              label: course.name
+            }))}
+            style={{ width: '100%', height: '40px' }}
+          />
 
-  <label htmlFor="classFormat" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-    Class Format
-  </label>
-  <Select
-    showSearch
-    id="classFormat"
-    placeholder="Select Class Format"
-    value={selectedClassFormat}
-    onChange={(value) => setSelectedClassFormat(value)}
-    filterOption={(input, option) =>
-      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-    }
-    options={classFormat.map((cf) => ({
-      value: cf.abbr,
-      label: cf.name
-    }))}
-    style={{ width: '100%', height: '40px' }}
-  />
-
-  <label htmlFor="classGrading" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-    Class Grading
-  </label>
-  <Select
-    showSearch
-    id="classGrading"
-    placeholder="Select Class Grading"
-    value={selectedClassGrading}
-    onChange={(value) => setSelectedClassGrading(value)}
-    filterOption={(input, option) =>
-      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-    }
-    options={classGrading.map((grading) => ({
-      value: grading.name,
-      label: grading.name
-    }))}
-    style={{ width: '100%',  height: '40px' }}
-  />
-</Modal>
-
-
+          
+          <label htmlFor="classGrading" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Class Grading
+          </label>
+          <Select
+            showSearch
+            id="classGrading"
+            placeholder="Select Class Grading"
+            value={selectedClassGrading}
+            onChange={(value) => setSelectedClassGrading(value)}
+            filterOption={(input, option) =>
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            options={classGrading.map((grading) => ({
+              value: grading.name,
+              label: grading.name
+            }))}
+            style={{ width: '100%',  height: '40px' }}
+          />
+        </Modal>
       )}
       {loading && (
         <motion.div

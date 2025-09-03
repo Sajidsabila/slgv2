@@ -31,7 +31,7 @@ const Page2 = ({ handleClick }) => {
     <div className="w-screen h-screen flex flex-col overflow-hidden relative">
       <video
         className="absolute top-0 left-0 w-full h-full md:object-cover object-contain -z-10"
-        src="/01.b.mp4"
+        src="/videos/01.b.mp4"
         loop
         autoPlay
         playsInline
@@ -41,10 +41,10 @@ const Page2 = ({ handleClick }) => {
 
           <div className="text-left max-w-xxl space-y-6  ms-9">
 
-            <p className="text-outline text-xl md:text-6xl font-extrabold ">Mengapa Anda</p>
-            <p className="text-outline text-xl md:text-6xl font-extrabold ">mengirimkan</p>
-            <p className="text-outline text-xl md:text-6xl font-extrabold ">anak/diri Anda</p>
-            <p className="text-outline text-xl md:text-6xl font-extrabold ">les musik?</p>
+            <p className="text-outline text-xl md:text-6xl font-extrabold gotham">Mengapa Anda</p>
+            <p className="text-outline text-xl md:text-6xl font-extrabold gotham">mengirimkan</p>
+            <p className="text-outline text-xl md:text-6xl font-extrabold gotham">anak/diri Anda</p>
+            <p className="text-outline text-xl md:text-6xl font-extrabold gotham">les musik?</p>
 
             <p className="w-auto bg-red-600 text-white ps-2 pe-10 text-sm md:text-3xl py-2 rounded-lg">Pilih salah satu dari Pilihan berikut ini</p>
         </div>

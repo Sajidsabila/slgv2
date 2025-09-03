@@ -15,7 +15,7 @@ const Page1 = ({ handleClick }) => {
     <div className="w-screen h-screen relative overflow-hidden">
       <video
         className="absolute top-0 left-0 w-full h-full md:object-cover object-contain"
-        src="/0.mp4"
+        src="/videos/0.mp4"
         autoPlay
         loop
         muted
@@ -26,7 +26,7 @@ const Page1 = ({ handleClick }) => {
           onClick={handleClick}
           className="px-12 py-3 rounded-2xl bg-red-600 text-white 
           text-xl font-bold shadow-lg absolute top-1/2 left-1/2 transform -translate-x-1/2
-           -translate-y-1/2 transition-all duration-300 hover:bg-red-700 hover:scale-105 fadeinanimation"
+           -translate-y-1/2 transition-all duration-300 hover:bg-red-700 hover:scale-105 fadeinanimation my-15"
         >
           START
         </button>
