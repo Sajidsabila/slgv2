@@ -79,7 +79,7 @@ const ParentsGuide = () => {
       if(page === 7) {
       timer = setTimeout(() => {
         setPage(8); 
-      },171000); 
+      },181000); 
       return () => clearTimeout(timer);
       }
      

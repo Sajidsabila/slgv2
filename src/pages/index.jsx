@@ -1,9 +1,10 @@
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, use } from "react";
 import { Link } from "react-router-dom";
 import LandingPageLayout from "../layout/landing-page";
 import { apiGetProgramMateriPublic } from "../api/apiPublic";
 import { capitalAtWords, getEnrollment } from "../helper/helper";
+import { methodGet } from "../api/apiMethod";
 
 const Index = () => {
   const [programs, setPrograms] = useState([]);
@@ -12,7 +13,16 @@ const Index = () => {
   const enrollClassCourse = enroll.map(item =>
       typeof item.program === 'string' ? item.course : ''
   );
- console.log(getName)
+  useEffect(() => {
+    const getProgramEnrollment = async () => {
+      try {
+        const response = await methodGet({url: "getProgramEnrollment"});
+        setPrograms(response);
+      }catch(error){
+        console.error("Error fetching program data:", error);
+      }
+    }
+  })
   useEffect(() => {
     const getPrograms = async () => {
       try {

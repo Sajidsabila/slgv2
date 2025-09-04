@@ -46,20 +46,21 @@ const Page8 = () => {
       {loading && <Spin fullscreen size="large" />}
       <div className="relative w-full h-screen bg-gradient-to-b from-sky-300 to-white overflow-hidden">
         {/* konten utama */}
-        <div className="container mx-auto flex flex-col items-center justify-center h-full text-center px-4 fadeinanimation">
-          <h1 className="text-xl md:text-8xl font-bold text-gray-800 mb-4">
+        <div className="container mx-auto flex flex-col items-center justify-center h-full text-center px-4 fadeinanimation ">
+          <h1 className="sm:text-3xl md:text-6xl lg:font-7xl xl:text-8xl sm:font-medium md:font-bold text-gray-800 mb-4">
             SO, ARE YOU
           </h1>
-          <p className="sm:text-xl md:text-8xl font-bold text-gray-800 mb-8">
+          <p className="sm:text-3xl md:text-6xl lg:font-7xl xl:text-8xl  font-bold text-gray-800 mb-8">
           READY ?
           </p>
-            <p className="text-3xl font-bold mb-2"> 
+            <p className="sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold mb-2"> 
                Let's support your child in this music
             </p>
-            <p  className="text-3xl font-bold mb-9">learning journey!</p>
+      
+            <p  className="sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold sm:mb-1 md:mb-9 ">learning journey!</p>
           <button
             onClick={handlePost}
-            className="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-full shadow-lg transition duration-300 font-bold text-3xl hover:scale-105"
+            className="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-full shadow-lg transition duration-300 font-bold text-xl xl:text-3xl hover:scale-105"
           >
             Yes, Let's go!
           </button>

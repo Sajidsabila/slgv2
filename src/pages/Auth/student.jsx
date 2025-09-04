@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { form } from "framer-motion/client";
 import { useStudents } from "../../context/studentsContext";
 import { useNavigate } from "react-router-dom";
+import { methodPost } from "../../api/apiMethod";
 
 const AuthStudent = () => {
     const [formData, setFormData] = useState({
@@ -54,10 +55,10 @@ const AuthStudent = () => {
                 date_of_birth: convertDate(formData.tanggal_lahir),
             };
 
-            const response = await checkStudent(data);
-            const status = response?.message;
-            console.log(status);
-            
+            const response = await methodPost({data, url: "smi.helper.login_auth"});
+        
+            const status = response;
+     
             if (!status || typeof status !== "object") {
                 setLimitRequest(prev => prev + 1);
                 setError("Respon dari server tidak valid");
@@ -78,14 +79,17 @@ const AuthStudent = () => {
                 setError(status.message || "Siswa tidak aktif");
                 return;
             }
-            console.log(response.message);
-            const api_key = response.message.student_user.api_key;
-            const api_secret = response.message.student_user.api_secret;
+            const datasiswa = {
+                "student_id": response.student_id,
+                "student_name": response.student_name
+            }
+            const setCode =  btoa(JSON.stringify(datasiswa));
+            sessionStorage.setItem("token", setCode);
+           const ping = atob(sessionStorage.getItem("token"));
+           const dataqq = JSON.parse(ping);
+           console.log("ini", dataqq);
 
-            sessionStorage.setItem("token", JSON.stringify(response.message));
-        sessionStorage.setItem("api_key", `${api_key}:${api_secret}`);
-          
-            setDataContext(response.message);      
+            setDataContext(datasiswa);
            navigate("/home");
         } catch (error) {
             setLimitRequest(prev => prev + 1);

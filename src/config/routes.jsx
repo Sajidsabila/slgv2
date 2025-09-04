@@ -137,10 +137,6 @@ const routes = createBrowserRouter([
       {path: "modul-training/:id", element: <DetailModulTraining />}
     ],
   },
-    {
-    path: "*",
-    element: <Page404 />,
-  },
 ]);
 
 export default routes;
