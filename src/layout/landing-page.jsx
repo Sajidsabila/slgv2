@@ -1,10 +1,14 @@
-import { useEffect } from "react";
-import Header from "../components/Header/index";
+import { use, useEffect } from "react";
+import Header from "../components/header";
 import Navbar from "../components/Navbar/index";
-import Footer from "../components/Footer/index";
-import FloatingChatButton from "../components/Button/floatingButton";
+import Footer from "../components/footer";
+import FloatingChatButton from "../components/floatingButton";
+import { refreshAccesToken } from "../api/apiMethod";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const LandingPageLayout = ({ title, children }) => {
+  const location = useLocation();
+
   useEffect(() => {
     const handleKeyUpF12 = (e) => {
       if (e.key === "F12") {
@@ -16,6 +20,13 @@ const LandingPageLayout = ({ title, children }) => {
     return () => document.removeEventListener("keyup", handleKeyUpF12);
   }, []);
 
+   useEffect(() => {
+    if (!sessionStorage.getItem("token")) return;
+     const resfreshToken = async () => {
+          const response = await refreshAccesToken();
+        }
+          resfreshToken();
+   }, [])
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -29,13 +40,13 @@ const LandingPageLayout = ({ title, children }) => {
 
           <Header title={title} />
 
-          <main className="flex-1 px-4 py-6 bg-slate-100">
+          <main className="flex-1 px-4 py-6 bg-slate-100 h-auto">
             {children}
           </main>
         </div>
 
  
-        <Footer />
+        <Footer className="relative z-1"/>
       </div>
 
 

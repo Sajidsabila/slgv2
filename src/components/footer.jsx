@@ -1,22 +1,13 @@
-import logo_simfoni from "../../assets/logowhite.svg";
-import icon_location from "../../assets/icon/iconlocation.svg";
-import icon_email from "../../assets/icon/iconemail.svg";
-import icon_tel from "../../assets/icon/icontel.svg";
-import icon_fb from "../../assets/icon/iconfb.svg";
-import icon_ig from "../../assets/icon/iconinstagram.svg";
-import icon_youtube from "../../assets/icon/iconyoutube.svg";
-import icon_linkedin from "../../assets/icon/iconlinkedin.svg";
-import googleplay from "../../assets/logo/logogoogleplay.svg";
-import appstore from "../../assets/logo/logoappstore.svg";
+
 
 const Footer = () => {
     return (
-    <footer className="w-full bg-red-800  text-white">
+    <footer className="w-full bg-red-800  text-white relative z-1">
 
             <div className="py-6 px-4 md:px-8 lg:px-16">
             <div className="container mx-auto ">
       <img 
-        src={logo_simfoni} 
+        src="/assets/logowhite.svg" 
         alt="Logo Simfoni" 
         width="200px"
         height="200px"
@@ -30,25 +21,25 @@ const Footer = () => {
           <div className="flex flex-col py-3 space-y-3">
             {/* Lokasi */}
             <div className="flex items-center gap-4 md:gap-2  mx-9 ">
-              <img src={icon_location} alt="Location" className="w-6 h-6" />
+              <img src="/assets/icon/iconlocation.svg" alt="Location" className="w-6 h-6" />
               <h3 className="text-base text-sm md:text-lg ">Jl. Puri Anjasmoro Blok E1. No.21, Semarang - Jawa Tengah, Indonesia 50144</h3>
             </div>
 
             {/* Email */}
             <div className="flex items-center gap-4 md:gap-2  mx-9">
-              <img src={icon_email} alt="Email" className="w-6 h-6" />
+              <img src="/assets/icon/iconemail.svg" alt="Email" className="w-6 h-6" />
               <h3 className="text-base text-sm md:text-lg">info@sekolahmusikindonesia.id</h3>
             </div>
 
             {/* Telepon */}
             <div className="flex items-center gap-4 md:gap-2  mx-9">
-              <img src={icon_tel} alt="Phone" className="w-6 h-6" />
+              <img src="/assets/icon/iconwhatsapp.svg" alt="Phone" className="w-6 h-6" />
               <h3 className="text-base text-sm md:text-lg">+62 811 297 5157</h3>
             </div>
 
             {/* Telepon 2 */}
             <div className="flex items-center gap-4 md:gap-2  mx-9">
-              <img src={icon_tel} alt="Phone" className="w-6 h-6" />
+              <img src="/assets/icon/icontel.svg" alt="Phone" className="w-6 h-6" />
               <h3 className="text-base text-sm md:text-lg">024 - 7609569 / 7606254</h3>
             </div>
           </div>
@@ -62,18 +53,18 @@ const Footer = () => {
               <h2 className="text-xl font-bold w-full text-right md:text-left">CONNECT WITH US</h2>
               <div className="flex justify-end md:justify-start gap-2 py-3 w-full">
                 <a href="https://www.facebook.com/SekolahMusikIndonesiaOfficial/" target="_blank">
-                    <img src={icon_fb} alt="Facebook" className="w-10 h-10 transition-transform transform hover:scale-110" />
+                    <img src="/assets/icon/iconfb.svg" alt="Facebook" className="w-10 h-10 transition-transform transform hover:scale-110" />
                 </a>
 
                 <a href="https://www.instagram.com/sekolahmusikindonesia/" target="_blank">
-                    <img src={icon_ig} alt="Instagram" className="w-10 h-10 transition-transform transform hover:scale-110" />
+                    <img src="/assets/icon/iconinstagram.svg" alt="Instagram" className="w-10 h-10 transition-transform transform hover:scale-110" />
                 </a>
 
                 <a href="https://www.youtube.com/@SMISemarangID" target="_blank">
-                    <img src={icon_youtube} alt="YouTube" className="w-10 h-10 transition-transform transform hover:scale-110" />
+                    <img src="/assets/icon/iconyoutube.svg" alt="YouTube" className="w-10 h-10 transition-transform transform hover:scale-110" />
                 </a>
                 <a href="https://www.linkedin.com/company/sekolah-musik-indonesia/mycompany/" target="_blank">
-                <img src={icon_linkedin} alt="LinkedIn" className="w-10 h-10 transition-transform transform hover:scale-110" />
+                <img src="/assets/icon/iconlinkedin.svg" alt="LinkedIn" className="w-10 h-10 transition-transform transform hover:scale-110" />
                 </a>
                
               </div>
@@ -84,10 +75,10 @@ const Footer = () => {
               <h2 className="text-xl font-bold w-full text-right md:text-left">DOWNLOAD APPS</h2>
               <div className="flex justify-end md:justify-start gap-2 py-3 w-full">
                 <a href="https://play.google.com/store/apps/details?id=com.sister_mobile.customer&hl=en" target="_blank">
-                  <img src={googleplay} alt="Google Play" className="w-32 h-10 transition-transform transform hover:scale-110" />
+                  <img src="/assets/logo/logogoogleplay.svg" alt="Google Play" className="w-32 h-10 transition-transform transform hover:scale-110" />
                 </a>
                 <a href="https://apps.apple.com/us/app/sister-smi-customer/id6448862601" target="_blank">
-                  <img src={appstore} alt="App Store" className="w-32 h-10 transition-transform transform hover:scale-110" />
+                  <img src="/assets/logo/logoappstore.svg" alt="App Store" className="w-32 h-10 transition-transform transform hover:scale-110" />
                 </a>  
               </div>
             </div>

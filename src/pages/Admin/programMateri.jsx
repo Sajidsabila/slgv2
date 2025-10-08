@@ -1,21 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import AdminLayout from "../../layout/admin-layout";
 import { Pencil, Trash, Eye, Plus} from "lucide-react";
-import Modal from "../../components/Modal/modal";
+import Modal  from "../../components/modal";
 import { Select } from 'antd';
 import { createFolderProgramMateri,
-        getProgramMateri,
-        updateProgramMateri,
-        postProgramMateri, 
-        deleteProgramMateri,
         checkFolderExists} from "../../api/apiProgramMateri";
-
-
-import { motion } from "framer-motion";
+import { Spin } from "antd";
 import { Link } from "react-router-dom";
-import { useResourceAdmin } from "../../api/userResourceAdmin";
+import { apiResourceAdmin, apiResourceAdminPut, apiResourceAdminDelete } from "../../api/apiResourceAdmin";
+
 
 const ProgramMateri = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,7 +58,7 @@ const ProgramMateri = () => {
   useEffect(() => {
     const fetchProgramMateri = async () => {
       try {
-        const program = await getProgramMateri();
+        const program = await apiResourceAdmin({doctype: "Program Materi"});
         setProgramMateri(program);
       } catch (error) {
         console.error("Error fetching program materi:", error);
@@ -72,7 +67,7 @@ const ProgramMateri = () => {
   
     const fetchCourse = async () => {
       try {
-        const course = await useResourceAdmin({doctype: "Course"});
+        const course = await apiResourceAdmin({doctype: "Course"});
         setCourseData(course);
       } catch (error) {
       setError("Error fetching course:", error);
@@ -81,7 +76,7 @@ const ProgramMateri = () => {
 
     const fetchClasssFormat = async () => {
       try {
-        const classFormat = await useResourceAdmin({doctype: "Program Class Format"});
+        const classFormat = await apiResourceAdmin({doctype: "Program Class Format"});
         setClassFormat(classFormat);
       } catch (error) {
       setError("Error fetching class format:", error);
@@ -90,7 +85,7 @@ const ProgramMateri = () => {
 
     const fetchClassGrading = async () => {
       try {
-        const classGrading = await useResourceAdmin({doctype: "Program Class Grading"});
+        const classGrading = await apiResourceAdmin({doctype: "Program Class Grading"});
         setClassGrading(classGrading);
       } catch (error) {
       setError("Error fetching class grading:", error);
@@ -140,8 +135,8 @@ const ProgramMateri = () => {
         };
         console.log("ini data ya ", data);
         const response = isEditMode
-            ? await updateProgramMateri(formData.name, data)
-            : await postProgramMateri(data);
+            ? await useResourceAdminPut({doctype: "Program Materi", name: formData.name, id: data})
+            : await useResourceAdminPost({doctype: "Program Materi", data});
         if (!response.name) {
             setError(`Data Materi gagal ${isEditMode ? "diperbarui" : "disimpan"}.`);
             return ;
@@ -216,7 +211,7 @@ const handleOpen = (data = null) => {
     setSuccess(null);
     try {
       setIsLoading(true);
-      const deleteResponse = await deleteProgramMateri(id);
+      const deleteResponse = await useResourceAdminDelete({ doctype: "Program Materi", id });
       
       if (deleteResponse) { 
         setSuccess("Data Materi berhasil dihapus.");
@@ -333,20 +328,7 @@ const filteredProgramMateri = programMateri.filter((item) =>
         </Modal>
       )}
       {loading && (
-        <motion.div
-          className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-         <div className="fixed inset-0 bg-transparent bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
-          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-sm text-blue-500 mt-3">Memproses data...</p>
-            </div>
-  </div>
-
-        </motion.div>
+       <Spin size="large" />
       )}
           <div className="relative overflow-x-auto rounded-xl shadow-md">
         

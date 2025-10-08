@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "../../layout/admin-layout";
 import { useParams } from "react-router-dom";
-import { detailModulTraining } from "../../api/apiProgramMateri";
 import { urlLink } from "../../config/config";
+import { apiResourceAdminDetail } from "../../api/apiResourceAdmin";
 
 const DetailModulTraining = () => {
   const { id } = useParams();
@@ -13,7 +13,7 @@ const DetailModulTraining = () => {
     const detailData = async () => {
       setLoading(true);
       try {
-        const response = await detailModulTraining(id);
+        const response = await apiResourceAdminDetail({ doctype: "Modul Training", id });
         setModulTrainingBookMenu(response);
       } catch (error) {
         console.error("Gagal mengambil data:", error);

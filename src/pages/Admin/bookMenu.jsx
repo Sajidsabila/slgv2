@@ -1,20 +1,18 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, Pencil, Trash } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 import AdminLayout from "../../layout/admin-layout";
 import {
-
-  postModulTraining,
   uploadFileProgramMateri,
-  deleteFileProgramMateri,
-  updateModulTraining,
-  deleteModulTraining
+  deleteFileProgramMateri
+ 
 } from "../../api/apiProgramMateri";
-import Modal from "../../components/Modal/modal";
-import InputModal from "../../components/InputModal";
-import { useResourceAdmin } from "../../api/userResourceAdmin";
+import Modal  from "../../components/modal";
+import InputModal from "../../components/inputModal";
+import { apiResourceAdmin, apiResourceAdminDelete, apiResourceAdminPut, apiResourceAdminPost } from "../../api/apiResourceAdmin";
+import { Spin } from "antd";
 
 const BookMenu = () => {
   const [bookMenu, setBookMenu] = useState([]);
@@ -35,8 +33,10 @@ const BookMenu = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-
-  const itemsPerPage = 5;
+  const [warning, setWarning] = useState(null);
+  const [extensions, setExtensions] = useState({});
+  const itemsPerPage = 10;
+  
 const fetchModulTraining = async () => {
       try {
         const response = await useResourceAdmin({
@@ -132,15 +132,14 @@ const fetchModulTraining = async () => {
     }
   };
 
-  const handleDelete = async (name) => {
+  const handleDelete = async (item) => {
     try{
       setIsLoading(true);
-      const deleteResponse = await deleteModulTraining(name);
+      const deleteResponse = await apiResourceAdminDelete({doctype: "Modul Training", id: item.name});
       console.log(deleteResponse);
       if (deleteResponse) {
         setSuccess("Data berhasil dihapus.");
-        const deleteFile = await deleteFileProgramMateri(name);
-        setBookMenu((prevData) => prevData.filter((item) => item.name !== name));
+        setBookMenu((prevData) => prevData.filter((item) => item.name !== item.name));
       }
     } catch (error) {
       setError(`Error: ${error.response.data.exc_type || error.response.data.exception || error.message}`);
@@ -150,63 +149,92 @@ const fetchModulTraining = async () => {
     }
   };
 
-     const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!formData.file && !formData.file_url && !isEditMode) {
-      alert("File atau URL masih kosong!");
-      return;
+  // Validasi awal: pastikan ada file/URL saat tambah baru
+  if (!formData.file && !formData.file_url && !isEditMode) {
+    setWarning("File atau URL masih kosong!");
+    return;
+  }
+
+  let payload = {
+    description: formData.description,
+    title: formData.title,
+    type: formData.type || "Modul Training",
+    is_active: formData.is_active,
+  };
+
+
+  if (formData.useFileUrl && formData.file_url) {
+    payload.file_url = formData.file_url;
+  } else if (formData.file) {
+     const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
+
+    if (!allowedTypes.includes(formData.file.type)) {
+      setWarning("File harus berformat PNG, JPG, atau JPEG!");
+      return; 
     }
+  }
 
-    try {
-      setIsLoading(true);
-      setIsOpen(false);
-
-      let payload = {
-        description: formData.description,
-        title: formData.title,
-        type: formData.type || "Modul Training",
-        file: formData.is_active == true ? null : formData.file,
-        is_active: formData.is_active
-      };
-
-      if (formData.useFileUrl && formData.file_url) {
-        payload.file_url = formData.file_url;
-      } else if (formData.file) {
-       const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
-        if (!allowedTypes.includes(file.type)) {
-        alert("File harus berformat PNG, JPG, atau JPEG!");
-        return;
-      }
-        const uploadedFile = await uploadFileProgramMateri(formData.file, "Home/Program Materi");
+  try {
+    setIsLoading(true);
+    setIsOpen(false);
+    if (!isEditMode) {
+      if(formData.file && !formData.useFileUrl) {
+           try {
+        const uploadedFile = await uploadFileProgramMateri(formData.file, "Home/Program Materi/Modul Training/Book Menu");
         payload.file = uploadedFile.name;
         payload.file_url = uploadedFile.file_url;
+      } catch (uploadErr) {
+        setError("Gagal mengupload file: " + (uploadErr.message || "Unknown error"));
+        setIsLoading(false);
+        return;
+      }
+      }else if(!formData.file && formData.useFileUrl) {
+        const uploadedFile = await uploadFileProgramMateri(formData.file_url, "Home/Program Materi/Modul Training/Book Menu");
+        payload.file_url = uploadedFile.file_url;
+        payload.file = uploadedFile.name;
+      }
+     
 
-        if (isEditMode && formData.oldFileName) {
-          try {
-            await deleteFileProgramMateri(editId, formData.oldFileName);
-          } catch (deleteErr) {
-            console.error("Gagal menghapus file lama:", deleteErr);
-          }
+      // Hapus file lama jika edit mode
+      if (isEditMode && formData.oldFileName) {
+        try {
+         const deleteFileResponse = await deleteFileProgramMateri(editId, formData.oldFileName);
+         console.log("ini response hapus file", deleteFileResponse);
+        } catch (deleteErr) {
+          console.error("Gagal menghapus file lama:", deleteErr);
         }
       }
-
-      if (isEditMode) {
-        await updateModulTraining(editId, payload);
-      } else {
-        await postModulTraining(payload);
-      }
-
-      await fetchModulTraining();
-      setSuccess(`Data berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
-      handleCloseModal();
-    } catch (error) {
-      setError(`Terjadi kesalahan: ${error.response?.data?.exception || error.message}`);
-      setSuccess("");
-    } finally {
-      setIsLoading(false);
     }
-  };
+
+    // Simpan data
+    if (isEditMode) {
+      const resPut = await apiResourceAdminPut({doctype:  "Modul Training", id: editId, data :  payload});
+      console.log(resPut);
+    } else {
+   const resPost = await apiResourceAdminPost({doctype: "Modul Training", data: payload});
+    console.log(resPost);
+
+  }
+
+    await fetchModulTraining();
+    setSuccess(`Data berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
+    handleCloseModal();
+  } catch (error) {
+    const message =
+      error.response?.data?.exception ||
+      error.response?.data?.message ||
+      error.response?.data?._server_messages ||
+      error.message;
+
+    setError(`Terjadi kesalahan: ${message}`);
+    setSuccess("");
+  } finally {
+    setIsLoading(false);
+  }
+};
   return (
     <AdminLayout>
       <h3 className="font-bold py-7 text-lg">Book Menu</h3>
@@ -243,6 +271,7 @@ const fetchModulTraining = async () => {
             titleModal={isEditMode ? "Edit Modul Training" : "Add Modul Training"}
             onSubmit={handleSubmit}
           >
+          {warning && <p className="bg-red-700 text-sm text-white py-3 px-4 my-3 font-bold">{warning}</p>}
             <InputModal
               label="Title"
               type="text"
@@ -297,17 +326,7 @@ const fetchModulTraining = async () => {
         )}
 
         {loading && (
-          <motion.div
-            className="fixed inset-0 bg-transparent bg-opacity-50 flex items-center justify-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
-              <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-sm text-blue-500 mt-3">Memproses data...</p>
-            </div>
-          </motion.div>
+           <Spin size="large" />
         )}
 
         <div className="relative overflow-x-auto rounded-xl shadow-md">
@@ -333,7 +352,7 @@ const fetchModulTraining = async () => {
                       <button
                         onClick={() =>
                           window.confirm("Apakah anda yakin ingin menghapus data ini?") &&
-                          handleDelete(item.name)
+                          handleDelete(item)
                         }
                         className="bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 flex items-center gap-1 px-3 py-1 rounded-md"
                       >

@@ -1,7 +1,8 @@
 import { use, useState, useEffect } from "react"
 import LandingPageLayout from "../../layout/landing-page"
 import { useParams } from "react-router-dom"
-import { detailModulTraining, getDetailModulTrainingPublic } from "../../api/apiProgramMateri";
+import { apiResourceAdmin } from "../../api/apiResourceAdmin"
+
 
 const DetailModulTrainingTeacher = ({title}) => {
     const {id} = useParams();

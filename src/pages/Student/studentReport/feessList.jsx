@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
-import LandingPageLayout from "../../layout/landing-page";
-import { currencyFormat } from "../../helper/helper";
+import LandingPageLayout from "../../../layout/landing-page";
+import { currencyFormat } from "../../../helper/helper";
 import { Button, Modal } from "antd";
-import { useResourceGet } from "../../api/useResource";
+import { methodGet} from "../../../api/apiMethod";
+import { formatDateIndonesia } from "../../../helper/helper";
 
 const FeesList = () => {
   const [feesList, setFeesList] = useState([]);
-  const [paymentEntry, setPaymentEntry] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -20,8 +20,8 @@ const FeesList = () => {
   useEffect(() => {
     const getFeesFromApi = async () => {
       try {
-        const response = await useResourceGet("Fees");
-        setFeesList(response);
+        const response = await methodGet("smi.helper.get_data_fees");
+        setFeesList(response.message);
       } catch (error) {
         console.error("Error fetching fees:", error);
       }
@@ -29,17 +29,7 @@ const FeesList = () => {
     getFeesFromApi();
   }, []);
 
-  useEffect(() => {
-    const getPaymentFromApi = async () => {
-      try {
-        const response = await useResourceGet("Payment Entry");
-        setPaymentEntry(response);
-      } catch (error) {
-        console.error("Error fetching payment entry:", error);
-      }
-    };
-    getPaymentFromApi();
-  }, []);
+console.log(feesList);
 
   const isInRange = (dateStr) => {
     if (!startDate && !endDate) return true;
@@ -80,10 +70,14 @@ const FeesList = () => {
   };
 
   const openModal = (detailData) => {
-    setDetail(detailData);
+  feesList.filter((item) => {
+    if (item.name === detailData) {
+      setDetail(item);
+    }
+  })
     setIsModalOpen(true);
   };
-
+  console.log(detail);
   const closeModal = () => {
     setIsModalOpen(false);
     setDetail(null);
@@ -157,7 +151,7 @@ const FeesList = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {paginatedData.map((item) => (
               <div
-                key={item.id}
+                key={item.name}
                 className="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 hover:shadow-md transition"
               >
                 <div className="flex justify-between items-start mb-4">
@@ -180,7 +174,7 @@ const FeesList = () => {
                   </span>
                 </div>
 
-                <hr className="my-4 border-gray-200 border-2" />
+                <hr className="my-4 border-red-900 border-2" />
 
                 <div className="flex flex-col py-2 gap-2">
                   <p className="text-sm text-gray-500">
@@ -190,13 +184,14 @@ const FeesList = () => {
 
                   {item.docstatus === 0 ? (
                     <p className="text-center font-medium w-full mx-auto bg-red-200 py-2 rounded-full text-red-600">
-                      SPP Tidak Aktif
+                      Anda di bulan ini tidak di digenerate oleh 
                     </p>
                   ) : (
                     <>
                       <p className="text-sm text-gray-500">
                         Fee Structure:{" "}
-                        <span className="font-medium">{item.program || "-"}</span>
+                        <span className="font-medium">{item.fee_structure
+                     || "-"}</span>
                       </p>
                       <p className="text-sm text-gray-500">
                         Grand Total:{" "}
@@ -210,8 +205,8 @@ const FeesList = () => {
 
                 {item.docstatus !== 0 && (
                   <button
-                    onClick={() => openModal(item)}
-                    className="w-full bg-green-600 py-2 rounded-full text-white text-center font-bold hover:bg-green-700 transition-all my-2"
+                    onClick={() => openModal(item.name)}
+                    className="w-full bg-green-700  py-2 rounded-full text-white text-center font-bold hover:bg-green-800 transition-all my-2 hover:cursor-pointer"
                   >
                     Lihat Detail
                   </button>
@@ -278,6 +273,7 @@ const FeesList = () => {
         footer={null}
       >
         {detail ? (
+    
           <div className="w-full my-4">
             <div className="flex justify-between items-start ">
                   <h2 className=" font-bold text-gray-800">
@@ -298,7 +294,7 @@ const FeesList = () => {
                     {detail.status || "-"}
                   </span>
                 </div>
-              <hr className="my-2"/>
+              <hr className="my-2 border-red-900"/>
 
               <div className="flex flex-col py-2 gap-2 ms-4">
                 <p className="text-sm">
@@ -311,7 +307,7 @@ const FeesList = () => {
                     {currencyFormat(detail.grand_total)}
                   </span>
                 </p>
-                 <p className="text-sm ">
+                 <p className="text-sm">
                   Total Terbayar{" "} : {" "}
                   <span className="font-medium text-green-600">
                     {currencyFormat(detail.grand_total - detail.outstanding_amount)}
@@ -323,29 +319,37 @@ const FeesList = () => {
                     {currencyFormat(detail.outstanding_amount)}
                   </span>
                 </p>
-                <hr className="mt-2 border-gray-300 border-2"/>
+                <hr className="mt-2 border-red-900 border-2"/>
                 <p className="font-bold">History Pembayaran</p>
 
-                <div className="w-full bg-gray-500 h-20 rounded-xl">
-                <div className="flex flex-col  justify-center h-full gap-2">
-                    <p className="text-sm ms-6  text-white font-semibold">Tanggal Pembayaran : 8 Agustus 2019 </p>
-                   <p className="text-sm ms-6 text-white font-semibold">Jumlah Pembayaran : Rp. 100.000</p>
-                </div>
+              {detail.payment_entry.length > 0 ? (
+                detail.payment_entry.map((item, index) => (
+                  <div key={index} className="w-full bg-red-800 h-20 rounded-xl">
+                    <div className="flex flex-col  justify-center h-full gap-2">
+                      <p className="text-sm ms-6  text-white font-semibold">Tanggal Pembayaran :  {formatDateIndonesia(item.posting_date)}</p>
+                      <p className="text-sm ms-6 text-white font-semibold">Jumlah Pembayaran : {currencyFormat(item.paid_amount)}</p>
+                    </div>
                   </div>
-                
+                ))
+              ) : (
+                <p className="text-sm bg-red-800 py-4 rounded-xl text-white text-center sans-serif">Belum ada pembayaran</p>
+              )}              
               </div>
           </div>
         ) : (
           <p>Data tidak tersedia</p>
         )}
 
+      <div className="flex justify-end mt-4">
         <Button
           onClick={closeModal}
-          color="danger" variant="solid"
-          className="mx-100"
+          color="danger"
+          variant="solid"
         >
           Tutup
-        </Button>
+      </Button>
+    </div>
+
       </Modal>
     </LandingPageLayout>
   );

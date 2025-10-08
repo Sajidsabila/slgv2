@@ -1,44 +1,34 @@
 
-import { useEffect, useState, useMemo, use } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import LandingPageLayout from "../layout/landing-page";
-import { apiGetProgramMateriPublic } from "../api/apiPublic";
-import { capitalAtWords, getEnrollment } from "../helper/helper";
-import { methodGet } from "../api/apiMethod";
+import LandingPageLayout from "../../layout/landing-page";
+import { methodGet } from "../../api/apiMethod";
+
+
 
 const Index = () => {
   const [programs, setPrograms] = useState([]);
-  const enroll = getEnrollment();
-  const getName =  capitalAtWords(JSON.parse(sessionStorage.getItem("token"))?.student_name || "");
-  const enrollClassCourse = enroll.map(item =>
-      typeof item.program === 'string' ? item.course : ''
-  );
+
   useEffect(() => {
     const getProgramEnrollment = async () => {
       try {
-        const response = await methodGet({url: "getProgramEnrollment"});
-        setPrograms(response);
+        const response = await methodGet("smi.helper.get_program_enrollment");
+        setPrograms(response.message);
       }catch(error){
         console.error("Error fetching program data:", error);
       }
-    }
-  })
-  useEffect(() => {
-    const getPrograms = async () => {
-      try {
-        const res = await apiGetProgramMateriPublic();
-        setPrograms(Array.isArray(res) ? res : []); 
-      } catch (error) {
-        console.error("Error fetching program data:", error);
-      }
     };
-    getPrograms();
+    getProgramEnrollment();
+   
+    
   }, []);
+
+  console.log("ini program", programs)
 
   
   const uniqueCourses = useMemo(() => {
       const filteredeStudentProgramEnrollment = programs.filter(p =>
-        enrollClassCourse.includes(p.class_course ?? "")
+        programs.includes(p.class_course ?? "")
       )
     return filteredeStudentProgramEnrollment.filter((value, index, self) =>
       index === self.findIndex((t) => t.class_course === value.class_course)
@@ -58,7 +48,7 @@ const Index = () => {
       </Link>
     </div>
     <h1 className="text-3xl font-bold text-center text-sky-700 mb-2">
-      Selamat Datang {getName} di Student Learning Guide
+      Selamat Datang Saya di Student Learning Guide
     </h1>
     <p className="text-center text-gray-600 mb-8">
       Silakan pilih program atau kelas yang tersedia di bawah ini.
@@ -69,7 +59,7 @@ const Index = () => {
     </h2>
 
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {enroll.length === 0 ? (
+      {programs.length === 0 ? (
         <p className="text-center text-gray-500 col-span-full">
           Anda Belum Memiliki Program Enrollment
         </p>
@@ -98,3 +88,21 @@ const Index = () => {
 };
 
 export default Index;
+
+// import LandingPageLayout from "../layout/landing-page";
+// const Index = () => {
+//   return (
+//     <LandingPageLayout title="Welcome to SMI">
+//     <div className="container mx-auto px-4 py-10">
+//       <h1 className="text-3xl font-bold text-center text-sky-700 mb-2">
+//         Selamat Datang di Student Learning Guide
+//       </h1>
+//       <p className="text-center text-gray-600 mb-8">
+//         Silakan pilih program atau kelas yang tersedia di bawah ini.
+//       </p>
+//     </div>
+//  </LandingPageLayout>
+//   );
+// };
+
+// export default Index;

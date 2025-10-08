@@ -1,9 +1,10 @@
 import { use, useEffect, useMemo, useState } from "react";
-import LandingPageLayout from "../../layout/landing-page";
-import { convertDate, formatDateIndonesia } from "../../helper/helper";
+import LandingPageLayout from "../../../layout/landing-page";
+import { convertDate, formatDateIndonesia } from "../../../helper/helper";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
-import { getPointStudent } from "../../api/apiPublic";
-import { useStudents } from "../../context/studentsContext";
+import { methodGet } from "../../../api/apiMethod";
+
+
 
 const HistoryAbsensi = () => {
     const [attendanceData, setAttendanceData] = useState([]);
@@ -11,72 +12,21 @@ const HistoryAbsensi = () => {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [api, setApi] = useState([]);
 
     const itemsPerPage = 9;
 
     useEffect(() => {
         const attendanceFromAPI = async () => {
             try{
-                const response = await useResourceGet("Attendance");
-                setApi(response);
+                const response = await methodGet("smi.helper.get_data_attendance");
+                setAttendanceData(response.attendance);
             }catch(error){
                 console.error("Gagal ambil data absensi dari API:", error);
             }
         }
         attendanceFromAPI();
     }, [])
-
-    console.log(api);
-
-    useEffect(() => {
-        const getAttendance = () => {
-            try {
-                const raw = sessionStorage.getItem("token");
-                if (!raw) return [];
-
-                const data = typeof raw === "string" ? JSON.parse(raw) : raw;
-                const attendance = data?.attendance;
-
-                if (!Array.isArray(attendance)) return [];
-
-                return attendance.map((e) => ({
-                    course_schedule: e.course_schedule,
-                    from_time: e.from_time,
-                    to_time: e.to_time,
-                    schedule_date: e.schedule_date,
-                    absensi_date: e.date,
-                    status: e.status,
-                    instructor_name: e.instructorlink_name,
-                    point: e.growth_point,
-                    program: e.sg_program,
-                    video: e.video_url,
-                    lesson: e.lesson,
-                    comment: e.comment,
-                    student_group: e.student_group,
-                }));
-            } catch (error) {
-                return [];
-            }
-        };
-
-        setAttendanceData(getAttendance());
-    }, []); 
-
-    useEffect(() => {
-        try{
-            const nameStudent = sessionStorage.getItem("token");
-            const name = nameStudent ? JSON.parse(nameStudent).student_id : "";
-            const response = getPointStudent(name);
-            console.log(response);
-        }catch (error) {
-            console.error("Gagal ambil data absensi dari session:", error);
-            return [];
-        }
-    })
-
-
-
+    console.log(attendanceData);
     const isInRange = (dateStr) => {
         if (!startDate && !endDate) return true;
 
@@ -198,7 +148,7 @@ const HistoryAbsensi = () => {
                 </span>
               </div>
 
-              <hr className="border-gray-200" />
+              <hr className="border-red-600 border-1" />
 
         
               <div className="text-sm text-gray-700 space-y-2">
@@ -224,7 +174,7 @@ const HistoryAbsensi = () => {
 
                 <p>
                   <span className="font-bold">Program Enrollment: </span>
-                  {`${e.program} -  ${e.instructor_name} ` || "-"}
+                  {`${e.sg_program} -  ${e.instructorlink_name} ` || "-"}
                 </p>
                
                 <p>
@@ -232,7 +182,7 @@ const HistoryAbsensi = () => {
                   {e.lesson || "-"}
                 </p>
 
-                <hr className="border-gray-200" />
+                <hr className="border-red-600 border-1" />
 
          
                 <div className="h-40 overflow-y-auto scrollbar space-y-3">

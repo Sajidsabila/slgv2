@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import LandingPageLayout from "../../layout/landing-page";
-import { checkStudent } from "../../api/apiPublic";
 import { convertDate } from "../../helper/helper";
 import { Link } from "react-router-dom";
-import { form } from "framer-motion/client";
-import { useStudents } from "../../context/studentsContext";
 import { useNavigate } from "react-router-dom";
-import { methodPost } from "../../api/apiMethod";
+import { authStudent } from "../../api/apiMethod";
+
 
 const AuthStudent = () => {
+    
+    const navigate = useNavigate();
+    const [driveUrl, setFriveUrl] = useState("");
     const [formData, setFormData] = useState({
         id_siswa: "",
         tanggal_lahir: ""
@@ -16,9 +17,6 @@ const AuthStudent = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [limitRequest, setLimitRequest] = useState(0);
-    const {dataContext, setDataContext} = useStudents();
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (limitRequest >= 5) {
@@ -34,79 +32,61 @@ const AuthStudent = () => {
         });
     };
 
-    const handleCheckStudent = async (e) => {
-        e.preventDefault();
+ const handleCheckStudent = async (e) => {
+    e.preventDefault();
 
-        if (!formData.id_siswa || !formData.tanggal_lahir) {
-            setError("ID Siswa dan Tanggal Lahir harus diisi");
-            return;
-        }
+    if (!formData.id_siswa || !formData.tanggal_lahir) {
+        setError("ID Siswa dan Tanggal Lahir harus diisi");
+        return;
+    }
 
-        if (limitRequest >= 5) {
-            setError("Terlalu banyak percobaan login. Coba lagi dalam 1 menit.");
-            return;
-        }
-        try {
-            setLoading(true);
-            setError("");
+    if (limitRequest >= 5) {
+        setError("Terlalu banyak percobaan login. Coba lagi dalam 1 menit.");
+        return;
+    }
 
-            const data = {
-                name: "0062-" +  formData.id_siswa.trim(),
-                date_of_birth: convertDate(formData.tanggal_lahir),
-            };
+    try {
+        setLoading(true);
+        setError("");
 
-            const response = await methodPost({data, url: "smi.helper.login_auth"});
-        
-            const status = response;
-     
-            if (!status || typeof status !== "object") {
-                setLimitRequest(prev => prev + 1);
-                setError("Respon dari server tidak valid");
-                return;
-            }
+        const data = {
+            name: "0062-" + formData.id_siswa.trim(),
+            date_of_birth: convertDate(formData.tanggal_lahir),
+        };
 
-            if (status.status === "failed") {
-                setError(status.message || "Login gagal");
-                setFormData({
-                    id_siswa: formData.id_siswa,
-                    tanggal_lahir: "",
-                })
-                setLimitRequest(prev => prev + 1);
-                return;
-            }
+        const response = await authStudent(data); // Ini fungsi API call ke server kamu
+        console.log(response);
 
-            if (status.student_status === "Out") {
-                setError(status.message || "Siswa tidak aktif");
-                return;
-            }
-            const datasiswa = {
-                "student_id": response.student_id,
-                "student_name": response.student_name
-            }
-            const setCode =  btoa(JSON.stringify(datasiswa));
-            sessionStorage.setItem("token", setCode);
-           const ping = atob(sessionStorage.getItem("token"));
-           const dataqq = JSON.parse(ping);
-           console.log("ini", dataqq);
-
-            setDataContext(datasiswa);
-           navigate("/home");
-        } catch (error) {
-            setLimitRequest(prev => prev + 1);
+        if (response.status === "failed") {
+            setError(response.message || "Login gagal");
             setFormData({
                 id_siswa: formData.id_siswa,
                 tanggal_lahir: "",
-                })
-            setError( error.message || "Terjadi kesalahan saat login");
-         
-        } finally {
-            setLoading(false);
-            setFormData({
-                id_siswa: "",
-                tanggal_lahir: "",
             });
+            setLimitRequest(prev => prev + 1);
+            return;
         }
-    };
+
+        if (response.student_status === "Out" || response.student_status === "failed") {
+            setError(response.message || "Siswa tidak aktif");
+            return;
+        }
+
+       const { access_token, refresh_token, student_id } = response;
+     sessionStorage.setItem("token", access_token);
+     sessionStorage.setItem("refresh_token", refresh_token);
+     sessionStorage.setItem("student_id", student_id);
+   
+
+        navigate("/home");
+
+    } catch (err) {
+        setError("Terjadi kesalahan server");
+        console.error(err);
+    } finally {
+        setLoading(false);
+    }
+};
 
     return (
         <LandingPageLayout title="Welcome to SMI">
@@ -136,9 +116,6 @@ const AuthStudent = () => {
                             </label>
                              <div className="flex flex-row items-center justify-start">
                                 <input type="text" className="font-bold w-15 bg-slate-200 py-2 ps-2 rounded-sm" value="0062 - " disabled></input>
-                       
-                           
-                            
                             <input
                                 type="text"
                                 id="id_siswa"

@@ -1,13 +1,31 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import Logout from "../pages/Auth/logout";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const AdminLayout = ({ children }) => {
+  const { logout } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try{
+      const response = await logout(); 
+      console.log(response);
+    }catch(e){
+      console.log(e);
+    }finally{
+      navigate("/login");
+    }
+  } 
 
   const handleProfileOpen = () => setIsProfileOpen((prev) => !prev);
+  const toggleDropdown = (label) => {
+    setOpenDropdown((prev) => (prev === label ? null : label));
+  };
 
   // Cegah scroll saat sidebar terbuka
   useEffect(() => {
@@ -49,7 +67,15 @@ const AdminLayout = ({ children }) => {
     { to: "/admin", label: "Home" },
     { to: "/admin/calender-academic", label: "Calender Academic" },
     { to: "/admin/book-menu", label: "Book Menu" },
-    { to: "/admin/program-materi", label: "Learning Materi" },
+    {
+      label: "Program Materi",
+      children: [
+        { to: "/admin/program-materi-syllabus", label: "SYLLABUS" },
+        { to: "/admin/program-materi-exam-speciment", label: "EXAM SPECIMEN" },
+        { to: "/admin/program-materi-slg", label: "SLG" },
+        { to: "/admin/program-materi-lhb", label: "LHB" },
+      ],
+    },
     { to: "/admin/evaluasi-semester", label: "Evaluasi Semester" },
     { to: "/admin/modul-training", label: "Modul Training" },
   ];
@@ -70,26 +96,70 @@ const AdminLayout = ({ children }) => {
         <h2 className="text-xl h-[100px] border-b-4 border-white flex items-center justify-center">
           Sekolah Musik
         </h2>
+
         <ul className="mt-4">
           {navLinks.map((link, idx) => (
             <li key={idx} className="border-b border-gray-700">
-              <NavLink
-                to={link.to}
-                end={link.to === "/admin"}
-                className={({ isActive }) =>
-                  `block py-3 px-6 transition duration-300 ${
-                    isActive
-                      ? "bg-slate-700 text-gray-300"
-                      : "hover:text-gray-300"
-                  }`
-                }
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsSidebarOpen(false);
-                }}
-              >
-                {link.label}
-              </NavLink>
+              {link.children ? (
+                <>
+                  {/* Tombol Dropdown */}
+                  <button
+                    className="flex justify-between items-center w-full py-3 px-6 hover:text-gray-300"
+                    onClick={() => toggleDropdown(link.label)}
+                  >
+                    <span>{link.label}</span>
+                    <i
+                      className={`fa-solid fa-chevron-${
+                        openDropdown === link.label ? "up" : "down"
+                      }`}
+                    ></i>
+                  </button>
+
+                  {/* Submenu */}
+                  {openDropdown === link.label && (
+                    <ul className="ml-4">
+                      {link.children.map((child, cIdx) => (
+                        <li key={cIdx}>
+                          <NavLink
+                            to={child.to}
+                            className={({ isActive }) =>
+                              `block py-2 px-6 transition duration-300 ${
+                                isActive
+                                  ? "bg-slate-700 text-gray-300"
+                                  : "hover:text-gray-300"
+                              }`
+                            }
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsSidebarOpen(false);
+                            }}
+                          >
+                            {child.label}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              ) : (
+                <NavLink
+                  to={link.to}
+                  end={link.to === "/admin"}
+                  className={({ isActive }) =>
+                    `block py-3 px-6 transition duration-300 ${
+                      isActive
+                        ? "bg-slate-700 text-gray-300"
+                        : "hover:text-gray-300"
+                    }`
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                   
+                  }}
+                >
+                  {link.label}
+                </NavLink>
+              )}
             </li>
           ))}
         </ul>
@@ -98,6 +168,7 @@ const AdminLayout = ({ children }) => {
       {/* Content */}
       <div className="flex flex-col flex-1 md:w-[85%] w-full relative z-40">
         <nav className="bg-white text-black py-4 px-6 shadow-md flex justify-between items-center sticky top-0 z-50">
+          {/* Tombol Menu Mobile */}
           <button
             className="md:hidden p-2 menu-btn"
             onClick={(e) => {
@@ -139,7 +210,7 @@ const AdminLayout = ({ children }) => {
                   className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 hover:cursor-pointer"
                   onClick={() => {
                     if (window.confirm("Apakah anda yakin ingin logout?")) {
-                      Logout();
+                      handleLogout();
                     }
                   }}
                 >
@@ -156,4 +227,4 @@ const AdminLayout = ({ children }) => {
   );
 };
 
-export default AdminLayout;
+export default AdminLayout;

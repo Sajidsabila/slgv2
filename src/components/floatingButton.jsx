@@ -2,7 +2,7 @@ import { FloatButton, notification, Spin } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useState, useRef, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { postIssue, getIssueTypeList, apiSendWa } from "../../api/apiSendIssue";
+import { postIssue, getIssueTypeList, apiSendWa } from "../api/apiSendIssue";
 
 
 

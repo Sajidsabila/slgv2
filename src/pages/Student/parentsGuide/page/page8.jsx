@@ -1,7 +1,8 @@
 import Swal from "sweetalert2";
-import { updateStudent } from "../../../../api/apiPublic";
+
 import { Spin } from "antd";
 import { useState } from "react";
+import { updateStudent } from "../../../../api/apiPublic";
 
 const Page8 = () => {
   const [loading, setLoading] = useState(false);
@@ -22,6 +23,7 @@ const Page8 = () => {
       await updateStudent(data, id);
       sessionStorage.removeItem("selectedOption1");
       sessionStorage.removeItem("selectedOption2");
+      localStorage.removeItem("page");
       setLoading(false);
       Swal.fire({
         title: "Success!",
@@ -47,9 +49,9 @@ const Page8 = () => {
       <div className="relative w-full h-screen bg-gradient-to-b from-sky-300 to-white overflow-hidden">
         {/* konten utama */}
         <div className="container mx-auto flex flex-col items-center justify-center h-full text-center px-4 fadeinanimation ">
-          <h1 className="sm:text-3xl md:text-6xl lg:font-7xl xl:text-8xl sm:font-medium md:font-bold text-gray-800 mb-4">
+          <p className="sm:text-3xl md:text-6xl lg:font-7xl xl:text-8xl  font-bold text-gray-800 mb-2">
             SO, ARE YOU
-          </h1>
+          </p>
           <p className="sm:text-3xl md:text-6xl lg:font-7xl xl:text-8xl  font-bold text-gray-800 mb-8">
           READY ?
           </p>

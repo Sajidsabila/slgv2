@@ -2,87 +2,6 @@
 import axios from "axios";
 import { urlLink } from "../config/config";
 
-//  api Program Materi List
-export const getProgramMateri = async () => {
-  try {
-    const response = await axios.get(
-      `${urlLink.url}/api/resource/Program%20Materi?fields=["*"]&order_by=creation desc`,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data?.data || []; 
-
-  } catch (error) {
-    console.error("Terjadi kesalahan", error?.response?.data || error.message);
-    return [];
-  }
-};
-
-export const postProgramMateri = async (data) => {
-  try {
-  
-    const response = await axios.post(
-      `${urlLink.url}/api/resource/Program%20Materi`,
-      data,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    console.log(response)
-
-    return response.data?.data || [];
-  } catch (error) {
-    throw error;
-  }
-};
-
-
-export const deleteProgramMateri = async (id) => {
-  try {
-    const response = await axios.delete(
-      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    return response.data?.data || [];
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const updateProgramMateri = async (id, data) => {
-  try {
-    const response = await axios.put(
-      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
-      data,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    return response.data?.data || [];
-  } catch (error) {
-    console.error("Terjadi kesalahan", error?.response?.data || error.message);
-    return [];
-  }
-};
-
-
 export const getProgramMateriById = async (id) => {
   try {
     const response = await axios.get(
@@ -162,8 +81,7 @@ export const removeFileProramMateri  = async (id, fileName) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-
-    console.log("File berhasil dihapus:", fileName);
+    console.log(response);
     return response.data?.data || [];
   } catch (error) {
     console.error("Terjadi kesalahan saat menghapus file", error?.response?.data || error.message);
@@ -279,14 +197,25 @@ export const checkFolderExists = async (folderName) => {
 
 export const uploadFileProgramMateri = async (file, folder = "") => {
   try {
-
     const formData = new FormData();
-    formData.append("file", file);
+
+    // Deteksi apakah file adalah URL string atau file asli
+    const isUrl = typeof file === "string" && file.startsWith("http");
+
+    if (isUrl) {
+      formData.append("file_url", file); // untuk upload via URL
+    } else {
+      formData.append("file", file); // untuk upload file asli
+    }
+
     formData.append("folder", folder);
     formData.append("is_private", "0");
+
+    // Debug
     for (let pair of formData.entries()) {
       console.log(pair[0], pair[1]);
     }
+
     const response = await axios.post(
       `${urlLink.url}/api/method/upload_file`,
       formData,
@@ -294,20 +223,19 @@ export const uploadFileProgramMateri = async (file, folder = "") => {
         headers: {
           "Accept": "application/json",
         },
-        withCredentials: true,
+        withCredentials: true, // penting kalau pakai login session
       }
     );
-    console.log(response);
 
-    
     if (!response.data) {
-     setError("Response dari server kosong.");
+      throw new Error("Response dari server kosong.");
     }
 
     console.log("Parsed Response:", response.data);
 
     return response.data.message || "Upload berhasil!";
   } catch (error) {
+    console.error("Upload error:", error);
     throw error;
   }
 };
@@ -354,73 +282,5 @@ export const getDetailModulTrainingPublic = async (id, token) => {
   }
 
 }
-export const postModulTraining = async (data) => {
-  try {
-    const response = await axios.post(
-      `${urlLink.url}/api/resource/Modul%20Training`,
-      data,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data?.data || [];
-  } catch (error) {
-    throw error;
-  }
 
-}
 
-export const deleteModulTraining = async (id) => {
-  try {
-    const response = await axios.delete(
-      `${urlLink.url}/api/resource/Modul%20Training/${id}`,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data?.data || [];
-  } catch (error) {
-    throw error;
-  }
-}
-
-export const updateModulTraining = async (id, data) =>{
-  try {
-    const response = await axios.put(
-      `${urlLink.url}/api/resource/Modul%20Training/${id}`,
-      data,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data?.data || [];
-  } catch (error) {
-    throw error;
-  }
-}
-
-export const detailModulTraining = async (id) => {
-  try {
-    const response = await axios.get(
-      `${urlLink.url}/api/resource/Modul%20Training/${id}?fields=["*"]`,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data?.data || [];
-  } catch (error) {
-    throw error;
-  }
-}

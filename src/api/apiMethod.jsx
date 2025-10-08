@@ -1,35 +1,93 @@
 import axios from "axios";
 import { urlLink } from "../config/config";
 
-export const methodPost = async ({ data, url }) => {
+import { Navigate, useNavigate } from "react-router-dom";
+import { use } from "react";
+
+
+
+export const authStudent  = async (data) => {
   try {
     const response = await axios.post(
-      `${urlLink.url}/api/method/${url}`,
+      `${urlLink.url}/api/method/smi.helper.login_auth`,
       data,
       {
         headers: {
           "Content-Type": "application/json",
-        },
-        withCredentials: true,
+        }
       }
     );
-   return  response.data?.message || [];
+   return  response.data || [];
   } catch (error) {
     throw error;
   }
 };
 
 
-export const methodGet = async ({url}) => {
+export const methodGet = async (url) => {
+  const token = sessionStorage.getItem("token");
   try{
     const response = await axios.get(`${urlLink.url}/api/method/${url}`,{
       headers: {
-        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}`,
       },
-      withCredentials: true,
     });
-    return response.data?.message || [];
+    return response.data
   }catch(error){
     throw error;
   }
 }
+
+export const methodLogout = async () => {
+   const token = sessionStorage.getItem("token");
+    const refresh_token = sessionStorage.getItem("refresh_token");
+    if (!refresh_token && !token) return null;
+      try{
+        const response = await axios.post(`${urlLink.url}/api/method/smi.helper.logout`, {refresh_token : refresh_token}, {
+          headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+          },
+        });
+
+      }catch(error){
+        sessionStorage.clear();
+
+      }finally{
+      sessionStorage.clear();
+
+      }
+}
+
+export const refreshAccesToken = async () => {
+
+    const token = sessionStorage.getItem("token");
+    const refresh_token = sessionStorage.getItem("refresh_token");
+    if (!refresh_token && !token) return null;
+        try {
+          const response = await axios.post(
+            `${urlLink.url}/api/method/smi.helper.refresh_access_token`,
+            { refresh_token },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const newToken = response.data?.access_token;
+          if (newToken && newToken !== token) {
+            sessionStorage.setItem("token", newToken);
+            return newToken;
+          }
+          return token; 
+        } catch (error) {
+         sessionStorage.clear();
+
+        }
+};
+
+
+
+

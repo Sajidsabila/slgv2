@@ -4,7 +4,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { MiddlewareStudent, MiddlewareTeacher,Middleware } from "../middleware/middelware.jsx";
 import { Guest, GuestOnly } from "../middleware/isGuest.jsx";
 
-import Index from "../pages/index.jsx";
+import Index from "../pages/Student/index.jsx";
 import PageProgramMateri from "../pages/pageProgramMateri.jsx";
 import ClassCourseDetail from "../pages/class.jsx";
 import AuthStudent from "../pages/Auth/student.jsx";
@@ -13,8 +13,8 @@ import Page404 from "../pages/404.jsx";
 import Dashboard from "../pages/Admin/dashboard.jsx";
 import Profile from "../pages/Admin/profile.jsx";
 import ProgramMateri from "../pages/Admin/programMateri.jsx";
-import DetailProgramMateri from "../pages/Admin/detailClassFormat.jsx";
-import HistoryAbsensi from "../pages/Student/historyAbsensi.jsx";
+
+import HistoryAbsensi from "../pages/Student/studentReport/historyAbsensi.jsx";
 import EvaluasiSemester from "../pages/Admin/evaluasiSemester.jsx";
 import DetailEvaluasiSemester from "../pages/Admin/detailEvaluasiSemester.jsx";
 import AuthTeacher from "../pages/Auth/teacher.jsx";
@@ -32,10 +32,19 @@ import ModulTrainingTeacher from "../pages/Teacher/modulTraining.jsx";
 import DetailModulTrainingTeacher from "../pages/Teacher/detailModulTraining.jsx";
 import EvaluationSemesterTeacher from "../pages/Teacher/evaluationSemester.jsx";
 import ProfileStudents from "../pages/profileStudent.jsx";
-import FeesList from "../pages/Student/feessList.jsx";
+import FeesList from "../pages/Student/studentReport/feessList.jsx";
 import ParentsGuide from "../pages/Student/parentsGuide/index.jsx";
 import Page7 from "../pages/Student/parentsGuide/page/page7.jsx";
 import Page8 from "../pages/Student/parentsGuide/page/page8.jsx";
+import ProgramMateriSyllabus from "../pages/Admin/program-materi/syllabus.jsx";
+import ProgramMateriExamSpeciment from "../pages/Admin/program-materi/examSpecimen.jsx";
+import ProgramMateriLhb from "../pages/Admin/program-materi/lhb.jsx";
+import ProgramMateriSlg from "../pages/Admin/program-materi/slg.jsx";
+import DetailProgramMateri from "../pages/Admin/program-materi/detailProgramMateri.jsx";
+import StudentReport from "../pages/Student/studentReport.jsx";
+import LearningResources from "../pages/Student/learningResources.jsx";
+import ProfileStudentsFrontend from "../pages/Student/profileStudent.jsx";
+
 
 
 const routes = createBrowserRouter([
@@ -66,7 +75,7 @@ const routes = createBrowserRouter([
   },
  {
   element: <MiddlewareStudent />,
-  errorElement: <Page404 />,
+
   children: [
     {
       path: "/home",
@@ -81,13 +90,31 @@ const routes = createBrowserRouter([
       element: <ClassCourseDetail />,
     },
     {
-      path: "/history-absensi",
+      path: "students-report/history-absensi",
       element: <HistoryAbsensi />,
     },
     {
-      path: "/fees",
+      path: "students-report/fees",
       element: <FeesList />
     },
+
+    {
+      path: "evaluasi-semester",
+      element: <EvaluasiSemester />
+    },
+    {
+      path: "students-report",
+      element: <StudentReport />
+    },
+    {
+      path: "learning-resources",
+      element: <LearningResources />
+    },
+    {
+      path: "profile",
+      element: <ProfileStudentsFrontend />
+    },
+
      
   ]
 },
@@ -134,7 +161,17 @@ const routes = createBrowserRouter([
       {path: "book-menu/:id", element: <DetailBookMenu />},
       {path: "calender-academic", element: <CalenderAcademic />},
       {path: "modul-training", element: <ModulTraining />},
-      {path: "modul-training/:id", element: <DetailModulTraining />}
+      {path: "modul-training/:id", element: <DetailModulTraining />},
+      {path: "program-materi-syllabus", element: <ProgramMateriSyllabus />},
+      {path: "program-materi-exam-speciment", element: <ProgramMateriExamSpeciment/>},
+      {path: "program-materi-LHB", element: <ProgramMateriLhb/>},
+      {path: "program-materi-SLG", element: <ProgramMateriSlg />},
+      {
+        path: "program-materi-syllabus/:id",
+        element: <DetailProgramMateri filetype={["mp4", "pdf"]} type="Syllabus" title="Detail Program Materi Syllabus" back="/admin/program-materi-syllabus"/> ,},
+        {path: "program-materi-exam-speciment/:id", element: <DetailProgramMateri filetype={["mp4", "pdf"]} type="Exam Speciment" title="Detail Program Materi Exam Speciment" back="/admin/program-materi-exam-speciment"/>},
+        {path: "program-materi-LHB/:id", element: <DetailProgramMateri filetype={["mp4", "pdf"]} type="LHB" title="Detail Program Materi LHB" back="/admin/program-materi-LHB"/>},
+        {path: "program-materi-SLG/:id", element: <DetailProgramMateri filetype={["mp4", "pdf"]} type="SLG" title="Detail Program Materi SLG" back="/admin/program-materi-SLG"/>},
     ],
   },
 ]);

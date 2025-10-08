@@ -4,7 +4,7 @@ import AdminLayout from "../../layout/admin-layout"
 import { apiGetProgramMateriPublic } from "../../api/apiPublic"
 
 import { Link } from "react-router-dom";
-import { useResourceAdmin } from "../../api/userResourceAdmin";
+import { apiResourceAdmin } from "../../api/apiResourceAdmin";
 
 const Dashboard = () => {
     const [program, setProgram] = useState([]);
@@ -24,7 +24,7 @@ const Dashboard = () => {
 
         const countClassFormat = async () => {
             try {
-                const resFormat = await useResourceAdmin({doctype: "Program Class Format"});
+                const resFormat = await apiResourceAdmin({doctype: "Program Class Format"});
                 const countFormat  = resFormat.length;
                 setFormat(countFormat);
         }catch(error) {
@@ -34,7 +34,7 @@ const Dashboard = () => {
 
     const classCourse = async () => {
         try {
-            const resCourse = await useResourceAdmin({doctype: "Program Class Course"});
+            const resCourse = await apiResourceAdmin({doctype: "Course"});
             const count = resCourse.length;
             setCourse(count);
         }catch (error) {
@@ -44,7 +44,7 @@ const Dashboard = () => {
 
     const classGrading = async () => {
         try {
-            const resGrading = await useResourceAdmin({doctype: "Program Class Grading"});
+            const resGrading = await apiResourceAdmin({doctype: "Program Class Grading"});
             const count = resGrading.length;
             setGrading(count);
         }catch (error) {
@@ -71,7 +71,7 @@ const Dashboard = () => {
                     <div className="flex flex-row px-6 py-4 justify-between">
                         <div className="text-l font-semibold">Jumlah Data</div>
                         <div className="bg-slate-800 text-white px-6 py-3 font-semibold rounded-md w-fit">
-                            {course || "0"}
+                            {course ?? 0}
                         </div>
                     </div>
                 </Link>

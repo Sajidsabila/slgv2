@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, Pencil, Trash } from "lucide-react";
-import { motion } from "framer-motion";
+import { Spin } from "antd";
 
 import AdminLayout from "../../layout/admin-layout";
 import {
-  postModulTraining,
   uploadFileProgramMateri,
-  deleteFileProgramMateri,
-  updateModulTraining,
-  deleteModulTraining
+  deleteFileProgramMateri
 } from "../../api/apiProgramMateri";
-import Modal from "../../components/Modal/modal";
-import InputModal from "../../components/InputModal";
-import { useResourceAdmin } from "../../api/userResourceAdmin";
+import Modal  from "../../components/modal";
+import InputModal from "../../components/inputModal";
+import { apiResourceAdmin, apiResourceAdminDelete, apiResourceAdminPut, apiResourceAdminPost } from "../../api/apiResourceAdmin";
 
 const CalenderAcademic = () => {
   const [calenderAcademic, seCalenderAcademic] = useState([]);
@@ -35,10 +32,10 @@ const CalenderAcademic = () => {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const fetchModulTraining = async () => {
       try {
-        const response = await useResourceAdmin({
+        const response = await apiResourceAdmin({
            doctype: "Modul Training",
           filters: [["type", "=", "Calender Academic"]],
         });
@@ -91,7 +88,7 @@ const CalenderAcademic = () => {
   };
 
   const handleEdit = (name) => {
-    const dataToEdit = modulTraining.find((item) => item.name === name);
+    const dataToEdit = calenderAcademic.find((item) => item.name === name);
     if (!dataToEdit) return;
 
     const isUrl = dataToEdit.file_url?.startsWith("http://") || dataToEdit.file_url?.startsWith("https://");
@@ -133,7 +130,7 @@ const CalenderAcademic = () => {
   const handleDelete = async (name) => {
     try{
       setIsLoading(true);
-      const deleteResponse = await deleteModulTraining(name);
+      const deleteResponse = await apiResourceAdminDelete({doctype: "Modul Training", id: name});
       console.log(deleteResponse);
       if (deleteResponse) {
         setSuccess("Data berhasil dihapus.");
@@ -190,9 +187,9 @@ const CalenderAcademic = () => {
       }
 
       if (isEditMode) {
-        await updateModulTraining(editId, payload);
+        await apiResourceAdminPut({doctype: "Modul Training", id: editId, data: payload});
       } else {
-        await postModulTraining(payload);
+        await apiResourceAdminPost({doctype: "Modul Training", data: payload});
       }
 
       await fetchModulTraining();
@@ -296,17 +293,7 @@ const CalenderAcademic = () => {
         )}
 
         {loading && (
-          <motion.div
-            className="fixed inset-0 bg-transparent bg-opacity-50 flex items-center justify-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
-              <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-sm text-blue-500 mt-3">Memproses data...</p>
-            </div>
-          </motion.div>
+          <Spin size="large" />
         )}
 
         <div className="relative overflow-x-auto rounded-xl shadow-md">

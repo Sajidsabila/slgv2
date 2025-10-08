@@ -1,39 +1,52 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 
-const Page7 = () => {
-  const [answers, setAnswers] = useState(true);
-  const [showVidio, setShowVidio] = useState(false);
+const Page7 = ({ muted, onToggleMute }) => {
+  const [showVideo, setShowVideo] = useState(false);
+  const audioRef = useRef(null);
+  const videoRef = useRef(null);
 
- 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowVidio(true);
-      setAnswers(false);
+      setShowVideo(true);
+      if (audioRef.current) {
+        audioRef.current.pause(); // stop audio saat video muncul
+      }
+      if (videoRef.current) {
+        videoRef.current.play().catch(() => {
+          // autoplay gagal
+        });
+        videoRef.current.muted = muted;
+      }
     }, 9000);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = muted;
+    }
+  }, [muted]);
 
   const options1 = sessionStorage.getItem("selectedOption1");
   const options2 = sessionStorage.getItem("selectedOption2");
 
   return (
     <div className="w-full h-screen flex items-center justify-center relative overflow-hidden">
-      {answers && (
+      {!showVideo && (
         <>
-          <audio autoPlay loop>
+          <audio ref={audioRef} autoPlay loop>
             <source src="/backsound/5.mp3" type="audio/mpeg" />
             Browser kamu tidak mendukung audio.
           </audio>
 
-          {/* Konten utama */}
-          <div className="xl:w-[85dvw] lg:-w-[80dvw] md:w-[75dvw]  text-center space-y-6">
+          <div className="xl:w-[85dvw] lg:-w-[80dvw] md:w-[75dvw] text-center space-y-6 absolute z-1">
             <div>
-              <h1 className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl font-extrabold text-red-600">
+              <div className="sm:text-lg md:text-xl lg:text-2xl xl:text-6xl font-extrabold text-red-800">
                 MARI KITA KEMBALI KE ALASAN & TUJUAN ANAK ANDA
-              </h1>
-              <h2 className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl font-extrabold mt-2 text-red-600">
+              </div>
+              <div className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl font-extrabold mt-2 text-red-800">
                 BELAJAR MUSIK :
-              </h2>
+              </div>
             </div>
 
             <div className="flex flex-col gap-6 text-left w-[100%]">
@@ -45,7 +58,7 @@ const Page7 = () => {
                   type="text"
                   value={options1 || "test question"}
                   readOnly
-                  className="w-full bg-stone-300 rounded-full px-4 text-sm sm:text-base font-medium sm:py-5 md:py-6 lg:py-7 lg:py-7 xl:py-7 ps-10"
+                  className="w-full bg-stone-300 rounded-full px-4 text-sm sm:text-base font-medium sm:py-5 md:py-6 lg:py-7 xl:py-7 ps-10"
                 />
               </div>
 
@@ -57,36 +70,38 @@ const Page7 = () => {
                   type="text"
                   value={options2 || "test question"}
                   readOnly
-                  className="w-full bg-stone-300 rounded-full px-4 text-sm sm:text-base font-medium sm:py-5 md:py-6 lg:py-7 lg:py-7 xl:py-7 ps-10 ps-10"
+                  className="w-full bg-stone-300 rounded-full px-4 text-sm sm:text-base font-medium sm:py-5 md:py-6 lg:py-7 xl:py-7 ps-10 ps-10"
                 />
               </div>
             </div>
           </div>
 
-          {/* Gambar kiri */}
           <img
             src="/images/image_page_7.1.png"
             alt=""
-            className="absolute xl:w-60 lg:w-60 sm:w-45  -translate-x-1/2 xl:top-90  left-15 lg:top-55 z-1 sm:top-20"
+            className="absolute z-0 xl:w-60 lg:w-60 sm:w-45 -translate-x-1/2 xl:top-90 left-15 lg:top-55 sm:top-20"
           />
 
-          {/* Gambar kanan */}
           <img
             src="/images/image_page_7.2.png"
             alt=""
-            className="absolute xl:w-60 lg:w-60 sm:w-45  translate-x-1/2 xl:top-90 right-20 lg:top-55 sm:top-20 z-0"
+            className="absolute z-0 xl:w-60 lg:w-60 sm:w-45 translate-x-1/2 xl:top-90 lg:right-22 lg:top-55 sm:top-20 "
           />
         </>
       )}
 
-      {showVidio && (
-        <div className="absolute inset-0 flex items-center justify-center">
+      {showVideo && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
           <video
+            ref={videoRef}
             className="w-full h-full object-cover"
             src="/videos/7.mp4"
             autoPlay
             playsInline
+            muted={muted}
+            controls={false}
           />
+        
         </div>
       )}
     </div>

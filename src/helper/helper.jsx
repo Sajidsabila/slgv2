@@ -6,38 +6,6 @@ export const convertDate = (date) => {
     return `${day}-${month}-${year}`;
 };
 
-export const getEnrollment = () => {
-  try {
-    const raw = sessionStorage.getItem("token");
-    if (!raw) return [];
-
-   let data; 
-   data = typeof raw === "string" ? JSON.parse(raw) : raw;
-   const enrollments = data?.program_enrollments;
-    if (Array.isArray(enrollments)) {
-
-      return enrollments.map((e) => ({
-        program: e.program,
-        course: e.course,
-        class_format: e.class_format,
-        class_grading: e.class_grading
-      }));
-    } else if(typeof enrollments === 'object' && enrollments !== null) {
-      return [
-        {
-          program: enrollments.program,
-          course: enrollments.course,
-          class_format: enrollments.class_format,
-          class_grading: enrollments.class_grading
-        }
-      ];
-    }
-    return [];
-  } catch (error) {
-    console.error("Gagal ambil program codes dari session:", error);
-    return [];
-  }
-}
 
 export const capitalAtWords = (string) => {
   if (typeof string !== 'string') return '';
@@ -52,4 +20,39 @@ export const formatDateIndonesia = (date) => {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   return new Date(date).toLocaleDateString('id-ID', options);
 };
+
+export const getDriveFileId = (url) => {
+  if (!url) return null;
+  const regex = /[-\w]{25,}/;
+  const match = url.match(regex);
+  return match ? match[0] : null;
+};
+
+export const  generateKarakter = (length) => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+export const generatePreviewGDriveImage = (url) => {
+
+  const match = url.match(/\/d\/([^/]+)\//);
+  if (match && match[1]) {
+    return `https://drive.google.com/thumbnail?id=${match[1]}`;
+  }
+  return url; 
+}
+
+export const generatePreviewGDriveVideo = (url) => {
+  const api_key = import.meta.env.VITE_GOOGLE_DRIVE_API_KEY;
+const match = url.match(/\/d\/([^/]+)\//);
+  if (match && match[1]) {
+    return `https://www.googleapis.com/drive/v3/files/${match[1]}?alt=media&key=${api_key}`;
+  }
+  return url;
+};
+
 

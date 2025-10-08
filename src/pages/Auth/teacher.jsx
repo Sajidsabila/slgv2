@@ -2,7 +2,7 @@ import { useState } from "react";
 import LandingPageLayout from "../../layout/landing-page";
 import { Link } from "react-router-dom";
 import { urlLink } from "../../config/config";
-import { ins } from "framer-motion/client";
+
 
 
 const AuthTeacher = () => {

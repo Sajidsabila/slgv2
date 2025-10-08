@@ -1,74 +1,60 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { urlLink } from "../config/config";
 import { Spin } from "antd";
+import { useAuth } from "../hooks/useAuth";
+import axios from "axios";
+
 
 export const Middleware = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-
+  const { user, logout } = useAuth();
+  const checked = useRef(false); 
   useEffect(() => {
-    let isMounted = true;
+    if (user && !checked.current) {
+      checked.current = true;
+      axios
+        .get(`${urlLink.url}/api/method/frappe.auth.get_logged_user`, {
+          withCredentials: true,
+        })
+        .catch(() => {
+          logout();
+        });
+    }
+  }, [user, logout]);
 
-    const checkAuth = async () => {
-      try {
-        const response = await fetch(
-          `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) throw new Error("Unauthorized");
-
-        if (isMounted) setIsAuthenticated(true);
-      } catch (error) {
-        console.error("Auth Error:", error);
-        localStorage.clear();
-        if (isMounted) setIsAuthenticated(false);
-      }
-    };
-
-    checkAuth();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  if (isAuthenticated === null) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Spin size="large" />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/login"/>;
 
   return <Outlet />;
 };
-
 export const MiddlewareStudent = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const token = sessionStorage.getItem("token");
+  const refreshToken = sessionStorage.getItem("refresh_token");
+  const [valid, setValid] = useState(null);
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    setIsAuthenticated(!!token);
-  }, []);
+    if (!token || !refreshToken) {
+      setValid(false);
+      return;
+    }
 
-  if (isAuthenticated === null) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Spin size="large" />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) return <Navigate to="/" replace />;
+    axios.post(
+      `${urlLink.url}/api/method/smi.helper.refresh_access_token`,
+      { refresh_token: refreshToken },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then(() => setValid(true)) 
+    .catch(() => {
+      sessionStorage.clear();
+      setValid(false);            
+    });
+  }, [token, refreshToken]);
+  if (valid === null) return null;
+  if (!valid) return <Navigate to="/" replace />;
 
   return <Outlet />;
 };
