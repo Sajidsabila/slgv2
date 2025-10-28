@@ -44,6 +44,7 @@ import DetailProgramMateri from "../pages/Admin/program-materi/detailProgramMate
 import StudentReport from "../pages/Student/studentReport.jsx";
 import LearningResources from "../pages/Student/learningResources.jsx";
 import ProfileStudentsFrontend from "../pages/Student/profileStudent.jsx";
+import KalenderAkademik from "../pages/Student/learningResources/kalederAkademik.jsx";
 
 
 
@@ -109,6 +110,10 @@ const routes = createBrowserRouter([
     {
       path: "learning-resources",
       element: <LearningResources />
+    },
+    {
+      path: "kalender-academic",
+      element: <KalenderAkademik />
     },
     {
       path: "profile",

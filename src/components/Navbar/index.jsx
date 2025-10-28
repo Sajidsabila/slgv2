@@ -1,11 +1,13 @@
 import React, { use, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { methodLogout } from "../../api/apiMethod";
+import { UserAddOutlined } from "@ant-design/icons";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [activeDropdown2, setActiveDropdown2] = useState(null);
+  const [open, setIsOpenModal] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const dropdownLinks = [
@@ -74,7 +76,8 @@ const Navbar = () => {
           <img src="/assets/logowhite.svg" alt="Logo Simfoni" className="w-30" />
 
           {sessionStorage.getItem("token") && (
-            <button
+            <>
+             <button
               onClick={() => {
                 if (window.confirm("Are you sure you want to logout?"))
                   logoutStudent();
@@ -83,6 +86,13 @@ const Navbar = () => {
             >
               Logout
             </button>
+            {/* <UserAddOutlined onClick={!isOpen}/> */}
+            {isOpen && (
+              <p className="w-40 ms-80 text-md relative z-10 bottom-10">test 123</p>
+            )}
+
+            </>
+           
           )}
         
         </div>

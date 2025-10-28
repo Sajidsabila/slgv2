@@ -1,108 +1,76 @@
-
-import { useEffect, useState, useMemo } from "react";
-import { Link } from "react-router-dom";
 import LandingPageLayout from "../../layout/landing-page";
-import { methodGet } from "../../api/apiMethod";
-
-
 
 const Index = () => {
-  const [programs, setPrograms] = useState([]);
+    return (
+        <LandingPageLayout>
+            <div className="container mx-auto px-4 py-10 bg-white w-full max-w-4xl rounded-xl shadow-lg">
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mx-6">
+                 
+                    <img
+                        src="https://placehold.co/200x200"
+                        alt="Foto Profil Siswa"
+                        className="w-40 h-40 object-cover rounded-full border-4 border-red-400 shadow-md"
+                    />
 
-  useEffect(() => {
-    const getProgramEnrollment = async () => {
-      try {
-        const response = await methodGet("smi.helper.get_program_enrollment");
-        setPrograms(response.message);
-      }catch(error){
-        console.error("Error fetching program data:", error);
-      }
-    };
-    getProgramEnrollment();
-   
-    
-  }, []);
+                  
+                    <div className="w-full">
 
-  console.log("ini program", programs)
+                     
+                        <div  className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-800">NAMA LENGKAP</h2>
+                                <p className="text-gray-600">Benidiktus Candra P.</p>
 
-  
-  const uniqueCourses = useMemo(() => {
-      const filteredeStudentProgramEnrollment = programs.filter(p =>
-        programs.includes(p.class_course ?? "")
-      )
-    return filteredeStudentProgramEnrollment.filter((value, index, self) =>
-      index === self.findIndex((t) => t.class_course === value.class_course)
+                                <h2 className="mt-4 text-lg font-semibold text-gray-800">NIS</h2>
+                                <p className="text-gray-600">00000000001</p>
+                            </div>
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-800">KELAS</h2>
+                                <p className="text-gray-600">PIANO - JC 1</p>
+
+                                <h2 className="mt-4 text-lg font-semibold text-gray-800">POINT SISWA</h2>
+                                <p className="text-gray-600">180 Point</p>
+                            </div>
+                        </div>
+
+                    
+                        <hr className="my-8 border-t border-gray-300" />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-800">KELAS SELANJUTNYA</h2>
+                                <p className="text-gray-600">
+                                    Selasa, 19 Agustus 2020<br />
+                                    15.00 - 16.00 WIB
+                                </p>
+                            </div>
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-800">STATUS PEMBAYARAN</h2>
+                                <p className="text-green-600">Terbayar</p>
+                            </div>
+                        </div>
+
+                       
+                        <hr className="my-8 border-t border-gray-300" />
+
+                      
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-800">EVENT SELANJUTNYA</h2>
+                                <p className="text-gray-600">
+                                    Rabu, 20 Agustus 2020<br />
+                                    10.00 - 12.00 WIB
+                                </p>
+                            </div>
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-800">Judul Event</h2>
+                                <p className="text-gray-600">Webinar Motivasi Belajar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </LandingPageLayout>
     );
-  }, [programs]);
- 
-
-  return (
-    <LandingPageLayout title="Welcome to SMI">
-  <div className="container mx-auto px-4 py-10">
-      <div className="flex justify-center mb-6">
-      <Link
-        to="/history-absensi"
-        className="text-white bg-blue-500 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition"
-      >
-        History Attendance
-      </Link>
-    </div>
-    <h1 className="text-3xl font-bold text-center text-sky-700 mb-2">
-      Selamat Datang Saya di Student Learning Guide
-    </h1>
-    <p className="text-center text-gray-600 mb-8">
-      Silakan pilih program atau kelas yang tersedia di bawah ini.
-    </p>
-
-    <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-      Pilihan Class Course
-    </h2>
-
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {programs.length === 0 ? (
-        <p className="text-center text-gray-500 col-span-full">
-          Anda Belum Memiliki Program Enrollment
-        </p>
-      ) : uniqueCourses.length > 0 ? (
-        uniqueCourses.map((item) => (
-          <Link
-            to={`/class-course/${item.abbr_course}`}
-            key={item.abbr_course}
-            className="p-5 bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
-          >
-            <p className="text-lg font-semibold text-gray-700 text-center">
-              {item.class_course}
-            </p>
-          </Link>
-        ))
-      ) : (
-        <p className="text-center text-gray-500 col-span-full">
-          Data Program Materi Masih Kosong
-        </p>
-      )}
-    </div>
-  </div>
-</LandingPageLayout>
-
-  );
 };
 
 export default Index;
-
-// import LandingPageLayout from "../layout/landing-page";
-// const Index = () => {
-//   return (
-//     <LandingPageLayout title="Welcome to SMI">
-//     <div className="container mx-auto px-4 py-10">
-//       <h1 className="text-3xl font-bold text-center text-sky-700 mb-2">
-//         Selamat Datang di Student Learning Guide
-//       </h1>
-//       <p className="text-center text-gray-600 mb-8">
-//         Silakan pilih program atau kelas yang tersedia di bawah ini.
-//       </p>
-//     </div>
-//  </LandingPageLayout>
-//   );
-// };
-
-// export default Index;
