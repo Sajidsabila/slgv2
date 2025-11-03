@@ -32,7 +32,6 @@ const DetailProgramMateri = ({ type, back, title }) => {
     itemsPerPage,
   } = useFileMateri(id, type);
 
-  // Pagination helper
   const changePage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
@@ -63,8 +62,18 @@ const DetailProgramMateri = ({ type, back, title }) => {
           <label className="text-sm font-medium text-gray-700">Use File Url</label>
         </div>
 
+           <InputModal
+           label="Judul File"
+           type="text"
+           name="description"
+           value={formData.description}
+           placeholder="Masukkan judul file..."
+           onChange={handleChange}
+         />
+
         {formData.useFileUrl ? (
-          <InputModal
+          <>
+           <InputModal
             label="File URL"
             type="text"
             name="file_url"
@@ -72,6 +81,9 @@ const DetailProgramMateri = ({ type, back, title }) => {
             placeholder="Masukkan URL file..."
             onChange={handleChange}
           />
+       
+          </>
+         
         ) : (
           <>
             <InputModal label="File" type="file" name="file" onChange={handleChange} />
@@ -79,6 +91,7 @@ const DetailProgramMateri = ({ type, back, title }) => {
               <p className="text-sm text-gray-500">Kosongkan jika file tidak ingin diubah</p>
             )}
           </>
+          
         )}
       </Modal>
 

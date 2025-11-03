@@ -84,7 +84,7 @@ console.log(feesList);
   };
 
   return (
-    <LandingPageLayout title="Fees List">
+    <LandingPageLayout>
       <div className="px-4 py-6 container mx-auto">
             <div className="flex my-6">
                <img src="/assets/smile_image/icon-6.png" className="w-15 h-15 relative z-1 top-2 left-3"/>

@@ -118,6 +118,7 @@ const handleSubmit = async (event) => {
           title: uploadedFile.file_name,
           file_url: uploadedFile.file_url,
           type: "Program Materi",
+          description: formData.description
         };
 
       } else if (formData.useFileUrl) {
@@ -127,6 +128,7 @@ const handleSubmit = async (event) => {
           title: formData.file_url,
           file: uploadWithUrl.name,
           type: "Program Materi",
+          description: formData.description
         };
       }
 
@@ -139,12 +141,11 @@ const handleSubmit = async (event) => {
       }
 
     } else {
-      // ========== Edit File ==========
 
       const isFileChanged =
-        (!!formData.file || (formData.useFileUrl && formData.file_url !== formData.oldFileUrl));
+      (!!formData.file || (formData.useFileUrl && formData.file_url !== formData.oldFileUrl));
 
-      if (!isFileChanged) {
+      if (!isFileChanged && !formData.description) {
         setSuccess("Tidak ada perubahan file. Data tetap sama.");
         resetFormData();
         setIsEditMode(false);
@@ -160,6 +161,7 @@ const handleSubmit = async (event) => {
           title: uploadedFile.file_name,
           file_url: uploadedFile.file_url,
           oldFileName: formData.oldFileName,
+          description: formData.description
         };
 
       } else if (formData.useFileUrl) {
@@ -169,6 +171,7 @@ const handleSubmit = async (event) => {
           title: formData.file_url,
           file: uploadWithUrl.name,
           oldFileName: formData.oldFileName,
+           description: formData.description
         };
       }
 
@@ -186,7 +189,7 @@ const handleSubmit = async (event) => {
       setProgramMateri((prev) => ({
         ...prev,
         file: (prev.file || []).map((f) =>
-          f.file === formData.oldFileName ? newFile : f
+          f.file === formData.oldFileName ? newFile : f,
         ),
       }));
     }
@@ -252,6 +255,7 @@ const handleEdit = (data) => {
     oldFileUrl: data.file_url ?? "",
     useFileUrl: data.file_url?.startsWith("http") ?? false,
     file_url: data.file_url.startsWith("http") ? data.file_url : "",
+    description: data.description ?? "",
   });
 
   setIsOpen(true);

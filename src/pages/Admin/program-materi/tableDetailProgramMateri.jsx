@@ -114,7 +114,7 @@ const TableDetailProgramMateri = ({
       <div className="flex lg:flex-row flex-col justify-between items-center mb-4 gap-2 ">
         <button
           onClick={handleOpen}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md lg:w-auto w-full"
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md lg:w-auto w-full hover:cursor-pointer"
         >
           Tambah File
         </button>
@@ -133,6 +133,7 @@ const TableDetailProgramMateri = ({
           <tr>
             <th className="p-3">No</th>
             <th className="p-3">Judul</th>
+            <th className="p-3">Description</th>
             <th className="p-3">Preview</th>
             <th className="p-3">Aksi</th>
           </tr>
@@ -145,7 +146,9 @@ const TableDetailProgramMateri = ({
                   {(currentPage - 1) * itemsPerPage + idx + 1}
                 </td>
                 <td className="p-3">{file.title}</td>
+                <td className="p-3">{file.description}</td>
                 <td className="p-3">{renderPreview(file)}</td>
+           
                 <td className="p-3 flex gap-2">
                   <button
                     onClick={() => handleEdit(file)}

@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { convertDate } from "../../helper/helper";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { authStudent } from "../../api/apiMethod";
-
-const AuthStudent = () => {
-  const location = useLocation().pathname;
+const SetStudentPassword = () => {
+const location = useLocation().pathname;
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     id_siswa: "",
@@ -78,8 +77,7 @@ const handleCheckStudent = async (e) => {
     setLoading(false);
   }
 };
-
-  return (
+    return (
     <div className="relative min-h-screen w-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat bg-[url(/assets/smile_image/background-page-login.png)] font-['Poppins']">
       <div className="container mx-auto px-4 py-10">
         <div className="flex flex-col lg:flex-row justify-between items-center gap-10 md:gap-7">
@@ -90,10 +88,9 @@ const handleCheckStudent = async (e) => {
           </div>
           <div className="lg:hidden text-white font-bold text-xl">Welcome to SMI Learning System</div>
           <div className="w-full lg:w-1/2 bg-white/90 backdrop-blur-md rounded-xl shadow-2xl p-6 md:p-10">
-            <h2 className="font-bold text-2xl md:text-3xl mb-6 text-gray-800">Log In to
-                <br /> Your Account</h2>
+            <h2 className="font-bold text-2xl md:text-3xl mb-6 text-gray-800">Forgot Password</h2>
 
-            <div className="flex flex-wrap gap-3 mb-8">
+            {/* <div className="flex flex-wrap gap-3 mb-8">
               <Link
                 to="/"
                 className={`w-30 text-center py-2 md:py-3 font-semibold rounded-lg shadow-md transition ${
@@ -110,7 +107,7 @@ const handleCheckStudent = async (e) => {
               >
                 Teacher
               </Link>
-            </div>
+            </div> */}
 
             {error && (
               <p className="text-red-600 font-medium text-center mb-4">{error}</p>
@@ -151,8 +148,7 @@ const handleCheckStudent = async (e) => {
                 />
               </div>
 
-              <p>Lupa Password ? <Link to="/set-password" className="text-red-800 hover:cursor-pointer hover:text-red-600">Klik disini</Link></p>
-
+                   <p>Kembali ke halaman login ? <Link to="/" className="text-red-800 hover:cursor-pointer hover:text-red-600">Klik disini</Link></p>
           <div className="relative top-12">
             <button
               type="submit"
@@ -168,7 +164,8 @@ const handleCheckStudent = async (e) => {
         </div>
       </div>
     </div>
-  );
-};
+    )
+}
 
-export default AuthStudent;
+
+export default SetStudentPassword

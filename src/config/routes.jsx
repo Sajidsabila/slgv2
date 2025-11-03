@@ -31,7 +31,6 @@ import CourseTeacher from "../pages/Teacher/course.jsx";
 import ModulTrainingTeacher from "../pages/Teacher/modulTraining.jsx";
 import DetailModulTrainingTeacher from "../pages/Teacher/detailModulTraining.jsx";
 import EvaluationSemesterTeacher from "../pages/Teacher/evaluationSemester.jsx";
-import ProfileStudents from "../pages/profileStudent.jsx";
 import FeesList from "../pages/Student/studentReport/feessList.jsx";
 import ParentsGuide from "../pages/Student/parentsGuide/index.jsx";
 import Page7 from "../pages/Student/parentsGuide/page/page7.jsx";
@@ -45,6 +44,11 @@ import StudentReport from "../pages/Student/studentReport.jsx";
 import LearningResources from "../pages/Student/learningResources.jsx";
 import ProfileStudentsFrontend from "../pages/Student/profileStudent.jsx";
 import KalenderAkademik from "../pages/Student/learningResources/kalederAkademik.jsx";
+import ProgramEdukasi from "../pages/Student/learningResources/programEdukasi.jsx";
+import MateriPembelajaran from "../pages/Student/learningResources/materiPembelajaran.jsx";
+import EvaluasiSemesterStudent from "../pages/Student/studentReport/evaluasiSemesterStudent.jsx";
+
+import SetStudentPassword from "../pages/Auth/setStudentPassword.jsx";
 
 
 
@@ -65,7 +69,10 @@ const routes = createBrowserRouter([
     path: "/",
     element: <GuestOnly><AuthStudent /></GuestOnly>,
   },
-
+ {
+  path: "/set-password",
+  element: <GuestOnly><SetStudentPassword /></GuestOnly>
+ },
   {
     path: "login-teacher",
     element: (
@@ -95,6 +102,10 @@ const routes = createBrowserRouter([
       element: <HistoryAbsensi />,
     },
     {
+      path: "students-report/evaluasi-semester",
+      element: <EvaluasiSemesterStudent />
+    },
+    {
       path: "students-report/fees",
       element: <FeesList />
     },
@@ -112,9 +123,17 @@ const routes = createBrowserRouter([
       element: <LearningResources />
     },
     {
-      path: "kalender-academic",
+      path: "learning-resources/kalender-academic",
       element: <KalenderAkademik />
     },
+    {
+      path: "learning-resources/program-edukasi",
+      element: <ProgramEdukasi />
+    },
+    {
+      path : "learning-resources/materi-pembelajaran",
+      element: <MateriPembelajaran />
+   },
     {
       path: "profile",
       element: <ProfileStudentsFrontend />

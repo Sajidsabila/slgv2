@@ -117,6 +117,7 @@ export const updateFileToProgramMateri = async (id, newFile) => {
       file: newFile.file, 
       title: newFile.title,
       file_url: newFile.file_url,
+      description: newFile.description
     };
     const response = await axios.put(
       `${urlLink.url}/api/resource/Program%20Materi/${id}`,
