@@ -13,18 +13,7 @@ const DetailBookMenu = () => {
   const [loading, setLoading] = useState(false);
   const [extension, setExtension] = useState({});
 
-  const getGoogleDriveExtension = async (url) => {
-   try{
-      const fileId = getDriveFileId(url);
-      if(!fileId) return;
  
-      const response = await googledriveApi(fileId);
-      setExtension(response.fileExtension);
-   }catch(e){
-    console.log(e);
-   }
-  };
-
   useEffect(() => {
     const detailData = async () => {
       setLoading(true);
@@ -41,78 +30,82 @@ const DetailBookMenu = () => {
     detailData();
   }, [id]);
 
-  console.log()
-
-  const file_url  =`${urlLink.url}/${detailmodulTrainingBookMenu.file_url}`;
-    const getFileType = (file) => {
-    if (file.file_url?.startsWith("http")) {
-      return extension[file.name] || "loading";
-    }
-    return file.title?.split(".").pop()?.toLowerCase();
-  };
-
-  console.log(extension);
-
-  const renderPreview = (file) => {
-    const fileType = getFileType(file);
-
-
-    if (fileType === "mp3" || fileType === "wav") {
-      return (
-        <audio controls className="w-80"  controlsList="nodownload">
-          <source src={file.file_url.startsWith("http") ? generatePreviewGDriveVideo(file.file_url) : urlLink.url + file.file_url}/>
-        </audio>
-      );
-    }
-
-    if (fileType === "mp4" || fileType === "webm") {
-      return (
-       <Image
-        width={200}
-        preview={{
-        destroyOnHidden: true,
-        imageRender: () => (
-        <video 
-            width="50%"
-            controls
-            src={file.file_url.startsWith("http") ? generatePreviewGDriveVideo(file.file_url) : urlLink.url + file.file_url}
-            controlsList="nodownload"
-            onContextMenu={(e) => e.preventDefault()}
-            />
-        ),
-        toolbarRender: () => null,
-        }}
-        src="/youtube.png"
-    />
-      );
-    }
-
-    if (fileType === "png" || fileType === "jpg" || fileType === "jpeg") {
-      return (
+   const getDriveFileExtension = async (url) => {
+     try {
+       const fileId = getDriveFileId(url);
+       if (!fileId) return;
+       const response = await googledriveApi(fileId);
+       const fileData = Array.isArray(response.files) ? response.files[0] : response;
+       const ext = fileData.fileExtension || "";
+ 
+       setFileExt(ext.toLowerCase());
+     } catch (err) {
+       console.error("Gagal ambil ekstensi dari Google Drive:", err);
+       setFileExt("");
+     }
+   };
+ 
+ 
+   useEffect(() => {
+     if (file_url.includes("drive.google.com")) {
+       getDriveFileExtension(file_url);
+     } else {
+       const ext = file_url.split(".").pop()?.toLowerCase() || "";
+       setFileExt(ext);
+     }
+   }, [file_url]);
+   console.log(fileExt);
+ 
+   const renderFileViewer = () => {
+     if (!file_url) {
+       return <p className="text-gray-400 italic text-center">File Tidak Tersedia</p>;
+     }
+ 
+     if (fileExt === "pdf") {
+      return ( 
+       <a href={file_url} target="_blank" rel="noopener noreferrer" className="bg-blue-800 rounded-md hover:bg-blue-900 text-white px-3 py-3">Lihat PDF</a>
+      )
+     }
+ 
+ 
+     if(["mp4", "mov", "webm"].includes(fileExt)) {
+       return (
         <Image
-        src={file.file_url.startsWith("http") ? generatePreviewGDriveImage(file.file_url) : urlLink.url + file.file_url}
-        alt="Preview"
-        width={150}
-        />
-      );
-    }
-
-    if (fileType === "pdf") {
-        const url = urlLink.url + file.file_url;
-      return (
-        <a
-          href={urlLink.url.startsWith("http") ? file.file_url : url}
-          target="_blank"
-          rel="noreferrer"
-          className="text-blue-600 underline"
-        >
-          Lihat PDF
-        </a>
-      );
-    }
-
-    return <span className="text-gray-500">Tidak ada preview</span>;
-  };
+         width={200}
+         preview={{
+         destroyOnHidden: true,
+         imageRender: () => (
+         <video 
+             width="40%"
+             controls
+             src={detailmodulTrainingBookMenu.file_url.startsWith("http") ? generatePreviewGDriveVideo(detailmodulTrainingBookMenu.file_url) : urlLink.url + detailmodulTrainingBookMenu.file_url}
+             controlsList="nodownload"
+             onContextMenu={(e) => e.preventDefault()}
+             />
+         ),
+         toolbarRender: () => null,
+         }}
+         src="/youtube.png"
+     />
+       );
+     }
+ 
+     if(['mp3', 'wav'].includes(fileExt)) {
+       return (
+        <audio controls className="w-80"  controlsList="nodownload">
+         <source src={detailmodulTrainingBookMenu.file_url.startsWith("http") ? generatePreviewGDriveVideo(detailmodulTrainingBookMenu.file_url) : urlLink.url + detailmodulTrainingBookMenu.file_url}/>
+       </audio>
+       );
+     }
+ 
+     return (
+       <p className="text-gray-500 text-center italic">
+         File tidak dapat ditampilkan (tipe: {fileExt || "tidak diketahui"})
+       </p>
+     );
+   };
+ 
+    
 
   return (
     <AdminLayout>

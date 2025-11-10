@@ -45,6 +45,7 @@ const Page8 = () => {
 
   return (
     <>
+    <audio autoPlay loop src="/backsound/08b.mp3" />
       {loading && <Spin fullscreen size="large" />}
       <div className="relative w-full h-screen bg-gradient-to-b from-sky-300 to-white overflow-hidden">
         {/* konten utama */}

@@ -13,14 +13,16 @@ const Navbar = () => {
   const dropdownLinks = [
     {
       text: "Students Report",
+      url: "/students-report",
       children: [
-        { label: "Student Attendance", url: "/history-absensi" },
-        { label: "History Pembayaran", url: "/fees" },
-        { label: "Hasil Evaluasi Semester", url: "/history-pembayaran" },
+        { label: "Student Attendance", url: "/students-report/history-absensi" },
+        { label: "History Pembayaran", url: "/students-report/fees" },
+        { label: "Hasil Evaluasi Semester", url: "/students-report/evaluasi-semester" },
       ],
     },
     {
       text: "Learning Resources",
+      url: "/learning-resources",
       children: [
         { label: "CalDic", url: "/history-absensi" },
         { label: "Education Program", url: "/history-pembayaran" },
@@ -86,7 +88,6 @@ const Navbar = () => {
             >
               Logout
             </button>
-            {/* <UserAddOutlined onClick={!isOpen}/> */}
             {isOpen && (
               <p className="w-40 ms-80 text-md relative z-10 bottom-10">test 123</p>
             )}
@@ -110,73 +111,59 @@ const Navbar = () => {
             </li>
 
             {sessionStorage.getItem("token") && (
-              // dropdownLinks.map((link, index) => (
-                // <li
-                //   key={index}
-                //   className="relative hover:text-red-900 cursor-pointer px-2 py-1"
-                //   onMouseEnter={() => setActiveDropdown(index)}
-                //   onMouseLeave={() => setActiveDropdown(null)}
-                // >
-                //   {link.url ? (
-                //     <Link to={link.url}>{link.text}</Link>
-                //   ) : (
-                //     <span>{link.text}</span>
-                //   )}
+              dropdownLinks.map((link, index) => (
+                <li
+                  key={index}
+                  className="relative hover:text-red-900 cursor-pointer px-2 py-1"
+                  onMouseEnter={() => setActiveDropdown(index)}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  {link.url ? (
+                    <Link to={link.url}>{link.text}</Link>
+                  ) : (
+                    <span>{link.text}</span>
+                  )}
 
-                //   {link.children && activeDropdown === index && (
-                //     <ul className="absolute top-full left-0 bg-slate-100 shadow-lg py-2 rounded-lg min-w-[200px]">
-                //       {link.children.map((child, childIndex) => (
-                //         <li
-                //           key={childIndex}
-                //           className="px-6 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:text-red-900"
-                //         >
-                //           {child.url ? (
-                //             <Link to={child.url}>{child.label}</Link>
-                //           ) : (
-                //             <span
-                //               onMouseEnter={() => setActiveDropdown2(index)}
-                //               onClick={() => setActiveDropdown2(index)}
-                //               onMouseLeave={() => setActiveDropdown2(null)}
-                //             >
-                //               {child.label}
-                //             </span>
-                //           )}
+                  {link.children && activeDropdown === index && (
+                    <ul className="absolute top-full left-0 bg-white bg-slate-100 shadow-lg py-2 rounded-lg min-w-[200px] my-3">
+                      {link.children.map((child, childIndex) => (
+                        <li
+                        
+                          key={childIndex}
+                          className="px-6 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:text-red-900 "
+                        >
+                          {child.url ? (
+                            <Link to={child.url}>{child.label}</Link>
+                          ) : (
+                            <Link
+                            to={child.url}
+                              onMouseEnter={() => setActiveDropdown2(index)}
+                              onClick={() => setActiveDropdown2(index)}
+                              onMouseLeave={() => setActiveDropdown2(null)}
+                            >
+                              {child.label}
+                            </Link>
+                          )}
 
-                //           {child.grandchildren &&
-                //             activeDropdown2 === index && (
-                //               <ul className="absolute left-full top-0 bg-slate-100 shadow-lg py-2 min-w-[180px]">
-                //                 {child.grandchildren.map((gc, gcIndex) => (
-                //                   <li
-                //                     key={gcIndex}
-                //                     className="px-4 py-1 hover:bg-gray-200"
-                //                   >
-                //                     <Link to={gc.url}>{gc.label}</Link>
-                //                   </li>
-                //                 ))}
-                //               </ul>
-                //             )}
-                //         </li>
-                //       ))}
-                //     </ul>
-                //   )}
-                // </li>
-                <>
-           
-            <li className={`hover:text-red-900 cursor-pointer px-2 py-1 ${location.pathname === "/students-report" ? "font-bold" : ""}`}>
-              <Link
-                to="/students-report"
-              >
-                Students Report
-              </Link>
-            </li>
-             <li className={`hover:text-red-900 cursor-pointer px-2 py-1 ${location.pathname === "/learning-resources" ? "font-bold" : ""}`}>
-              <Link
-                to="/learning-resources"
-              >
-              Learning Resources
-              </Link>
-            </li>
-                 </>
+                          {child.grandchildren &&
+                            activeDropdown2 === index && (
+                              <ul className="absolute left-full top-20 bg-white shadow-lg py-2 min-w-[180px] rounded-md">
+                                {child.grandchildren.map((gc, gcIndex) => (
+                                  <li
+                                    key={gcIndex}
+                                    className="px-4 py-1 hover:bg-gray-200"
+                                  >
+                                    <Link to={gc.url}>{gc.label}</Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))
               )}
           </div>
         </ul>

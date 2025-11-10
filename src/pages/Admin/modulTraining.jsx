@@ -134,7 +134,7 @@ const ModulTraining = () => {
   const handleDelete = async (name) => {
     try {
       setIsLoading(true);
-      const deleteResponse = await useResourceAdminDelete({doctype: "Modul Training", id: name});
+      const deleteResponse = await apiResourceAdminDelete({doctype: "Modul Training", id: name});
       if (deleteResponse) {
         setSuccess("Data berhasil dihapus.");
         setModulTraining((prevData) => prevData.filter((item) => item.name !== name));
@@ -147,91 +147,75 @@ const ModulTraining = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
+   const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // Validasi awal: pastikan ada file/URL saat tambah baru
-  if (!formData.file && !formData.file_url && !isEditMode) {
-    setWarning("File atau URL masih kosong!");
-    return;
-  }
-
-  let payload = {
-    description: formData.description,
-    title: formData.title,
-    type: formData.type || "Modul Training",
-    is_active: formData.is_active,
-  };
-
-  // Validasi URL/file sebelum masuk ke try
-  if (formData.useFileUrl && formData.file_url) {
-    payload.file_url = formData.file_url;
-  } else if (formData.file) {
-    const allowedTypes = [
-      "application/pdf",
-      "video/mp4",
-      "video/avi",
-      "video/quicktime",
-      "video/x-matroska",
-    ];
-
-    if (!allowedTypes.includes(formData.file.type)) {
-      setWarning("File harus berformat PDF atau Video");
-      return; // stop di sini → tidak lanjut ke try
+    if (!formData.file && !formData.file_url && !isEditMode) {
+      alert("File atau URL masih kosong!");
+      return;
     }
-  }
 
-  try {
-    setIsLoading(true);
-    setIsOpen(false);
+    if (formData.file) {
+      const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
+      if (!allowedTypes.includes(formData.file.type)) {
+        alert("File harus berformat PNG, JPG, atau JPEG!");
+        return;
+      }
+    }
 
-    // Upload file kalau ada
-    if (formData.file && !formData.useFileUrl) {
-      try {
+    try {
+      setIsLoading(true);
+      setIsOpen(false);
+
+      let payload = {
+        description: formData.description,
+        title: formData.title,
+        type: formData.type || "Modul Training",
+        file:formData.file,
+        is_active: formData.is_active
+      };
+
+      if (formData.useFileUrl && formData.file_url) {
+         const uploadedWithUrl = await uploadFileProgramMateri(formData.file_url, "Home/Program Materi");
+        payload = { 
+          description: formData.description,
+          title: formData.title,
+          type: formData.type || "Modul Training",
+          file: uploadedWithUrl.name,
+          is_active: formData.is_active
+        }
+      } else if (formData.file) {
         const uploadedFile = await uploadFileProgramMateri(formData.file, "Home/Program Materi");
         payload.file = uploadedFile.name;
         payload.file_url = uploadedFile.file_url;
-      } catch (uploadErr) {
-        setError("Gagal mengupload file: " + (uploadErr.message || "Unknown error"));
-        setIsLoading(false);
-        return;
-      }
 
-      // Hapus file lama jika edit mode
-      if (isEditMode && formData.oldFileName) {
-        try {
-          await deleteFileProgramMateri(editId, formData.oldFileName);
-        } catch (deleteErr) {
-          console.error("Gagal menghapus file lama:", deleteErr);
+        if (isEditMode && formData.oldFileName) {
+          try {
+            await deleteFileProgramMateri(editId, formData.oldFileName);
+          } catch (deleteErr) {
+            console.error("Gagal menghapus file lama:", deleteErr);
+          }
         }
       }
+
+      if (isEditMode) {
+        await apiResourceAdminPut({doctype: "Modul Training", id: editId, data: payload});
+      } else {
+        await apiResourceAdminPost({doctype: "Modul Training", data: payload});
+      }
+
+      await fetchModulTraining();
+      setSuccess(`Data berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
+      handleCloseModal();
+    } catch (error) {
+      setError(`Terjadi kesalahan: ${error.response?.data?.exception || error.message}`);
+      setSuccess("");
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    // Simpan data
-    if (isEditMode) {
-      await apiResourceAdminPut({doctype: "Modul Training", id: editId, data: payload});
-    } else {
-      await apiResourceAdminPost({ doctype: "Modul Training", data: payload });
-    }
-
-    await fetchModulTraining();
-    setSuccess(`Data berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
-    handleCloseModal();
-  } catch (error) {
-    const message =
-      error.response?.data?.exception ||
-      error.response?.data?.message ||
-      error.response?.data?._server_messages ||
-      error.message;
-
-    setError(`Terjadi kesalahan: ${message}`);
-    setSuccess("");
-  } finally {
-    setIsLoading(false);
-  }
-};
-
-
+  
   return (
     <AdminLayout>
       <h3 className="font-bold py-7 text-lg">Modul Training</h3>
@@ -241,6 +225,7 @@ const ModulTraining = () => {
 
       <div className="flex flex-col w-full p-4 bg-white rounded-xl shadow-lg">
         <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center mb-4 gap-2">
+        
           <button
             onClick={() => {
               setIsEditMode(false);

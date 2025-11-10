@@ -34,12 +34,11 @@ const BookMenu = () => {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [warning, setWarning] = useState(null);
-  const [extensions, setExtensions] = useState({});
   const itemsPerPage = 10;
   
 const fetchModulTraining = async () => {
       try {
-        const response = await useResourceAdmin({
+        const response = await apiResourceAdmin({
            doctype: "Modul Training",
           filters: [["type", "=", "Book Menu"]],
         });
@@ -149,92 +148,73 @@ const fetchModulTraining = async () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
+   const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // Validasi awal: pastikan ada file/URL saat tambah baru
-  if (!formData.file && !formData.file_url && !isEditMode) {
-    setWarning("File atau URL masih kosong!");
-    return;
-  }
-
-  let payload = {
-    description: formData.description,
-    title: formData.title,
-    type: formData.type || "Modul Training",
-    is_active: formData.is_active,
-  };
-
-
-  if (formData.useFileUrl && formData.file_url) {
-    payload.file_url = formData.file_url;
-  } else if (formData.file) {
-     const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
-
-    if (!allowedTypes.includes(formData.file.type)) {
-      setWarning("File harus berformat PNG, JPG, atau JPEG!");
-      return; 
+    if (!formData.file && !formData.file_url && !isEditMode) {
+      alert("File atau URL masih kosong!");
+      return;
     }
-  }
 
-  try {
-    setIsLoading(true);
-    setIsOpen(false);
-    if (!isEditMode) {
-      if(formData.file && !formData.useFileUrl) {
-           try {
-        const uploadedFile = await uploadFileProgramMateri(formData.file, "Home/Program Materi/Modul Training/Book Menu");
-        payload.file = uploadedFile.name;
-        payload.file_url = uploadedFile.file_url;
-      } catch (uploadErr) {
-        setError("Gagal mengupload file: " + (uploadErr.message || "Unknown error"));
-        setIsLoading(false);
+    if (formData.file) {
+      const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
+      if (!allowedTypes.includes(formData.file.type)) {
+        alert("File harus berformat PNG, JPG, atau JPEG!");
         return;
       }
-      }else if(!formData.file && formData.useFileUrl) {
-        const uploadedFile = await uploadFileProgramMateri(formData.file_url, "Home/Program Materi/Modul Training/Book Menu");
-        payload.file_url = uploadedFile.file_url;
-        payload.file = uploadedFile.name;
-      }
-     
-
-      // Hapus file lama jika edit mode
-      if (isEditMode && formData.oldFileName) {
-        try {
-         const deleteFileResponse = await deleteFileProgramMateri(editId, formData.oldFileName);
-         console.log("ini response hapus file", deleteFileResponse);
-        } catch (deleteErr) {
-          console.error("Gagal menghapus file lama:", deleteErr);
-        }
-      }
     }
 
-    // Simpan data
-    if (isEditMode) {
-      const resPut = await apiResourceAdminPut({doctype:  "Modul Training", id: editId, data :  payload});
-      console.log(resPut);
-    } else {
-   const resPost = await apiResourceAdminPost({doctype: "Modul Training", data: payload});
-    console.log(resPost);
+    try {
+      setIsLoading(true);
+      setIsOpen(false);
 
-  }
+      let payload = {
+        description: formData.description,
+        title: formData.title,
+        type: formData.type || "Modul Training",
+        file:formData.file,
+        is_active: formData.is_active
+      };
 
-    await fetchModulTraining();
-    setSuccess(`Data berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
-    handleCloseModal();
-  } catch (error) {
-    const message =
-      error.response?.data?.exception ||
-      error.response?.data?.message ||
-      error.response?.data?._server_messages ||
-      error.message;
+      if (formData.useFileUrl && formData.file_url) {
+         const uploadedWithUrl = await uploadFileProgramMateri(formData.file_url, "Home/Program Materi");
+        payload = { 
+          description: formData.description,
+          title: formData.title,
+          type: formData.type || "Modul Training",
+          file: uploadedWithUrl.name,
+          is_active: formData.is_active
+        }
+      } else if (formData.file) {
+        const uploadedFile = await uploadFileProgramMateri(formData.file, "Home/Program Materi");
+        payload.file = uploadedFile.name;
+        payload.file_url = uploadedFile.file_url;
 
-    setError(`Terjadi kesalahan: ${message}`);
-    setSuccess("");
-  } finally {
-    setIsLoading(false);
-  }
-};
+        if (isEditMode && formData.oldFileName) {
+          try {
+            await deleteFileProgramMateri(editId, formData.oldFileName);
+          } catch (deleteErr) {
+            console.error("Gagal menghapus file lama:", deleteErr);
+          }
+        }
+      }
+
+      if (isEditMode) {
+        await apiResourceAdminPut({doctype: "Modul Training", id: editId, data: payload});
+      } else {
+        await apiResourceAdminPost({doctype: "Modul Training", data: payload});
+      }
+
+      await fetchModulTraining();
+      setSuccess(`Data berhasil ${isEditMode ? "diperbarui" : "ditambahkan"}!`);
+      handleCloseModal();
+    } catch (error) {
+      setError(`Terjadi kesalahan: ${error.response?.data?.exception || error.message}`);
+      setSuccess("");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <AdminLayout>
       <h3 className="font-bold py-7 text-lg">Book Menu</h3>

@@ -51,6 +51,7 @@ const Page3 = ({ handleClick, muted }) => {
 
   return (
     <div className="relative w-screen h-screen flex flex-col overflow-hidden">
+     
       <video
         ref={videoRef}
         className="absolute top-0 left-0 w-full h-full object-cover -z-10"
@@ -63,8 +64,8 @@ const Page3 = ({ handleClick, muted }) => {
 
       {showOptions && (
         <div className="relative flex flex-col items-center justify-center h-full gap-10 px-6 z-10 fadeinanimation">
-          {/* Teks Desktop */}
-          <div className="hidden lg:flex flex-col space-y-6 items-center justify-center">
+          <div className="container mx-auto ">
+          <div className="hidden lg:flex flex-col space-y-6 items-center justify-center gap-4">
             <p className="hidden lg:block text-outline text-xl md:text-6xl font-extrabold text-center gotham">
               Apa Prioritas Utama Tujuan
             </p>
@@ -76,7 +77,7 @@ const Page3 = ({ handleClick, muted }) => {
             </p>
           </div>
 
-          {/* Teks Mobile */}
+
           <div className="flex flex-col items-center lg:hidden relative top-10 border-white ">
             <p className="text-xl font-extrabold gotham mt-10 text-outline-sm">
               Apa Prioritas Utama Tujuan Anak/Diri Anda Belajar Musik
@@ -104,7 +105,11 @@ const Page3 = ({ handleClick, muted }) => {
               </p>
             ))}
           </div>
-
+     <div className="flex flex-row justify-between w-full container mx-auto items-center">
+        <div className="image ">
+            <img className="w-[200px]" src="/images/logo.png" alt="" />
+        </div>
+        <div className="div button ">
           {selectedOption2 && (
             <button
               className="bg-red-600 text-white font-semibold py-3 lg:py-4 px-8 rounded-2xl shadow-lg 
@@ -114,6 +119,9 @@ const Page3 = ({ handleClick, muted }) => {
               Lanjut
             </button>
           )}
+          </div>
+          </div>
+        </div>
         </div>
       )}
     </div>

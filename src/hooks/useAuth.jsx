@@ -7,18 +7,18 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
-      const savedUser = localStorage.getItem("user");
+      const savedUser = sessionStorage.getItem("user");
       return savedUser ? JSON.parse(savedUser) : null;
     } catch (e) {
-      localStorage.removeItem("user");
+      sessionStorage.removeItem("user");
       return null;
     }
   });
   useEffect(() => {
     if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("user", JSON.stringify(user));
     } else {
-      localStorage.removeItem("user");
+      sessionStorage.removeItem("user");
     }
   }, [user]);
 
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
        console.log(e);
    }finally{
      setUser(null);
-      localStorage.clear();
+      sessionStorage.clear();
       return true;
    }
   };

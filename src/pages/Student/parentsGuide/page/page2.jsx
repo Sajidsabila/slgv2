@@ -37,7 +37,7 @@ const Page2 = ({ handleClick, muted }) => {
     }
   }, []);
 
-  // Update mute state jika prop muted berubah
+ 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = muted;
@@ -73,6 +73,9 @@ const Page2 = ({ handleClick, muted }) => {
             <p className="w-auto bg-red-600 text-white ps-2 pe-10 text-sm md:text-3xl py-2 rounded-lg">
               Pilih salah satu dari Pilihan berikut ini
             </p>
+
+
+            <img className="w-[200px] mt-5" src="/images/logo.png" alt="" />
           </div>
 
           {/* Bagian teks untuk HP/tablet */}

@@ -6,13 +6,13 @@ import { useAuth } from "../hooks/useAuth";
 import axios from "axios";
 
 
-export const Middleware = () => {
+export const Middleware = async  () => {
   const { user, logout } = useAuth();
   const checked = useRef(false); 
   useEffect(() => {
     if (user && !checked.current) {
       checked.current = true;
-      axios
+     const response = axios
         .get(`${urlLink.url}/api/method/frappe.auth.get_logged_user`, {
           withCredentials: true,
         })
@@ -24,7 +24,20 @@ export const Middleware = () => {
 
   if (!user) return <Navigate to="/login"/>;
 
-  return <Outlet />;
+    const userData = await fetch(
+            `${urlLink.url}/api/resource/User/${response.message}`,
+            {
+              method: "GET",
+              credentials: "include",
+              headers,
+              mode: "cors",
+            }
+          );
+          const dataUser = await userData.json();
+          if (dataUser.user_type === "Student") {
+            return <Navigate to="/" replace />;
+          }
+        return <Outlet />;
 };
 export const MiddlewareStudent = () => {
   const token = sessionStorage.getItem("token");

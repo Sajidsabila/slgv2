@@ -14,7 +14,8 @@ export const authStudent  = async (data) => {
       {
         headers: {
           "Content-Type": "application/json",
-        }
+        },
+        withCredentials: true,
       }
     );
    return  response.data || [];
@@ -32,6 +33,7 @@ export const methodGet = async (url) => {
         "Accept": "application/json",
         "Authorization": `Bearer ${token}`,
       },
+      withCredentials: true
     });
     return response.data
   }catch(error){

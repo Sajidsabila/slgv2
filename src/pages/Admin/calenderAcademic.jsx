@@ -153,6 +153,14 @@ const CalenderAcademic = () => {
       return;
     }
 
+    if (formData.file) {
+      const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
+      if (!allowedTypes.includes(formData.file.type)) {
+        alert("File harus berformat PNG, JPG, atau JPEG!");
+        return;
+      }
+    }
+
     try {
       setIsLoading(true);
       setIsOpen(false);
@@ -161,18 +169,20 @@ const CalenderAcademic = () => {
         description: formData.description,
         title: formData.title,
         type: formData.type || "Modul Training",
-        file: formData.is_active == true ? null : formData.file,
+        file:formData.file,
         is_active: formData.is_active
       };
 
       if (formData.useFileUrl && formData.file_url) {
-        payload.file_url = formData.file_url;
+         const uploadedWithUrl = await uploadFileProgramMateri(formData.file_url, "Home/Program Materi");
+        payload = { 
+          description: formData.description,
+          title: formData.title,
+          type: formData.type || "Modul Training",
+          file: uploadedWithUrl.name,
+          is_active: formData.is_active
+        }
       } else if (formData.file) {
-        const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
-        if (!allowedTypes.includes(file.type)) {
-        alert("File harus berformat PNG, JPG, atau JPEG!");
-        return;
-      }
         const uploadedFile = await uploadFileProgramMateri(formData.file, "Home/Program Materi");
         payload.file = uploadedFile.name;
         payload.file_url = uploadedFile.file_url;
@@ -326,7 +336,7 @@ const CalenderAcademic = () => {
                         <Trash size={16} /> Delete
                       </button>
                       <Link
-                        to={`/admin/book-menu/${item.name}`}
+                        to={`/admin/calender-academic/${item.name}`}
                         className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 flex items-center gap-1 px-3 py-1 rounded-md hover:cursor-pointer"
                       >
                         <Eye size={16} /> Detail

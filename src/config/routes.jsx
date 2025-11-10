@@ -49,6 +49,7 @@ import MateriPembelajaran from "../pages/Student/learningResources/materiPembela
 import EvaluasiSemesterStudent from "../pages/Student/studentReport/evaluasiSemesterStudent.jsx";
 
 import SetStudentPassword from "../pages/Auth/setStudentPassword.jsx";
+import DetaiCalenderAcademic from "../pages/Admin/detailCalenderAcademic.jsx";
 
 
 
@@ -184,6 +185,7 @@ const routes = createBrowserRouter([
       {path: "book-menu", element: <BookMenu />},
       {path: "book-menu/:id", element: <DetailBookMenu />},
       {path: "calender-academic", element: <CalenderAcademic />},
+      {path: "calender-academic/:id", element: <DetaiCalenderAcademic />},
       {path: "modul-training", element: <ModulTraining />},
       {path: "modul-training/:id", element: <DetailModulTraining />},
       {path: "program-materi-syllabus", element: <ProgramMateriSyllabus />},
