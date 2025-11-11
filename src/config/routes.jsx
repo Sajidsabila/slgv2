@@ -83,19 +83,19 @@ const routes = createBrowserRouter([
     ),
   },
  {
-  element: <MiddlewareStudent />,
-
+  path: "/student",
+  element:<Middleware allowed={["Student"]}/>,
   children: [
     {
-      path: "/home",
+      path: "home",
       element: <Index />,
     },
     {
-      path: "/program-materi/:id",
+      path: "program-materi/:id",
       element: <PageProgramMateri />,
     },
     {
-      path: "/class-course/:abbr_course",
+      path: "class-course/:abbr_course",
       element: <ClassCourseDetail />,
     },
     {
@@ -153,7 +153,7 @@ const routes = createBrowserRouter([
   },
   {
     path: "/teacher",
-    element: <MiddlewareTeacher />,
+    element:<Middleware allowed={["Instructor"]}/>,
     children:[
       {path: "", element: <IndexTeacher />},
       {path: "learning-materi", element: <CourseTeacher />},
@@ -173,7 +173,7 @@ const routes = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <Middleware />,
+    element: <Middleware allowed={["Instructor", "LMS User"]}/>,
     children: [
       { path: "", element: <Dashboard /> },
       { path: "profile", element: <Profile /> },

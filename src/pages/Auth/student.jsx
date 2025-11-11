@@ -1,18 +1,22 @@
 import { useState, useEffect } from "react";
-import { convertDate } from "../../helper/helper";
+import { urlLink } from "../../config/config";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { authStudent } from "../../api/apiMethod";
+import { useAuth } from "../../hooks/useAuth";
+
 
 const AuthStudent = () => {
+    const { login } = useAuth();
   const location = useLocation().pathname;
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    id_siswa: "",
-    tanggal_lahir: "",
+    email: "",
+   password: "",
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [limitRequest, setLimitRequest] = useState(0);
+
+    const headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
   useEffect(() => {
     if (limitRequest >= 5) {
@@ -28,56 +32,82 @@ const AuthStudent = () => {
     });
   };
 
-const handleCheckStudent = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
-  if (!formData.id_siswa || !formData.tanggal_lahir) {
-    setError("ID Siswa dan Tanggal Lahir harus diisi");
-    return;
-  }
-
-  if (limitRequest >= 5) {
-    setError("Terlalu banyak percobaan login. Coba lagi dalam 1 menit.");
-    return;
-  }
-
-  try {
-    setLoading(true);
-    setError("");
-
-    const data = {
-      name: "0062-" + formData.id_siswa.trim(),
-      date_of_birth: convertDate(formData.tanggal_lahir),
-    };
-
-    const response = await authStudent(data);
-
-    const { status, message } = response.message || {};
-
-    if (status === "failed" || status === "out") {
-      setError(message || "Login gagal atau siswa tidak aktif");
-      setFormData({
-        id_siswa: formData.id_siswa,
-        tanggal_lahir: "",
-      });
-      setLimitRequest((prev) => prev + 1);
+    if (!email || !password) {
+      setIsLoading(false);
+      setError("Email dan Password tidak boleh kosong");
       return;
     }
 
-    const { access_token, refresh_token, student_id } = response;
+    try {
+      const response = await fetch(`${urlLink.url}/api/method/smi.api.login`, {
+        method: "POST",
+        headers,
+      body: new URLSearchParams({ usr: formData.email, pwd: formData.password }),
+        credentials: "include",
+      });
 
-    sessionStorage.setItem("token", access_token);
-    sessionStorage.setItem("refresh_token", refresh_token);
-    sessionStorage.setItem("student_id", student_id);
+      const data = await response.json();
+      if (!response.ok) {
+        setIsLoading(false);
+        throw new Error(data.message);
+      }
 
-    navigate("/home");
-  } catch (err) {
-    setError("Terjadi kesalahan: " + err.message);
-    console.error(err);
-  } finally {
-    setLoading(false);
-  }
-};
+      const getLoggedUser = await fetch(
+        `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers,
+          mode: "cors",
+        }
+      );
+      const user = await getLoggedUser.json();
+      console.log(user);
+
+      const userData = await fetch(
+        `${urlLink.url}/api/resource/User/${user.message}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers,
+          mode: "cors",
+        }
+      );
+      const dataUser = await userData.json();
+
+      const getUser = {
+        full_name: dataUser.data.full_name,
+        user_image: dataUser.data.user_image,
+        email: dataUser.data.email,
+        roles: dataUser.data.roles,
+        mobile_no: dataUser.data.mobile_no,
+      };
+
+      const roles = Array.isArray(dataUser.data.roles)
+        ? dataUser.data.roles
+        : [];
+      const isInstructor = roles.some(
+        (roleObj) =>
+          roleObj.role === "Student" 
+      );
+
+      if (!isInstructor) {
+        setIsLoading(false);
+        throw new Error("Anda Tidak Mempunyai Akses");
+      }
+      login(getUser);
+      navigate("/student/home"); 
+    } catch (err) {
+      console.log(err);
+      setError(err.message || "Terjadi kesalahan");
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="relative min-h-screen w-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat bg-[url(/assets/smile_image/background-page-login.png)] font-['Poppins']">
@@ -116,24 +146,18 @@ const handleCheckStudent = async (e) => {
               <p className="text-red-600 font-medium text-center mb-4">{error}</p>
             )}
 
-            <form onSubmit={handleCheckStudent}>
+            <form onSubmit={handleSubmit}>
               <div className="mb-5">
-                <label className="block font-semibold mb-2 text-gray-800">Nomor Induk Siswa</label>
+                <label className="block font-semibold mb-2 text-gray-800">Email</label>
                 <div className="flex gap-2">
+                 
                   <input
                     type="text"
-                    value="0062-"
-                    disabled
-                    readOnly
-                    className="w-24 py-3 px-4 text-center bg-red-800 text-white font-bold rounded-lg shadow-md"
-                  />
-                  <input
-                    type="text"
-                    id="id_siswa"
+                    id="email"
                     autoFocus={true}
-                    value={formData.id_siswa}
+                    value={formData.email}
                     onChange={handleChange}
-                    placeholder="Masukkan ID Siswa"
+                    placeholder="Masukkan Emaill ..."
                     className="w-full py-3 px-4 rounded-lg shadow-md border border-gray-300 focus:ring-2 focus:ring-red-700 focus:outline-none"
                   />
                 </div>
@@ -141,11 +165,11 @@ const handleCheckStudent = async (e) => {
 
    
               <div className="mb-6">
-                <label className="block font-semibold mb-2 text-gray-800">Tanggal Lahir</label>
+                <label className="block font-semibold mb-2 text-gray-800">Password</label>
                 <input
-                  type="date"
-                  id="tanggal_lahir"
-                  value={formData.tanggal_lahir}
+                  type="password"
+                  id="password"
+                  value={formData.password}
                   onChange={handleChange}
                   className="w-full py-3 px-4 rounded-lg shadow-md border border-gray-300 focus:ring-2 focus:ring-red-700 focus:outline-none"
                 />

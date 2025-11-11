@@ -1,44 +1,63 @@
 import { useEffect, useState, useRef } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { urlLink } from "../config/config";
 import { Spin } from "antd";
 import { useAuth } from "../hooks/useAuth";
 import axios from "axios";
 
 
-export const Middleware = async  () => {
+
+export const Middleware = ({ allowed }) => {
   const { user, logout } = useAuth();
-  const checked = useRef(false); 
+  const [userRoles, setUserRoles] = useState(undefined);
+  const checked = useRef(false);
+  const location = useLocation().pathname;
+
   useEffect(() => {
-    if (user && !checked.current) {
-      checked.current = true;
-     const response = axios
-        .get(`${urlLink.url}/api/method/frappe.auth.get_logged_user`, {
-          withCredentials: true,
-        })
-        .catch(() => {
-          logout();
-        });
-    }
-  }, [user, logout]);
+    const checkUser = async () => {
+      try {
+        if (user && !checked.current) {
+          checked.current = true;
 
-  if (!user) return <Navigate to="/login"/>;
-
-    const userData = await fetch(
-            `${urlLink.url}/api/resource/User/${response.message}`,
-            {
-              method: "GET",
-              credentials: "include",
-              headers,
-              mode: "cors",
-            }
+          // Ambil user ID yang sedang login
+          const { data: logged } = await axios.get(
+            `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
+            { withCredentials: true }
           );
-          const dataUser = await userData.json();
-          if (dataUser.user_type === "Student") {
-            return <Navigate to="/" replace />;
-          }
-        return <Outlet />;
+
+          // Ambil detail user
+          const { data: userData } = await axios.get(
+            `${urlLink.url}/api/resource/User/${logged.message}`,
+            { withCredentials: true }
+          );
+
+          // Ambil daftar role user
+          const roles = userData.data.roles.map(r => r.role);
+          setUserRoles(roles);
+        }
+      } catch (error) {
+        console.error("Middleware error:", error);
+        logout();
+      }
+    };
+
+    checkUser();
+  }, [user, logout]);
+  useEffect(() => {
+    checked.current = false;
+  }, [user]);
+
+  if (!user && location.startsWith("/admin") || location == "/admin") return <Navigate to="/login" />;
+  if (!user && location.startsWith("/teacher") || location.startsWith("/student")) return <Navigate to="/" />;
+  if (userRoles === undefined) return null; 
+  if (!allowed.some(role => userRoles.includes(role))) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />;
 };
+
+
 export const MiddlewareStudent = () => {
   const token = sessionStorage.getItem("token");
   const refreshToken = sessionStorage.getItem("refresh_token");
@@ -92,5 +111,3 @@ export const MiddlewareTeacher = () => {
 
   return <Outlet />;
 };
-
-
