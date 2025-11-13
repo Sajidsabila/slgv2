@@ -9,6 +9,22 @@ const MateriPembelajaran = () => {
                         <span className="ms-13">Materi Pembelajaran</span>
             </div>
           </div>
+           <div className="list-program-edukasi my-5 flex flex-wrap">
+                     <div className="program-edukasi-item w-1/2 md:w-1/3 lg:w-1/4 p-3  rounded-md shadow-sm gap-3">
+                        <div className="head-materi bg-red-800 p-3 rounded-md text-white font-sans font-bold">Materi Pertama</div>
+                        <div className="link-materi bg-white ">
+                            <Image src="/assets/smile_image/icon-1.png" width={50} className="relative z-1 top-2 left-3 py-2"/>
+                        </div>
+                     </div>
+
+                      <div className="program-edukasi-item w-1/2 md:w-1/3 lg:w-1/4 p-3  rounded-md shadow-sm gap-3">
+                        <div className="head-materi bg-red-800 p-3 rounded-md text-white font-sans font-bold">Materi Pertama</div>
+                        <div className="link-materi bg-white ">
+                            <Image src="/assets/smile_image/icon-1.png" width={50} className="relative z-1 top-2 left-3 py-2"/>
+                        </div>
+                     </div>
+
+                 </div>
          </div>
         </LandingPageLayout>
     )

@@ -2,6 +2,7 @@ import React, { use, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { methodLogout } from "../../api/apiMethod";
 import { UserAddOutlined } from "@ant-design/icons";
+import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,29 +11,30 @@ const Navbar = () => {
   const [open, setIsOpenModal] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const dropdownLinks = [
     {
       text: "Students Report",
-      url: "/students-report",
+      url: "/student/students-report",
       children: [
-        { label: "Student Attendance", url: "/students-report/history-absensi" },
-        { label: "History Pembayaran", url: "/students-report/fees" },
-        { label: "Hasil Evaluasi Semester", url: "/students-report/evaluasi-semester" },
+        { label: "Student Attendance", url: "/student/students-report/history-absensi" },
+        { label: "History Pembayaran", url: "/student/students-report/fees" },
+        { label: "Hasil Evaluasi Semester", url: "/student/students-report/evaluasi-semester" },
       ],
     },
     {
       text: "Learning Resources",
-      url: "/learning-resources",
+      url: "/student/learning-resources",
       children: [
-        { label: "CalDic", url: "/history-absensi" },
-        { label: "Education Program", url: "/history-pembayaran" },
+        { label: "CalDic", url: "/student/history-absensi" },
+        { label: "Education Program", url: "/student/history-pembayaran" },
         {
           label: "Learning Material",
           grandchildren: [
-            { label: "Exam Speciment", url: "/program-materi" },
-            { label: "LHB", url: "/program-materi" },
-            { label: "SLG", url: "/program-materi" },
-            { label: "Syllabus", url: "/program-materi" },
+            { label: "Exam Speciment", url: "/student/program-materi" },
+            { label: "LHB", url: "/student/program-materi" },
+            { label: "SLG", url: "/student/program-materi" },
+            { label: "Syllabus", url: "/student/program-materi" },
           ],
         },
       ],
@@ -41,15 +43,16 @@ const Navbar = () => {
 
   const logoutStudent = async () => {
 
-    try {
-      const response = await methodLogout();
+    try{
+      const response = await logout(); 
       console.log(response);
-    } catch (error) {
-      console.log(error);
+    }catch(e){
+      console.log(e);
     }finally{
       navigate("/");
     }
-  };
+
+  }
 
   const toggleDropdown = (index) => {
     setActiveDropdown(activeDropdown === index ? null : index);
@@ -77,7 +80,7 @@ const Navbar = () => {
         <div className="flex flex-row justify-between items-center py-1 w-full">
           <img src="/assets/logowhite.svg" alt="Logo Simfoni" className="w-30" />
 
-          {sessionStorage.getItem("token") && (
+          {sessionStorage.getItem("user") && (
             <>
              <button
               onClick={() => {
@@ -103,14 +106,14 @@ const Navbar = () => {
             <li className={`hover:text-red-900 cursor-pointer px-2 py-1 ${location.pathname === "/home" ? "font-bold" : ""}`}>
               <Link
                 to={
-                  !sessionStorage.getItem("profileInstructor") ? "/" : "/teacher"
+                  !sessionStorage.getItem("profileInstructor") ? "/student/home" : "/teacher"
                 }
               >
                 Home
               </Link>
             </li>
 
-            {sessionStorage.getItem("token") && (
+            {sessionStorage.getItem("user") && (
               dropdownLinks.map((link, index) => (
                 <li
                   key={index}
@@ -178,7 +181,7 @@ const Navbar = () => {
               <Link to="/">Home</Link>
             </li>
 
-            {sessionStorage.getItem("token") && (
+            {sessionStorage.getItem("user") && (
               <>
                 {dropdownLinks.map((menu, idx) => (
                   <li

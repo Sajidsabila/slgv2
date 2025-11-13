@@ -18,8 +18,9 @@ const HistoryAbsensi = () => {
     useEffect(() => {
         const attendanceFromAPI = async () => {
             try{
-                const response = await methodGet("smi.helper.get_data_attendance");
-                setAttendanceData(response.attendance);
+                const response = await methodGet("Student Attendance");
+                console.log(response);
+                setAttendanceData(response?.data);
             }catch(error){
                 console.error("Gagal ambil data absensi dari API:", error);
             }
@@ -41,14 +42,14 @@ const HistoryAbsensi = () => {
     };
 
     const filteredData = useMemo(() => {
-        return attendanceData.filter((e) => {
+        return attendanceData?.filter((e) => {
             const searchContent = [
-                e.program,
+                e.sg_program,
                 e.student_group,
-                e.instructor_name,
+                e.instructorlink_name,
                 e.lesson,
                 e.comment,
-                e.video,
+                e.video_url,
             ]
                 .join(" ")
                 .toLowerCase();
@@ -62,8 +63,8 @@ const HistoryAbsensi = () => {
         });
     }, [attendanceData, searchTerm, startDate, endDate]);
 
-    const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
-    const paginatedData = filteredData.slice(
+    const totalPages = Math.max(1, Math.ceil(filteredData?.length / itemsPerPage));
+    const paginatedData = filteredData?.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );

@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 
 
-import { MiddlewareStudent, MiddlewareTeacher,Middleware } from "../middleware/middelware.jsx";
-import { Guest, GuestOnly } from "../middleware/isGuest.jsx";
+import {Middleware } from "../middleware/middelware.jsx";
+import { Guest} from "../middleware/isGuest.jsx";
 
 import Index from "../pages/Student/index.jsx";
 import PageProgramMateri from "../pages/pageProgramMateri.jsx";
@@ -50,6 +50,7 @@ import EvaluasiSemesterStudent from "../pages/Student/studentReport/evaluasiSeme
 
 import SetStudentPassword from "../pages/Auth/setStudentPassword.jsx";
 import DetaiCalenderAcademic from "../pages/Admin/detailCalenderAcademic.jsx";
+import UpdatePassword from "../pages/Auth/updatePassword.jsx";
 
 
 
@@ -68,19 +69,24 @@ const routes = createBrowserRouter([
   },
   {
     path: "/",
-    element: <GuestOnly><AuthStudent /></GuestOnly>,
+    element: <Guest><AuthStudent /></Guest>,
   },
  {
   path: "/set-password",
-  element: <GuestOnly><SetStudentPassword /></GuestOnly>
+  element: <Guest><SetStudentPassword /></Guest>
  },
-  {
-    path: "login-teacher",
-    element: (
-      <GuestOnly>
-        <AuthTeacher />
-      </GuestOnly>
-    ),
+  // {
+  //   path: "login-teacher",
+  //   element: (
+  //     <GuestOnly>
+  //       <AuthTeacher />
+  //     </GuestOnly>
+  //   ),
+  // },
+
+  { 
+    path: "update-password",
+    element: <UpdatePassword />
   },
  {
   path: "/student",
@@ -173,7 +179,7 @@ const routes = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <Middleware allowed={["Instructor", "LMS User"]}/>,
+    element: <Middleware allowed={["LMS User"]}/>,
     children: [
       { path: "", element: <Dashboard /> },
       { path: "profile", element: <Profile /> },

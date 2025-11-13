@@ -15,26 +15,20 @@ export const Middleware = ({ allowed }) => {
 
   useEffect(() => {
     const checkUser = async () => {
+      if (!user || checked.current) return;
+      checked.current = true;
       try {
-        if (user && !checked.current) {
-          checked.current = true;
+        const { data: logged } = await axios.get(
+          `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
+          { withCredentials: true }
+        );
+        const { data: userData } = await axios.get(
+          `${urlLink.url}/api/resource/User/${logged.message}`,
+          { withCredentials: true }
+        );
 
-          // Ambil user ID yang sedang login
-          const { data: logged } = await axios.get(
-            `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
-            { withCredentials: true }
-          );
-
-          // Ambil detail user
-          const { data: userData } = await axios.get(
-            `${urlLink.url}/api/resource/User/${logged.message}`,
-            { withCredentials: true }
-          );
-
-          // Ambil daftar role user
-          const roles = userData.data.roles.map(r => r.role);
-          setUserRoles(roles);
-        }
+        const roles = userData.data.roles.map((r) => r.role);
+        setUserRoles(roles);
       } catch (error) {
         console.error("Middleware error:", error);
         logout();
@@ -43,14 +37,20 @@ export const Middleware = ({ allowed }) => {
 
     checkUser();
   }, [user, logout]);
-  useEffect(() => {
-    checked.current = false;
-  }, [user]);
 
-  if (!user && location.startsWith("/admin") || location == "/admin") return <Navigate to="/login" />;
-  if (!user && location.startsWith("/teacher") || location.startsWith("/student")) return <Navigate to="/" />;
-  if (userRoles === undefined) return null; 
-  if (!allowed.some(role => userRoles.includes(role))) {
+  if (user && userRoles === undefined) return (
+    <div className="flex items-center justify-center h-screen">
+      <Spin />
+    </div>
+  );
+
+  if (!user) {
+    if (location.startsWith("/admin")) return <Navigate to="/login" replace />;
+    if (location.startsWith("/teacher") || location.startsWith("/student"))
+      return <Navigate to="/" replace />;
+  }
+
+  if (user && userRoles && !allowed.some((role) => userRoles.includes(role))) {
     return <Navigate to="/" replace />;
   }
 
@@ -58,56 +58,56 @@ export const Middleware = ({ allowed }) => {
 };
 
 
-export const MiddlewareStudent = () => {
-  const token = sessionStorage.getItem("token");
-  const refreshToken = sessionStorage.getItem("refresh_token");
-  const [valid, setValid] = useState(null);
+// export const MiddlewareStudent = () => {
+//   const token = sessionStorage.getItem("token");
+//   const refreshToken = sessionStorage.getItem("refresh_token");
+//   const [valid, setValid] = useState(null);
 
-  useEffect(() => {
-    if (!token || !refreshToken) {
-      setValid(false);
-      return;
-    }
+//   useEffect(() => {
+//     if (!token || !refreshToken) {
+//       setValid(false);
+//       return;
+//     }
 
-    axios.post(
-      `${urlLink.url}/api/method/smi.helper.refresh_access_token`,
-      { refresh_token: refreshToken },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-    .then(() => setValid(true)) 
-    .catch(() => {
-      sessionStorage.clear();
-      setValid(false);            
-    });
-  }, [token, refreshToken]);
-  if (valid === null) return null;
-  if (!valid) return <Navigate to="/" replace />;
+//     axios.post(
+//       `${urlLink.url}/api/method/smi.helper.refresh_access_token`,
+//       { refresh_token: refreshToken },
+//       {
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//       }
+//     )
+//     .then(() => setValid(true)) 
+//     .catch(() => {
+//       sessionStorage.clear();
+//       setValid(false);            
+//     });
+//   }, [token, refreshToken]);
+//   if (valid === null) return null;
+//   if (!valid) return <Navigate to="/" replace />;
 
-  return <Outlet />;
-};
+//   return <Outlet />;
+// };
 
-export const MiddlewareTeacher = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
+// export const MiddlewareTeacher = () => {
+//   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
-  useEffect(() => {
-    const credentials = sessionStorage.getItem("credentials");
-    setIsAuthenticated(!!credentials);
-  }, []);
+//   useEffect(() => {
+//     const credentials = sessionStorage.getItem("credentials");
+//     setIsAuthenticated(!!credentials);
+//   }, []);
 
-  if (isAuthenticated === null) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Spin size="large" />
-      </div>
-    );
-  }
+//   if (isAuthenticated === null) {
+//     return (
+//       <div className="flex items-center justify-center h-screen">
+//         <Spin size="large" />
+//       </div>
+//     );
+//   }
 
-  if (!isAuthenticated) return <Navigate to="/login-teacher" replace />;
+//   if (!isAuthenticated) return <Navigate to="/login-teacher" replace />;
 
-  return <Outlet />;
-};
+//   return <Outlet />;
+// };

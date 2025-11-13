@@ -63,13 +63,13 @@ const handleCheckStudent = async (e) => {
       return;
     }
 
-    const { access_token, refresh_token, student_id } = response;
+    const { username, reset_key} = response;
 
-    sessionStorage.setItem("token", access_token);
-    sessionStorage.setItem("refresh_token", refresh_token);
-    sessionStorage.setItem("student_id", student_id);
+    sessionStorage.setItem("email", username);
+    sessionStorage.setItem("key", reset_key);
+   
 
-    navigate("/home");
+    navigate("/update-password");
   } catch (err) {
     setError("Terjadi kesalahan: " + err.message);
     console.error(err);
@@ -115,7 +115,7 @@ const handleCheckStudent = async (e) => {
 
             <form onSubmit={handleCheckStudent}>
               <div className="mb-5">
-                <label className="block font-semibold mb-2 text-gray-800">Nomor Induk Siswa</label>
+                <label className="block font-semibold mb-2 text-gray-800">Student ID</label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -130,7 +130,7 @@ const handleCheckStudent = async (e) => {
                     autoFocus={true}
                     value={formData.id_siswa}
                     onChange={handleChange}
-                    placeholder="Masukkan ID Siswa"
+                    placeholder="Input Student ID ..."
                     className="w-full py-3 px-4 rounded-lg shadow-md border border-gray-300 focus:ring-2 focus:ring-red-700 focus:outline-none"
                   />
                 </div>
@@ -138,7 +138,7 @@ const handleCheckStudent = async (e) => {
 
    
               <div className="mb-6">
-                <label className="block font-semibold mb-2 text-gray-800">Tanggal Lahir</label>
+                <label className="block font-semibold mb-2 text-gray-800">Birth Date</label>
                 <input
                   type="date"
                   id="tanggal_lahir"

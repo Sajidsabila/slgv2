@@ -1,15 +1,41 @@
 import LandingPageLayout from "../../layout/landing-page";
+import { use, useEffect, useState } from "react";
+import { methodGet } from "../../api/apiMethod";
+import { urlLink } from "../../config/config";
+
 
 const Index = () => {
+    const [profile, setProfile] = useState({});
+    const roles = JSON.parse(sessionStorage.getItem("user"))?.roles;
+    console.log(roles);
+    const getItem = roles?.map((r) => r.role);
+    const Instructor = getItem?.includes("Instructor");
+    console.log(Instructor);
+    console.log("ini role", getItem);
+    
+      useEffect(() => {
+        const getFeesFromApi = async () => {
+          try {
+            const response = await methodGet("Student");
+            console.log(response);
+            setProfile(response.data[0]);
+          } catch (error) {
+            console.error("Error fetching fees:", error);
+          }
+        };
+        getFeesFromApi();
+      }, []);
+    
+    console.log(profile);
     return (
         <LandingPageLayout>
             <div className="container mx-auto px-4 py-10 bg-white w-full max-w-4xl rounded-xl shadow-lg">
                 <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mx-6">
                  
                     <img
-                        src="https://placehold.co/200x200"
+                        src={`${profile.image ? urlLink.url + profile.image : "https://placehold.co/200x200"}`}
                         alt="Foto Profil Siswa"
-                        className="w-40 h-40 object-cover rounded-full border-4 border-red-400 shadow-md"
+                        className="w-50 h-50 object-contain rounded-full border-4 border-red-400 shadow-md"
                     />
 
                   
@@ -19,17 +45,17 @@ const Index = () => {
                         <div  className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div>
                                 <h2 className="text-lg font-semibold text-gray-800">NAMA LENGKAP</h2>
-                                <p className="text-gray-600">Benidiktus Candra P.</p>
+                                <p className="text-gray-600">{profile.first_name}</p>
 
                                 <h2 className="mt-4 text-lg font-semibold text-gray-800">NIS</h2>
-                                <p className="text-gray-600">00000000001</p>
+                                <p className="text-gray-600">{profile.name}</p>
                             </div>
                             <div>
                                 <h2 className="text-lg font-semibold text-gray-800">KELAS</h2>
                                 <p className="text-gray-600">PIANO - JC 1</p>
 
                                 <h2 className="mt-4 text-lg font-semibold text-gray-800">POINT SISWA</h2>
-                                <p className="text-gray-600">180 Point</p>
+                                <p className="text-gray-600">{profile.point} Point</p>
                             </div>
                         </div>
 

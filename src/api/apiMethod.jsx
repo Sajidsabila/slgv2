@@ -1,7 +1,7 @@
 import axios from "axios";
 import { urlLink } from "../config/config";
 
-import { Navigate, useNavigate } from "react-router-dom";
+import { data, Navigate, useNavigate } from "react-router-dom";
 import { use } from "react";
 
 
@@ -24,23 +24,65 @@ export const authStudent  = async (data) => {
   }
 };
 
+export const updatePassword = async (data) => {
+   try {
+    const response = await axios.post(
+      `${urlLink.url}/api/method/frappe.core.doctype.user.user.update_password`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+   return  response.data || [];
+  } catch (error) {
+    throw error;
+  }
+};
 
-export const methodGet = async (url) => {
-  const token = sessionStorage.getItem("token");
+
+
+export const methodGet = async (doctype, filters = {}, fields = ["*"]) => {
+  try {
+    // encode filter dan field ke format URL sesuai API Frappe
+    const filterParam = encodeURIComponent(JSON.stringify(filters));
+    const fieldParam = encodeURIComponent(JSON.stringify(fields));
+
+    const response = await axios.get(
+      `${urlLink.url}/api/resource/${doctype}?fields=${fieldParam}&filters=${filterParam}`,
+      {
+        headers: {
+          Accept: "application/json",
+          // Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const method = async (url) => {
+  // const token = sessionStorage.getItem("token");
   try{
     const response = await axios.get(`${urlLink.url}/api/method/${url}`,{
       headers: {
         "Accept": "application/json",
-        "Authorization": `Bearer ${token}`,
+        // "Authorization": `Bearer ${token}`,
       },
-      withCredentials: true
+       withCredentials: true,
     });
     return response.data
   }catch(error){
     throw error;
   }
 }
-
 export const methodLogout = async () => {
    const token = sessionStorage.getItem("token");
     const refresh_token = sessionStorage.getItem("refresh_token");

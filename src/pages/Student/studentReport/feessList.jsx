@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import LandingPageLayout from "../../../layout/landing-page";
 import { currencyFormat } from "../../../helper/helper";
 import { Button, Modal } from "antd";
-import { methodGet} from "../../../api/apiMethod";
+import { method, methodGet} from "../../../api/apiMethod";
 import { formatDateIndonesia } from "../../../helper/helper";
 
 const FeesList = () => {
@@ -20,7 +20,7 @@ const FeesList = () => {
   useEffect(() => {
     const getFeesFromApi = async () => {
       try {
-        const response = await methodGet("smi.helper.get_data_fees");
+        const response = await method("smi.helper.get_data_fees");
         setFeesList(response.message);
       } catch (error) {
         console.error("Error fetching fees:", error);
