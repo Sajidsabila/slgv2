@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { methodGet } from "../../../api/apiMethod";
 import { Image } from "antd";
 import { useAuth } from "../../../hooks/useAuth";
+import { urlLink } from "../../../config/config";
 
 // === Helper Functions ===
 
@@ -41,7 +42,6 @@ const KalenderAkademik = () => {
         const response = await methodGet("Modul Training", [
           ["type", "=", "Calender Academic"],
         ]);
-        console.log("DATA:", response.data);
         setModulTraining(response.data || []);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -63,9 +63,10 @@ const KalenderAkademik = () => {
     const fileType = getFileExtension(file.file_url);
 
     if (fileType === "gdrive") {
-      const imageUrl = generatePreviewGDriveImage(file.file_url);
-      const videoUrl = generatePreviewGDriveVideo(file.file_url);
+
       const pdfUrl = generatePreviewGDrivePDF(file.file_url);
+
+    
 
     
       return (
@@ -85,28 +86,30 @@ const KalenderAkademik = () => {
     // === Audio ===
     if (["mp3", "wav"].includes(fileType)) {
       return (
-        <audio
-          controls
-          className="w-64 my-2"
-          controlsList="nodownload"
-          src={file.file_url}
-        />
+        <Image
+        width={200}
+        preview={{
+        destroyOnHidden: true,
+        imageRender: () => (
+        <video 
+            width="50%"
+            controls
+            src={file.file_url.startsWith("http") ? generatePreviewGDriveVideo(file.file_url) : urlLink.url + file.file_url}
+            controlsList="nodownload"
+            onContextMenu={(e) => e.preventDefault()}
+            />
+        ),
+        toolbarRender: () => null,
+        }}
+        src="/youtube.png"
+    />
       );
     }
 
     // === Video ===
     if (["mp4", "webm"].includes(fileType)) {
       return (
-        <video
-          width="250"
-          height="150"
-          controls
-          controlsList="nodownload"
-          className="my-2 rounded-md"
-          onContextMenu={(e) => e.preventDefault()}
-        >
-          <source src={file.file_url} type={`video/${fileType}`} />
-        </video>
+       <p>jwjski</p>
       );
     }
     if (["png", "jpg", "jpeg"].includes(fileType)) {
@@ -120,17 +123,18 @@ const KalenderAkademik = () => {
       );
     }
 
-    // === PDF ===
     if (fileType === "pdf") {
       return (
-        <a
-          href={file.file_url}
-          target="_blank"
-          rel="noreferrer"
-          className="text-blue-600 underline"
-        >
-          Lihat PDF
-        </a>
+      <div className="my-2 flex justify-center">
+          <iframe
+            src={urlLink.url + file.file_url}
+            width="250"
+            height="150"
+            allow="autoplay"
+            title={file.title}
+            className="rounded-md border"
+          />
+        </div>
       );
     }
 
@@ -140,16 +144,12 @@ const KalenderAkademik = () => {
   return (
     <LandingPageLayout>
       <div className="px-4 py-6 container mx-auto">
-        <div className="flex items-center mb-4">
-          <img
-            src="/assets/smile_image/icon-4.png"
-            className="w-12 h-12 mr-3"
-            alt="icon"
-          />
-          <div className="bg-black text-white py-3 px-6 font-bold mt-2 rounded-lg shadow-xl hover:scale-105 transition">
-            Kalender Akademik
+             <div className="flex">
+                        <img src="/assets/smile_image/icon-1.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
+                        <div className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
+                        <span className="ms-13">Materi Pembelajaran</span>
+            </div>
           </div>
-        </div>
 
         <div className="list-program-edukasi my-5 flex flex-wrap">
           {modulTraining.map((item) => (
