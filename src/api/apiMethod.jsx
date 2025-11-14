@@ -46,7 +46,6 @@ export const updatePassword = async (data) => {
 
 export const methodGet = async (doctype, filters = {}, fields = ["*"]) => {
   try {
-    // encode filter dan field ke format URL sesuai API Frappe
     const filterParam = encodeURIComponent(JSON.stringify(filters));
     const fieldParam = encodeURIComponent(JSON.stringify(fields));
 
@@ -55,7 +54,6 @@ export const methodGet = async (doctype, filters = {}, fields = ["*"]) => {
       {
         headers: {
           Accept: "application/json",
-          // Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
       }
@@ -131,6 +129,25 @@ export const refreshAccesToken = async () => {
 
         }
 };
+
+export const  detailData = async ({doctype, id}) => {
+ try{
+    const response = await axios.get(
+      `${urlLink.url}/api/resource/${doctype}/${id}?fields=["*"]`,
+      {
+        headers: {
+          Accept: "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+ }
+
 
 
 

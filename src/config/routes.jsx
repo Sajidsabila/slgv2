@@ -51,6 +51,9 @@ import EvaluasiSemesterStudent from "../pages/Student/studentReport/evaluasiSeme
 import SetStudentPassword from "../pages/Auth/setStudentPassword.jsx";
 import DetaiCalenderAcademic from "../pages/Admin/detailCalenderAcademic.jsx";
 import UpdatePassword from "../pages/Auth/updatePassword.jsx";
+import Syllabus from "../pages/Student/learningResources/learningMateri/syllabus.jsx";
+import DetailSyllabus from "../pages/Student/learningResources/learningMateri/detailSyllabus.jsx";
+import ExamSpeciment from "../pages/Student/learningResources/learningMateri/examSpeciment.jsx";
 
 
 
@@ -141,11 +144,23 @@ const routes = createBrowserRouter([
       path : "learning-resources/materi-pembelajaran",
       element: <MateriPembelajaran />
    },
+   {
+    path: "learning-resources/materi-pembelajaran/syllabus",
+    element: <Syllabus />
+   },
+   {
+    path: "learning-resources/materi-pembelajaran/exam-speciment",
+    element: <ExamSpeciment />
+   },
+   {
+    path: "learning-resources/materi-pembelajaran/syllabus/:id",
+    element: <DetailSyllabus />
+   },
     {
       path: "profile",
       element: <ProfileStudentsFrontend />
     },
-
+    
      
   ]
 },

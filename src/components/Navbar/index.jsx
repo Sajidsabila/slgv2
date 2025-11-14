@@ -59,6 +59,11 @@ const Navbar = () => {
     setActiveDropdown2(null);
   };
 
+  const toggleDropdown2 = (index) => {
+    setActiveDropdown2(activeDropdown2 === index ? null : index);
+    setActiveDropdown(activeDropdown2 === index ? null : index);
+  };
+
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50">
       <div className="container mx-auto flex flex-col justify-between items-center py-3">
@@ -208,7 +213,7 @@ const Navbar = () => {
                             ) : (
                               <div
                                 className="flex flex-row justify-between"
-                                onClick={() => setActiveDropdown2(idx)}
+                                onClick={() => toggleDropdown2(idx)}
                               >
                                 <span>{child.label}</span>
                                 <i

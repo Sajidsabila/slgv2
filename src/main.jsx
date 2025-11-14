@@ -5,14 +5,21 @@ import "./index.css";
 import routes from "./config/routes";
 import { StudentsProvider } from "./context/studentsContext";
 import { AuthProvider } from "./hooks/useAuth";
+import { SyllabusProvider } from "./hooks/useGetSyllabus";
+import { ExamSpecimentContext, ExamSpecimentProvider } from "./hooks/useGetExamSpeciment";
 
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <StudentsProvider>
       <AuthProvider>
-             <RouterProvider router={routes} />
+      <SyllabusProvider>
+     <ExamSpecimentProvider>
 
+    
+            <RouterProvider router={routes} />
+        </ExamSpecimentProvider>
+      </SyllabusProvider>
       </AuthProvider>
     </StudentsProvider>
   </StrictMode>

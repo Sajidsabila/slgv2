@@ -41,7 +41,7 @@ const Header = () => {
       </div>
 
       {/* Footer */}
-      <div className="absolute bottom-0 left-0 w-full bg-red-800 h-16 font-semibold text-xl flex items-center justify-center">
+      <div className="absolute bottom-0 left-0 w-full bg-red-800 h-16 font-semibold md:text-xl font-l flex items-center justify-center">
         WELCOME TO SMI LEARNING SYSTEM
       </div>
     </header>

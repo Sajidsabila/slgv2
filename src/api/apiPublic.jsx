@@ -75,3 +75,17 @@ export const updateStudent = async (data, id) => {
     throw error;
    }
 } 
+
+export const  getProgramEnrollment = async () => {
+  try {
+    const response = await axios.get(
+      `${urlLink.url}/api/resource/Program%20Enrollment?fields=["course", "class_grading"]&filters=[["workflow_state","in",["Approved","Idle"]]]&order_by=creation desc`,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    throw error;
+  }
+};
