@@ -152,6 +152,10 @@ const routes = createBrowserRouter([
     path: "learning-resources/materi-pembelajaran/exam-speciment",
     element: <ExamSpeciment />
    },
+     {
+    path: "learning-resources/materi-pembelajaran/exam-speciment/:id",
+    element: <DetailSyllabus />
+   },
    {
     path: "learning-resources/materi-pembelajaran/syllabus/:id",
     element: <DetailSyllabus />

@@ -89,3 +89,18 @@ export const  getProgramEnrollment = async () => {
     throw error;
   }
 };
+
+export const getModulTraining = async (filters= {}) => {
+  try {
+     const filterParam = encodeURIComponent(JSON.stringify(filters));
+    const response = await axios.get(
+      `${urlLink.url}/api/resource/Modul%20Training?order_by=creation%20desc&limit_page_length=1&fields=["*"]&filters=${filterParam}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    throw error;
+  }
+}

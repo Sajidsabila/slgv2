@@ -22,19 +22,19 @@ const StudentReport = () => {
             <div className="flex">
               <img src="/assets/smile_image/icon-1.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
               <Link to="/students-report/history-absensi" className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-                  <span className="ms-13">Kehadiran Siswa</span>
+                  <span className="ms-13">Student Attendance</span>
               </Link>
           </div>
           <div className="flex">
                <img src="/assets/smile_image/icon-6.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
             <Link to="/students-report/fees" className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-             <span className="ms-13">Mutasi Pembayaran</span>
+             <span className="ms-13">Fees</span>
             </Link>
           </div>
           <div className="flex">
               <img src="/assets/smile_image/icon-5.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
             <Link to="/students-report/evaluasi-semester" className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-            <span className="ms-13">Hasil Evaluasi Semester</span>      
+            <span className="ms-13">Evaluation Semester</span>      
              </Link>
              </div>
           </div>

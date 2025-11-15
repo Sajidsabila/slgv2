@@ -11,6 +11,7 @@ import { FilePdfTwoTone } from "@ant-design/icons";
 
 const DetailSyllabus = () => {
       const [coursePaginatedData, setCoursePaginatedData ] = useState([]);
+      const [course, setCourse] = useState([]);
       const { id } = useParams();
       const [extensions, setExtensions] = useState({});
       useEffect(() => {
@@ -18,13 +19,14 @@ const DetailSyllabus = () => {
           try{
               const response = await detailData({doctype: "Program Materi", id});
               setCoursePaginatedData(response.data.file);
+              setCourse(response);
           }catch(err){
             console.log(err);
           }
         }
         materiDetail();
       }, [id]);
-      console.log("ini coursePaginatedData", coursePaginatedData);
+
 
       const getDriveFileExtension = async (url, fileName) => {
         try {
@@ -102,10 +104,11 @@ const DetailSyllabus = () => {
         }
     
        if (fileType === "pdf") {
-      const url = urlLink.url + file.file_url;
+      const url1 = urlLink.url + file.file_url;
+      console.log(url1);
       return (
         <a
-          href={urlLink.url.startsWith("http") ? file.file_url : url}
+          href={urlLink.url.startsWith("http") ? file.file_url : url1}
           target="_blank"
           rel="noreferrer"
         >
@@ -119,15 +122,12 @@ const DetailSyllabus = () => {
         <LandingPageLayout>
           <div className="px-4 py-6 container mx-auto">
 
-        <div className="flex">
-          <img
-            src="/assets/smile_image/icon-1.png"
-            className="w-15 h-15 relative z-1 top-2 left-3"
-          />
-          <div className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-            <span className="ms-13">Materi Pembelajaran</span>
+        <div className="flex my-6">
+              <img src="/assets/smile_image/icon-1.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
+              <div className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
+                  <span className="ms-13">{course.class_course}</span>
+              </div>
           </div>
-        </div>
              <div className="list-program-edukasi my-5 flex flex-wrap gap-6">
           {coursePaginatedData.map((item) => (
             <div

@@ -89,7 +89,7 @@ console.log(feesList);
             <div className="flex my-6">
                <img src="/assets/smile_image/icon-6.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
             <div className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-             <span className="ms-13">Mutasi Pembayaran</span>
+             <span className="ms-13">Fees</span>
             </div>
           </div>
         <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 mb-6">
@@ -127,7 +127,7 @@ console.log(feesList);
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4 mb-6">
+        {/* <div className="grid md:grid-cols-2 gap-4 mb-6">
           <div className="bg-green-700 rounded-xl p-4 text-white text-center">
             <p className="text-sm">Jumlah Uang Terbayar</p>
             <hr className="my-2 border-white" />
@@ -142,7 +142,7 @@ console.log(feesList);
             <hr className="my-2 border-white" />
             <p className="font-bold">Rp. 100.000</p>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex justify-end mb-5">
           <div className="text-lg font-semibold">

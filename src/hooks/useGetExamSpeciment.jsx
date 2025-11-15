@@ -42,7 +42,8 @@ export const ExamSpecimentProvider = ({ children }) => {
 
 const enrollWithMateri = Array.isArray(materi) && Array.isArray(enroll) 
   ? materi.filter((item) =>
-      enroll.some((m) => m.course === item.class_course)
+      enroll.some((m) => m.course === item.class_course) &&
+      enroll.some((m) => m.class_grading === item.class_grade)
     )
   : [];
 

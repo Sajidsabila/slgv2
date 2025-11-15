@@ -7,6 +7,7 @@ import { urlLink } from "../../../config/config";
 import { googledriveApi } from "../../../api/gooledriveApi";
 import { getDriveFileId, generatePreviewGDriveImage, generatePreviewGDriveVideo } from "../../../helper/helper";
 import { FilePdfTwoTone } from "@ant-design/icons";
+import { getModulTraining } from "../../../api/apiPublic";
 
 const KalenderAkademik = () => {
   const { logout } = useAuth();
@@ -18,10 +19,8 @@ const KalenderAkademik = () => {
   useEffect(() => {
     const getModulFromApi = async () => {
       try {
-        const response = await methodGet("Modul Training", [
-          ["type", "=", "Calender Academic"],
-        ]);
-        setModulTraining(response.data || []);
+        const response = await getModulTraining([["type", "=", "Calender Academic"]]);
+        setModulTraining(response || []);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -29,7 +28,7 @@ const KalenderAkademik = () => {
     getModulFromApi();
   }, []);
 
-  // Fetch extension dari Google Drive API
+console.log(modulTraining);
   const getDriveFileExtension = async (url, fileName) => {
     try {
       const fileId = getDriveFileId(url);
@@ -55,7 +54,6 @@ const KalenderAkademik = () => {
     return file.file_url?.split(".").pop()?.toLowerCase();
   };
 
-  // Ambil extension untuk semua file Google Drive
   useEffect(() => {
     modulTraining.forEach((file) => {
       if (file.file_url?.startsWith("http") && !extensions[file.name]) {
@@ -73,7 +71,6 @@ const KalenderAkademik = () => {
       return <span className="text-gray-500">Loading preview...</span>;
     }
 
-    // === AUDIO ===
     if (fileType === "mp3" || fileType === "wav") {
       return (
         <audio controls className="w-40" controlsList="nodownload">
@@ -88,7 +85,7 @@ const KalenderAkademik = () => {
       );
     }
 
-    // === VIDEO ===
+
     if (fileType === "mp4" || fileType === "webm") {
       return (
         <Image
@@ -131,14 +128,14 @@ const KalenderAkademik = () => {
 
     if (fileType === "pdf") {
       const url = urlLink.url + file.file_url;
+      console.log(url);
       return (
-        <a
-          href={urlLink.url.startsWith("http") ? file.file_url : url}
-          target="_blank"
-          rel="noreferrer"
-        >
-      <FilePdfTwoTone style={{ fontSize: "100px" }} className="mx-2 my-2 hover:text-red-500"/>
-        </a>
+        <iframe
+          src={url}
+          width="100%"
+     
+          className="mx-2 my-2"
+        ></iframe>
       );
     }
 
@@ -149,26 +146,23 @@ const KalenderAkademik = () => {
     <LandingPageLayout>
       <div className="px-4 py-6 container mx-auto">
 
-        <div className="flex">
-          <img
-            src="/assets/smile_image/icon-1.png"
-            className="w-15 h-15 relative z-1 top-2 left-3"
-          />
-          <div className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-            <span className="ms-13">Materi Pembelajaran</span>
+        <div className="flex my-6">
+              <img src="/assets/smile_image/icon-1.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
+              <div className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
+                  <span className="ms-13">Calender Academic</span>
+              </div>
           </div>
-        </div>
 
         <div className="list-program-edukasi my-5 flex flex-wrap gap-6">
           {modulTraining.map((item) => (
             <div
               key={item.name}
-              className="program-edukasi-item w-full md:w-1/3 lg:w-1/4  rounded-md shadow-sm gap-3"
+              className="program-edukasi-item w-full  rounded-md shadow-sm gap-3"
             >
               <div className="head-materi bg-red-800 p-3 rounded-md text-white font-sans font-bold">
                 {item.title ?? "-"}
               </div>
-              <div className="link-materi bg-white p-3 flex justify-center">
+              <div className="link-materi bg-white p-3 h-100 flex justify-center">
                 {renderPreview(item)}
               </div>
             </div>
