@@ -156,13 +156,14 @@ const fetchModulTraining = async () => {
       return;
     }
 
-    if (formData.file) {
-      const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
+   if (formData.file) {
+      const allowedTypes = ["image/png", "image/jpg", "image/jpeg", "application/pdf"];
       if (!allowedTypes.includes(formData.file.type)) {
-        alert("File harus berformat PNG, JPG, atau JPEG!");
+        alert("File harus berformat PNG, JPG, pdf atau JPEG!");
         return;
       }
     }
+
 
     try {
       setIsLoading(true);
