@@ -141,7 +141,7 @@ const routes = createBrowserRouter([
       element: <ProgramEdukasi />
     },
     {
-      path : "learning-resources/materi-pembelajaran",
+      path : "learning-resources/learning-materi",
       element: <MateriPembelajaran />
    },
    {

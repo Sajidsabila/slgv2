@@ -19,7 +19,7 @@ const DetailSyllabus = () => {
           try{
               const response = await detailData({doctype: "Program Materi", id});
               setCoursePaginatedData(response.data.file);
-              setCourse(response);
+              setCourse(response.data);
           }catch(err){
             console.log(err);
           }
@@ -27,7 +27,7 @@ const DetailSyllabus = () => {
         materiDetail();
       }, [id]);
 
-
+      console.log(course);
       const getDriveFileExtension = async (url, fileName) => {
         try {
           const fileId = getDriveFileId(url);
@@ -105,7 +105,6 @@ const DetailSyllabus = () => {
     
        if (fileType === "pdf") {
       const url1 = urlLink.url + file.file_url;
-      console.log(url1);
       return (
         <a
           href={urlLink.url.startsWith("http") ? file.file_url : url1}

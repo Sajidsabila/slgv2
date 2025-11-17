@@ -32,7 +32,7 @@ const LearningResources = () => {
           </div>
           <div className="flex">
               <img src="/assets/smile_image/icon-1.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
-            <Link to="/learning-resources/materi-pembelajaran" className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
+            <Link to="/student/learning-resources/learning-materi" className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
             <span className="ms-13">Learning Materi</span>      
              </Link>
              </div>
