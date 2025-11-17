@@ -66,8 +66,8 @@ export const updateStudent = async (data, id) => {
       {
         headers: {
            Accept: "application/json",
-          Authorization: `token ${token}`,
         },
+        withCredentials: true,
       }
     );
     return response.data?.data || [];

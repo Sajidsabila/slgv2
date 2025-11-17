@@ -28,9 +28,6 @@ const FeesList = () => {
     };
     getFeesFromApi();
   }, []);
-
-console.log(feesList);
-
   const isInRange = (dateStr) => {
     if (!startDate && !endDate) return true;
     if (!dateStr) return false;

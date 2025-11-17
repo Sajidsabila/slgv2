@@ -26,8 +26,6 @@ const DetailSyllabus = () => {
         }
         materiDetail();
       }, [id]);
-
-      console.log(course);
       const getDriveFileExtension = async (url, fileName) => {
         try {
           const fileId = getDriveFileId(url);

@@ -1,47 +1,77 @@
 import Swal from "sweetalert2";
 
 import { Spin } from "antd";
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import { updateStudent } from "../../../../api/apiPublic";
+import { methodGet } from "../../../../api/apiMethod";
+import { Link } from "react-router-dom";
 
 const Page8 = () => {
   const [loading, setLoading] = useState(false);
+  const [studentId, setStudentId] = useState(null);
+  const [success, setSuccess] = useState(false);
+  
+    useEffect(() => {
+        const getStudentId = async () => {
+          try {
+            const response = await methodGet("Student");
+            console.log(response);
+           setStudentId(response.data[0].name);
+          } catch (error) {
+            console.error("Error fetching fees:", error);
+          }
+        };
+        getStudentId();
+      }, []);
+      console.log(studentId);
+const handlePost = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-  const handlePost = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const token = sessionStorage.getItem("key");
-      console.log(token);
-      const id =
-        JSON.parse(sessionStorage.getItem("token"))?.student_id || "";
-      const data = {
-        reason_for_join: sessionStorage.getItem("selectedOption1"),
-        reason_for_priority: sessionStorage.getItem("selectedOption2"),
-      };
+  try {
+    const selectedChoices = JSON.parse(sessionStorage.getItem("selectedChoices") || "[]");
 
-      await updateStudent(data, id);
-      sessionStorage.removeItem("selectedOption1");
-      sessionStorage.removeItem("selectedOption2");
-      localStorage.removeItem("page");
-      setLoading(false);
-      Swal.fire({
-        title: "Success!",
-        text: "Data berhasil di simpan",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-      Swal.fire({
-        title: "Gagal !",
-        text: error.message,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    }
-  };
+    const reasonForGoals = selectedChoices.map((item, index) => ({
+      description: item,
+      idx: index + 1,
+      doctype: "Reason Goals"
+    }));
+
+    const data = {
+      reason_for_join: sessionStorage.getItem("selectedOption1") ?? "",
+      reason_for_priority: sessionStorage.getItem("selectedOption2") ?? "",
+      reason_for_goals: reasonForGoals,
+    };
+
+    await updateStudent(data, studentId);
+
+    sessionStorage.removeItem("selectedOption1");
+    sessionStorage.removeItem("selectedOption2");
+    sessionStorage.removeItem("selectedChoices");
+    localStorage.removeItem("page");
+
+    setLoading(false);
+    setSuccess(true);
+    Swal.fire({
+      title: "Success!",
+      text: "Data berhasil disimpan",
+      icon: "success",
+      confirmButtonText: "OK",
+    });
+
+  } catch (error) {
+    setLoading(false);
+    console.log(error);
+
+    Swal.fire({
+      title: "Gagal!",
+      text: error.message,
+      icon: "error",
+      confirmButtonText: "OK",
+    });
+  }
+};
+
 
   return (
     <>
@@ -61,12 +91,24 @@ const Page8 = () => {
             </p>
       
             <p  className="sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold sm:mb-1 md:mb-9 ">learning journey!</p>
-          <button
+        {!success && (
+           <button
             onClick={handlePost}
             className="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-full shadow-lg transition duration-300 font-bold text-xl xl:text-3xl hover:scale-105"
           >
             Yes, Let's go!
           </button>
+        )}
+
+        {success && (
+          <Link
+            to={"/student/home"}
+            className="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-full shadow-lg transition duration-300 font-bold text-xl xl:text-3xl hover:scale-105"
+          >
+            Back to home
+          </Link>
+        )}
+         
         </div>
 
      

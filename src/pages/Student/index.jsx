@@ -7,26 +7,21 @@ import { urlLink } from "../../config/config";
 const Index = () => {
     const [profile, setProfile] = useState({});
     const roles = JSON.parse(sessionStorage.getItem("user"))?.roles;
-    console.log(roles);
     const getItem = roles?.map((r) => r.role);
     const Instructor = getItem?.includes("Instructor");
-    console.log(Instructor);
-    console.log("ini role", getItem);
     
       useEffect(() => {
-        const getFeesFromApi = async () => {
+        const getStudentProfile = async () => {
           try {
             const response = await methodGet("Student");
-            console.log(response);
             setProfile(response.data[0]);
           } catch (error) {
             console.error("Error fetching fees:", error);
           }
         };
-        getFeesFromApi();
+        getStudentProfile();
       }, []);
     
-    console.log(profile);
     return (
         <LandingPageLayout>
             <div className="container mx-auto px-4 py-10 bg-white w-full max-w-4xl rounded-xl shadow-lg">

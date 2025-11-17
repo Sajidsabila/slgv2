@@ -27,8 +27,6 @@ const KalenderAkademik = () => {
     };
     getModulFromApi();
   }, []);
-
-console.log(modulTraining);
   const getDriveFileExtension = async (url, fileName) => {
     try {
       const fileId = getDriveFileId(url);
@@ -128,7 +126,6 @@ console.log(modulTraining);
 
     if (fileType === "pdf") {
       const url = urlLink.url + file.file_url;
-      console.log(url);
       return (
         <iframe
           src={url}

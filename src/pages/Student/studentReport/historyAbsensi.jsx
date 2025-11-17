@@ -19,7 +19,6 @@ const HistoryAbsensi = () => {
         const attendanceFromAPI = async () => {
             try{
                 const response = await methodGet("Student Attendance");
-                console.log(response);
                 setAttendanceData(response?.data);
             }catch(error){
                 console.error("Gagal ambil data absensi dari API:", error);

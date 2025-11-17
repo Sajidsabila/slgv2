@@ -4,9 +4,9 @@ import { Link } from "react-router-dom"
 
 const ExamSpeciment = () => {
    const { loading, enroll, materi, enrollWithMateri } = useExamSpeciment();
-   console.log("ini enroll with materi", enrollWithMateri);
-   console.log("ini enroll", enroll);
-   console.log("ini materi", materi);
+  //  console.log("ini enroll with materi", enrollWithMateri);
+  //  console.log("ini enroll", enroll);
+  //  console.log("ini materi", materi);
     return (
       <LandingPageLayout>
         <div className="px-4 py-6 container mx-auto">

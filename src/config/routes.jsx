@@ -66,10 +66,7 @@ const routes = createBrowserRouter([
   path: "/page-8",
   element: <Page8 />
 },
-   {
-    path: "/parents-guide",
-    element: <ParentsGuide />
-  },
+   
   {
     path: "/",
     element: <Guest><AuthStudent /></Guest>,
@@ -99,6 +96,10 @@ const routes = createBrowserRouter([
       path: "home",
       element: <Index />,
     },
+    {
+    path: "parents-guide",
+    element: <ParentsGuide />
+  },
     {
       path: "program-materi/:id",
       element: <PageProgramMateri />,
