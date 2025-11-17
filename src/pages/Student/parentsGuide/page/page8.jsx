@@ -10,6 +10,9 @@ const Page8 = () => {
   const [loading, setLoading] = useState(false);
   const [studentId, setStudentId] = useState(null);
   const [success, setSuccess] = useState(false);
+  const handleEndSession = () => {
+    sessionStorage.setItem("page", 1);
+  }
   
     useEffect(() => {
         const getStudentId = async () => {
@@ -31,10 +34,8 @@ const handlePost = async (e) => {
   try {
     const selectedChoices = JSON.parse(sessionStorage.getItem("selectedChoices") || "[]");
 
-    const reasonForGoals = selectedChoices.map((item, index) => ({
+    const reasonForGoals = selectedChoices.map((item) => ({
       description: item,
-      idx: index + 1,
-      doctype: "Reason Goals"
     }));
 
     const data = {
@@ -48,7 +49,7 @@ const handlePost = async (e) => {
     sessionStorage.removeItem("selectedOption1");
     sessionStorage.removeItem("selectedOption2");
     sessionStorage.removeItem("selectedChoices");
-    localStorage.removeItem("page");
+
 
     setLoading(false);
     setSuccess(true);
@@ -103,6 +104,7 @@ const handlePost = async (e) => {
         {success && (
           <Link
             to={"/student/home"}
+            onClick={handleEndSession}
             className="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-full shadow-lg transition duration-300 font-bold text-xl xl:text-3xl hover:scale-105"
           >
             Back to home

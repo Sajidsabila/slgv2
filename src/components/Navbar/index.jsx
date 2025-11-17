@@ -128,7 +128,7 @@ const Navbar = () => {
                     onMouseEnter={() => setActiveDropdown(index)}
                   >
                     {link.url ? (
-                      <Link to={link.url}>{link.text}</Link>
+                      <Link className="w-full" to={link.url}>{link.text}</Link>
                     ) : (
                       <span>{link.text}</span>
                     )}
@@ -145,14 +145,14 @@ const Navbar = () => {
                         {link.children.map((child, childIndex) => (
                           <li
                             key={childIndex}
-                            className="relative px-6 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:text-red-900"
+                            className="relative w-full flex items-center"
                             onMouseEnter={() => child.grandchildren && setActiveDropdown2(childIndex)}
                             onMouseLeave={() => child.grandchildren && setActiveDropdown2(null)}
                           >
                             {child.url ? (
-                              <Link to={child.url}>{child.label}</Link>
+                              <Link className="relative px-6 py-2 text-sm w-full text-gray-700 hover:bg-gray-200 hover:text-red-900" to={child.url}>{child.label}</Link>
                             ) : (
-                              <span>{child.label}</span>
+                              <span className="relative px-6 py-2 w-full text-sm text-gray-700 hover:bg-gray-200 hover:text-red-900">{child.label}</span>
                             )}
 
                             {/* SECOND LEVEL */}
