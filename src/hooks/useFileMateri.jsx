@@ -166,8 +166,6 @@ const handleSubmit = async (event) => {
         setIsEditMode(false);
         return;
       }
-
-      // ====== Jika FILE BARU di-upload ======
       if (formData.file && !formData.useFileUrl) {
         const uploadedFile = await uploadFileProgramMateri(formData.file, folder);
 
@@ -190,11 +188,8 @@ const handleSubmit = async (event) => {
           description: formData.description,
         };
       }
-
-      // Update data
       await updateFileToProgramMateri(id, newFile);
 
-      // Hapus file lama jika benar-benar diganti dan file lama bukan URL
       if (formData.oldFileName && newFile.file) {
         try {
           await deleteFileProgramMateri(id, formData.oldFileName);
@@ -202,8 +197,6 @@ const handleSubmit = async (event) => {
           console.error("Gagal hapus file lama:", e);
         }
       }
-
-      // Update state lokal
       setProgramMateri((prev) => ({
         ...prev,
         file: prev.file.map((f) =>

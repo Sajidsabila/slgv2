@@ -201,7 +201,7 @@ const handleOpen = (data = null) => {
     setSuccess(null);
     try {
       setIsLoading(true);
-      const deleteResponse = await useResourceAdminDelete({ doctype: "Program Materi", id });
+      const deleteResponse = await apiResourceAdminDelete({ doctype: "Program Materi", id });
       
       if (deleteResponse) { 
         setSuccess("Data Materi berhasil dihapus.");
