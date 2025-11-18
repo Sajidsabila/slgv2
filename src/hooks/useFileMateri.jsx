@@ -108,7 +108,6 @@ const handleSubmit = async (event) => {
         : `Home/Program Materi/${type}/${programMateri?.abbr_course}`;
 
     if (!isEditMode) {
-      // ========== Tambah File ==========
       if (formData.file && !formData.useFileUrl) {
         const uploadedFile = await uploadFileProgramMateri(formData.file, folder);
         if (!uploadedFile?.name) throw new Error("Gagal upload file ke server");
@@ -141,55 +140,74 @@ const handleSubmit = async (event) => {
       }
 
     } else {
+         const isFileChanged =
+        formData.file !== null || 
+        (formData.useFileUrl && formData.file_url !== formData.oldFileUrl);
 
-      const isFileChanged =
-      (!!formData.file || (formData.useFileUrl && formData.file_url !== formData.oldFileUrl));
+      if (!isFileChanged) {
+        const updated = {
+          file: formData.oldFileName,
+          file_url: formData.oldFileUrl,
+          title: formData.oldTitle,
+          description: formData.description
+        };
 
-      if (!isFileChanged && !formData.description) {
-        setSuccess("Tidak ada perubahan file. Data tetap sama.");
+        await updateFileToProgramMateri(id, updated);
+
+        setProgramMateri((prev) => ({
+          ...prev,
+          file: prev.file.map((f) =>
+            f.file === formData.oldFileName ? updated : f
+          ),
+        }));
+
+        setSuccess("Data berhasil diperbarui tanpa mengganti file.");
         resetFormData();
         setIsEditMode(false);
         return;
       }
 
+      // ====== Jika FILE BARU di-upload ======
       if (formData.file && !formData.useFileUrl) {
         const uploadedFile = await uploadFileProgramMateri(formData.file, folder);
-        if (!uploadedFile?.name) throw new Error("Gagal upload file ke server");
 
         newFile = {
           file: uploadedFile.name,
           title: uploadedFile.file_name,
           file_url: uploadedFile.file_url,
           oldFileName: formData.oldFileName,
-          description: formData.description
+          description: formData.description,
         };
+      }
 
-      } else if (formData.useFileUrl) {
-        const uploadWithUrl = await uploadFileProgramMateri(formData.file_url, folder);
+      // ====== Jika URL diganti ======
+      else if (formData.useFileUrl) {
         newFile = {
           file_url: formData.file_url,
           title: formData.file_url,
-          file: uploadWithUrl.name,
+          file: null,
           oldFileName: formData.oldFileName,
-           description: formData.description
+          description: formData.description,
         };
       }
 
-      const update = await updateFileToProgramMateri(id, newFile);
+      // Update data
+      await updateFileToProgramMateri(id, newFile);
 
-      if (formData.oldFileName && update) {
+      // Hapus file lama jika benar-benar diganti dan file lama bukan URL
+      if (formData.oldFileName && newFile.file) {
         try {
-          const deleteFile = await deleteFileProgramMateri(id, formData.oldFileName);
-          console.log("File lama berhasil dihapus:", deleteFile);
-        } catch (deleteError) {
-          console.error("Gagal hapus file lama:", deleteError);
+          await deleteFileProgramMateri(id, formData.oldFileName);
+        } catch (e) {
+          console.error("Gagal hapus file lama:", e);
         }
       }
 
+      // Update state lokal
       setProgramMateri((prev) => ({
         ...prev,
-        file: (prev.file || []).map((f) =>
-          f.file === formData.oldFileName ? newFile : f,
+        file: prev.file.map((f) =>
+          f.file === formData.oldFileName ? newFile : f
         ),
       }));
     }
@@ -200,12 +218,10 @@ const handleSubmit = async (event) => {
 
   } catch (err) {
     setError(`Terjadi kesalahan: ${err.response?.data?.exception || err.message}`);
-    setSuccess("");
   } finally {
     setLoading(false);
   }
 };
-
 
   /** Delete File */
 const handleDeleteFile = async (fileName) => {

@@ -117,9 +117,8 @@ const ProgramMateriSyllabus = () => {
         try {
             setIsLoading(true);
             const data = {
-               title: `SY/${selectedCourse}`,
                 type: "Syllabus",
-                class_course: courseData.find(c => c.abbr === selectedCourse)?.name || ""
+                class_course: selectedCourse,
             };
             console.log("ini data ya ", data);
             const response = isEditMode
@@ -291,7 +290,7 @@ const ProgramMateriSyllabus = () => {
               (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
             }
             options={courseData.map((course) => ({
-              value: course.abbr,
+              value: course.name,
               label: course.name
             }))}
             style={{ width: '100%', height: '40px' }}

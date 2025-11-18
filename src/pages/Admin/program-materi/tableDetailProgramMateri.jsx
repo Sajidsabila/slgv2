@@ -92,10 +92,10 @@ const TableDetailProgramMateri = ({
     }
 
     if (fileType === "pdf") {
-        const url = urlLink.url + file.file_url;
+        const preview = file.file_url.startsWith("http") ? file.file_url : urlLink.url + file.file_url;
       return (
         <a
-          href={urlLink.url.startsWith("http") ? file.file_url : url}
+          href={preview}
           target="_blank"
           rel="noreferrer"
           className="text-blue-600 underline"

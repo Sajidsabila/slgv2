@@ -90,35 +90,30 @@ export const removeFileProramMateri  = async (id, fileName) => {
 }
 export const updateFileToProgramMateri = async (id, newFile) => {
   try {
-    // 1️⃣ Ambil data lama dari API
     const getResponse = await axios.get(
       `${urlLink.url}/api/resource/Program%20Materi/${id}`,
       { withCredentials: true }
     );
 
-    if (!getResponse.data || !getResponse.data.data) {
-      throw new Error("Data tidak ditemukan di API");
-    }
-
     const oldData = getResponse.data.data;
-    let oldFiles = Array.isArray(oldData.file) ? oldData.file : oldData.file ? [oldData.file] : [];
+    let oldFiles = Array.isArray(oldData.file) ? oldData.file : [];
+    const targetFile = newFile.oldFileName || newFile.file;
 
-    if (!newFile.oldFileName) {
-      return [];
-    }
-    const fileIndex = oldFiles.findIndex(file => 
-      String(file.file).trim() === String(newFile.oldFileName).trim()
+    const fileIndex = oldFiles.findIndex(
+      (file) => String(file.file).trim() === String(targetFile).trim()
     );
+
     if (fileIndex === -1) {
-      return [];
+      throw new Error("File yang akan diperbarui tidak ditemukan");
     }
     oldFiles[fileIndex] = {
       ...oldFiles[fileIndex],
-      file: newFile.file, 
-      title: newFile.title,
-      file_url: newFile.file_url,
-      description: newFile.description
+      file: newFile.file ?? oldFiles[fileIndex].file,
+      title: newFile.title ?? oldFiles[fileIndex].title,
+      file_url: newFile.file_url ?? oldFiles[fileIndex].file_url,
+      description: newFile.description ?? oldFiles[fileIndex].description,
     };
+
     const response = await axios.put(
       `${urlLink.url}/api/resource/Program%20Materi/${id}`,
       { file: oldFiles },
@@ -128,16 +123,14 @@ export const updateFileToProgramMateri = async (id, newFile) => {
       }
     );
 
-    if (!response.data || !response.data.data) {
-      throw new Error("Gagal memperbarui file di API");
-    }
     return response.data.data;
 
   } catch (error) {
- 
+    console.error("UPDATE ERROR:", error);
     return [];
   }
 };
+
 
 export const createFolderProgramMateri = async (folderName) => {
   try {

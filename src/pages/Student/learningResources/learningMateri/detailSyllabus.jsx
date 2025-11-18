@@ -101,15 +101,17 @@ const DetailSyllabus = () => {
           );
         }
     
-       if (fileType === "pdf") {
-      const url1 = urlLink.url + file.file_url;
+        if (fileType === "pdf") {
+        const preview = file.file_url.startsWith("http") ? file.file_url : urlLink.url + file.file_url;
+  
       return (
         <a
-          href={urlLink.url.startsWith("http") ? file.file_url : url1}
+          href={preview}
           target="_blank"
           rel="noreferrer"
+          className="text-blue-600 underline"
         >
-      <FilePdfTwoTone style={{ fontSize: "100px" }} className="mx-2 my-2 hover:text-red-500"/>
+          Lihat PDF
         </a>
       );
     }
