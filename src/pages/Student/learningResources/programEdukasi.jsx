@@ -161,7 +161,7 @@ const ProgramEdukasi= () => {
               <div className="head-materi bg-red-800 p-3 rounded-md text-white font-sans font-bold">
                 {item.title ?? "-"}
               </div>
-                  <div className="link-materi bg-white p-3 h-[70dvh] flex justify-center">
+                  <div className="link-materi bg-white p-3 xl:h-[70dvh] h-[100dvh] flex justify-center">
                 {renderPreview(item)}
               </div>
             </div>

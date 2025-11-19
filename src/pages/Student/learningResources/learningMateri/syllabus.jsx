@@ -22,7 +22,7 @@ const Syllabus = () => {
 
            enrollWithMateri.map((item, index) => (
               <Link
-                className="program-edukasi-item w-full md:w-1/4 lg:w-1/6  rounded-md shadow-sm gap-3 my-1"
+                className="program-edukasi-item w-full md:w-1/4 lg:w-1/4 xl:w-1/6 rounded-md shadow-sm gap-3 my-1"
                 key={index}
                 to={`/student/learning-resources/materi-pembelajaran/syllabus/${item.name}`}
               >
