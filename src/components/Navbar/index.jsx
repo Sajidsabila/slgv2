@@ -176,12 +176,16 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* MOBILE MENU */}
+     
       {isOpen && (
         <div className="md:hidden bg-white shadow-lg p-3 border-t-2 border-orange-700">
           <ul className="space-y-2 text-sm font-semibold">
             <li className="hover:text-blue-600 px-2 py-2 border-b border-gray-200">
-              <Link to="/">Home</Link>
+              <Link to={
+                    !sessionStorage.getItem("profileInstructor")
+                      ? "/student/home"
+                      : "/teacher"
+                  }>Home</Link>
             </li>
 
             {sessionStorage.getItem("user") && (
