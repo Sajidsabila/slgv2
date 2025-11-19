@@ -130,7 +130,6 @@ const KalenderAkademik = () => {
         <iframe
           src={url}
           width="100%"
-     
           className="mx-2 my-2"
         ></iframe>
       );
@@ -159,7 +158,7 @@ const KalenderAkademik = () => {
               <div className="head-materi bg-red-800 p-3 rounded-md text-white font-sans font-bold">
                 {item.title ?? "-"}
               </div>
-              <div className="link-materi bg-white p-3 h-[250mm] flex justify-center items-center">
+              <div className="link-materi bg-white p-3 h-[240mm] flex justify-center">
                 {renderPreview(item)}
               </div>
             </div>
