@@ -19,7 +19,7 @@ const ProgramEdukasi= () => {
   useEffect(() => {
     const getModulFromApi = async () => {
       try {
-        const response = await getModulTraining([["type", "=", "Calender Academic"]]);
+        const response = await getModulTraining([["type", "=", "Book Menu"]]);
         setModulTraining(response || []);
       } catch (error) {
         console.error("Error fetching data:", error);
