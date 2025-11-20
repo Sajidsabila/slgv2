@@ -186,12 +186,12 @@ const AuthStudent = () => {
               <div className="mb-5">
                 <label className="block font-semibold mb-2 text-gray-800">Email</label>
                 <input
-                  type="email"
+                  type="text"
                   id="email"
                   autoFocus
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="Input your email ..."
+                  placeholder="Input your email or username ..."
                   className="w-full py-3 px-4 rounded-lg shadow-md border border-gray-300 focus:ring-2 focus:ring-red-700 focus:outline-none"
                 />
               </div>
