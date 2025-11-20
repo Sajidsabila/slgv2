@@ -53,7 +53,7 @@ const TableDetailProgramMateri = ({
 
     if (fileType === "mp3" || fileType === "wav") {
       return (
-        <audio controls className="w-80"  controlsList="nodownload">
+        <audio controls className="w-80"  controlsList="nodownload" muted={false}>
           <source src={file.file_url.startsWith("http") ? generatePreviewGDriveVideo(file.file_url) : urlLink.url + file.file_url}/>
         </audio>
       );

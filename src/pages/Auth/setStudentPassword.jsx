@@ -155,7 +155,7 @@ const handleCheckStudent = async (e) => {
               disabled={loading}
               className="absolute left-1/2 -translate-x-1/2 bottom-[-20px] px-10 py-3 rounded-lg bg-black text-white font-semibold text-lg shadow-lg hover:bg-white hover:border-2 border-red-800 hover:text-red-800 hover:cursor-pointer transition duration-300 ease-in-out"
             >
-              {loading ? "Memproses..." : "Login"}
+              {loading ? "Memproses..." : "Submit"}
             </button>
           </div>
 

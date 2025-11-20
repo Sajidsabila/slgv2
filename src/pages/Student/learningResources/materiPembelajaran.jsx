@@ -24,7 +24,7 @@ const MateriPembelajaran = () => {
             </div>
           </div>
             <div className="list-program-edukasi my-5 flex flex-wrap gap-2">
-            {array .length > 0  ? (
+            {array.length > 0  ? (
 
             array.map((item, index) => (
               <Link
