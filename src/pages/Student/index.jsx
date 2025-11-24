@@ -1,184 +1,235 @@
 import LandingPageLayout from "../../layout/landing-page";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { methodGet, updatePassword } from "../../api/apiMethod";
 import { urlLink } from "../../config/config";
-import { Spin } from "antd";
-
+import { Link } from "react-router-dom";
+import { CloseCircleTwoTone } from "@ant-design/icons";
 
 const Index = () => {
-    const [profile, setProfile] = useState({});
-   const [formData, setFormData] = useState({"old_password": "", "new_password": ""});
-   const [loading, setIsLoading] = useState(false);
-   const [error, setError] = useState("");
-   const [success, setSuccess] = useState("");
-    const roles = JSON.parse(sessionStorage.getItem("user"))?.roles;
-    const getItem = roles?.map((r) => r.role);
-    const Instructor = getItem?.includes("Instructor");
-    
-      useEffect(() => {
-        const getStudentProfile = async () => {
-          try {
-            const response = await methodGet("Student");
-            setProfile(response.data[0]);
-          } catch (error) {
-            console.error("Error fetching fees:", error);
-          }
-        };
-        getStudentProfile();
-      }, []);
+  const [profile, setProfile] = useState({});
+  const [formData, setFormData] = useState({
+    old_password: "",
+    new_password: "",
+  });
+  const [loading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
-        const handleChange = (e) => {
+useEffect(() => {
+  const hasSeenPopup = localStorage.getItem("hasSeenPopup");
+
+  if (!hasSeenPopup) {
+    setShowPopup(true);
+    localStorage.setItem("hasSeenPopup", "true");
+    document.body.style.overflow = "hidden";
+  }
+
+  return () => {
+    document.body.style.overflow = "auto";
+  };
+}, []);
+
+  useEffect(() => {
+    const getStudentProfile = async () => {
+      try {
+        const response = await methodGet("Student");
+        setProfile(response.data[0]);
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+    getStudentProfile();
+  }, []);
+
+  const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-  }
+  };
 
-      const passwordUpdate = async (e) => {
-        e.preventDefault();
+  const passwordUpdate = async (e) => {
+    e.preventDefault();
 
-        if(formData.old_password === "" || formData.new_password === "") {
-          alert("Password lama dan password baru harus diisi");
-          return;
-        }
-        const data = {
-          old_password : formData.old_password,
-          new_password : formData.new_password
-        }
-        setIsLoading(true);
-        try{
-            const response = await updatePassword(data);
-            setSuccess("Password has been updated successfully");
-            setError("");
-            console.log(response);
-        }catch(error){
-          setError(error.response.data.exc_type || error.response.data.exception || error.message);
-          setSuccess("");
-        }finally{
-          setIsLoading(false);
-        }
-      }
+    if (formData.old_password === "" || formData.new_password === "") {
+      alert("Password lama dan password baru harus diisi");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await updatePassword(formData);
+      setSuccess("Password updated successfully");
+      setError("");
+    } catch (error) {
+      setError(
+        error.response?.data?.exc_type ||
+          error.response?.data?.exception ||
+          error.message
+      );
+      setSuccess("");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+const closePopup = () => {
+  setShowPopup(false);
+  document.body.style.overflow = "auto";
+};
+
+
+  return (
+    <>
+    {showPopup && (
+        <div className="pop-up fixed inset-0 flex flex-col items-center justify-center backdrop-blur-sm z-20">
+        <CloseCircleTwoTone
+          className="text-4xl cursor-pointer mb-4 hover:scale-110 transition"
+          onClick={closePopup}
+        />
+
+        <img
+          src="/images/popup_parents_guide.png"
+          alt="Parents Guide"
+          className="rounded-md shadow-xl w-[80%] sm:w-[60%] md:w-[40%] lg:w-[35%] xl:w-[30%]"
+        />
+
+      <Link to="/student/parents-guide" onClick={closePopup} className="bg-slate-100 px-6 py-1 rounded-md font-medium md:text-lg text-md relative md:bottom-15 bottom-10 md:right-50 right-28 hover:scale-105 transition">Start</Link>
+      </div>
+
+    )}
     
-    return (
-        <LandingPageLayout>
-            <div className="container mx-auto px-4 py-10 bg-white w-full max-w-4xl rounded-xl shadow-lg">
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mx-6">
-                   
-                 
-                    <img
-                        src={`${profile.image ? urlLink.url + profile.image : "https://placehold.co/200x200"}`}
-                        alt="Foto Profil Siswa"
-                        className="w-50 h-50 object-contain rounded-full border-4 border-red-400 shadow-md"
-                    />
+      <LandingPageLayout>
+        <div className="container mx-auto px-6 py-10 bg-white max-w-4xl rounded-xl shadow-xl mt-10">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+           
+            <img
+              src={
+                profile.image
+                  ? urlLink.url + profile.image
+                  : "https://placehold.co/200x200"
+              }
+              alt="Foto Profil Siswa"
+              className="w-40 h-40 object-cover rounded-full border-4 border-red-500 shadow-lg"
+            />
 
-                  
-                    <div className="w-full">
+            {/* Profile Data */}
+            <div className="w-full">
+              {/* — PERSONAL INFO — */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h2 className="text-lg font-semibold">Nama Lengkap</h2>
+                  <p className="text-gray-600">{profile.first_name}</p>
 
-                     
-                        <div  className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-800">NAMA LENGKAP</h2>
-                                <p className="text-gray-600">{profile.first_name}</p>
-
-                                <h2 className="mt-4 text-lg font-semibold text-gray-800">NIS</h2>
-                                <p className="text-gray-600">{profile.name}</p>
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-800">KELAS</h2>
-                                <p className="text-gray-600">PIANO - JC 1</p>
-
-                                <h2 className="mt-4 text-lg font-semibold text-gray-800">POINT SISWA</h2>
-                                <p className="text-gray-600">{profile.point} Point</p>
-                            </div>
-                        </div>
-
-                    
-                        <hr className="my-8 border-t border-gray-300" />
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-800">KELAS SELANJUTNYA</h2>
-                                <p className="text-gray-600">
-                                    Selasa, 19 Agustus 2020<br />
-                                    15.00 - 16.00 WIB
-                                </p>
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-800">STATUS PEMBAYARAN</h2>
-                                <p className="text-green-600">Terbayar</p>
-                            </div>
-                        </div>
-
-                       
-                        <hr className="my-8 border-t border-gray-300" />
-
-                      
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-800">EVENT SELANJUTNYA</h2>
-                                <p className="text-gray-600">
-                                    Rabu, 20 Agustus 2020<br />
-                                    10.00 - 12.00 WIB
-                                </p>
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-800">Judul Event</h2>
-                                <p className="text-gray-600">Webinar Motivasi Belajar</p>
-                            </div>
-                        </div>
-
-                         <hr className="my-8 border-t border-gray-300" />
-
-                      
-                        <div className="grid grid-cols-1  gap-6">
-                           <h1 className="font-bold">Update Password</h1>
-                           <form onSubmit={passwordUpdate}>
-                            {error && <p className="bg-red-900 text-white px-2 py-2 rounded-lg">{error}</p>}
-                            {success && <p className="bg-green-900 text-white px-2 py-2 rounded-lg">{success}</p>}
-                           <div className="mb-4 mt-4">
-                               <label className="block text-gray-700 font-bold mb-2" htmlFor="password">
-                                  Old Password
-                               </label>
-                               <input
-                                   className="appearance-none rounded-lg border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-red-900"
-                             
-                                   type="password"
-                                   placeholder="Input Old Password ...."
-                                   autoFocus={true}
-                                   id="old_password"
-                                   name="old_password"
-                                   value={formData.old_password}
-                                   onChange={handleChange}
-                               />
-                           </div>
-
-                             <div className="mb-4">
-                               <label className="block text-gray-700 font-bold mb-2" htmlFor="password">
-                                 New Password
-                               </label>
-                               <input
-                                   className="appearance-none rounded-lg border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-red-900"
-
-                                   type="password"
-                                   placeholder="Input New Password ...."
-                                   id="new_password"
-                                   name="new_password"
-                                   value={formData.new_password}
-                                   onChange={handleChange}                                 
-                               />
-                           </div>
-
-                           <div className="mb-4">
-                             <button type="submit" className="bg-red-900 rounded-lg hover:bg-red-700 text-white hover:cursor-pointer font-medium py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                               {loading ? "Loading..." : "Update Password"}
-                             </button>
-                           </div>
-                           </form>
-                        </div>
-                    </div>
+                  <h2 className="mt-4 text-lg font-semibold">NIS</h2>
+                  <p className="text-gray-600">{profile.name}</p>
                 </div>
+
+                <div>
+                  <h2 className="text-lg font-semibold">Kelas</h2>
+                  <p className="text-gray-600">PIANO - JC 1</p>
+
+                  <h2 className="mt-4 text-lg font-semibold">Point Siswa</h2>
+                  <p className="text-gray-600">{profile.point} Point</p>
+                </div>
+              </div>
+
+              <hr className="my-8 border-gray-300" />
+
+              {/* — NEXT CLASS — */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h2 className="text-lg font-semibold">Kelas Selanjutnya</h2>
+                  <p className="text-gray-600">
+                    Selasa, 19 Agustus 2020 <br />
+                    15.00 - 16.00 WIB
+                  </p>
+                </div>
+
+                <div>
+                  <h2 className="text-lg font-semibold">Status Pembayaran</h2>
+                  <p className="text-green-600 font-semibold">Terbayar</p>
+                </div>
+              </div>
+
+              <hr className="my-8 border-gray-300" />
+
+              {/* — NEXT EVENT — */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h2 className="text-lg font-semibold">Event Selanjutnya</h2>
+                  <p className="text-gray-600">
+                    Rabu, 20 Agustus 2020 <br />
+                    10.00 - 12.00 WIB
+                  </p>
+                </div>
+
+                <div>
+                  <h2 className="text-lg font-semibold">Judul Event</h2>
+                  <p className="text-gray-600">Webinar Motivasi Belajar</p>
+                </div>
+              </div>
+
+              <hr className="my-8 border-gray-300" />
+
+              {/* — PASSWORD UPDATE — */}
+              <h1 className="font-bold text-xl mb-4">Update Password</h1>
+
+              <form onSubmit={passwordUpdate} className="space-y-4">
+                {error && (
+                  <p className="bg-red-600 text-white px-3 py-2 rounded-lg">
+                    {error}
+                  </p>
+                )}
+
+                {success && (
+                  <p className="bg-green-600 text-white px-3 py-2 rounded-lg">
+                    {success}
+                  </p>
+                )}
+
+                <div>
+                  <label className="block font-medium text-gray-700 mb-2">
+                    Old Password
+                  </label>
+                  <input
+                    type="password"
+                    name="old_password"
+                    placeholder="Input Old Password..."
+                    value={formData.old_password}
+                    onChange={handleChange}
+                    className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-600 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-gray-700 mb-2">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    name="new_password"
+                    placeholder="Input New Password..."
+                    value={formData.new_password}
+                    onChange={handleChange}
+                    className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-600 outline-none"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="bg-red-700 hover:bg-red-800 text-white px-5 py-2 rounded-lg shadow transition w-fit"
+                >
+                  {loading ? "Loading..." : "Update Password"}
+                </button>
+              </form>
             </div>
-        </LandingPageLayout>
-    );
+          </div>
+        </div>
+      </LandingPageLayout>
+    </>
+  );
 };
 
 export default Index;
