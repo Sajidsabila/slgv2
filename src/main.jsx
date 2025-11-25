@@ -11,7 +11,7 @@ import { ExamSpecimentContext, ExamSpecimentProvider } from "./hooks/useGetExamS
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <StudentsProvider>
+
       <AuthProvider>
       <SyllabusProvider>
      <ExamSpecimentProvider>
@@ -21,6 +21,5 @@ createRoot(document.getElementById("root")).render(
         </ExamSpecimentProvider>
       </SyllabusProvider>
       </AuthProvider>
-    </StudentsProvider>
   </StrictMode>
 );

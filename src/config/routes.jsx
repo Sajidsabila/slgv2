@@ -226,6 +226,10 @@ const routes = createBrowserRouter([
         {path: "program-materi-SLG/:id", element: <DetailProgramMateri filetype={["mp4", "pdf"]} type="SLG" title="Detail Program Materi SLG" back="/admin/program-materi-SLG"/>},
     ],
   },
+  {
+    path: "*", 
+    element: <Page404 />
+  }
 ]);
 
 export default routes;
