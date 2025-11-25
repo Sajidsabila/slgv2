@@ -17,11 +17,11 @@ const Index = () => {
   const [showPopup, setShowPopup] = useState(false);
 
 useEffect(() => {
-  const hasSeenPopup = localStorage.getItem("hasSeenPopup");
+  const hasSeenPopup = sessionStorage.getItem("hasSeenPopup");
 
   if (!hasSeenPopup) {
     setShowPopup(true);
-    localStorage.setItem("hasSeenPopup", "true");
+   sessionStorage.setItem("hasSeenPopup", "true");
     document.body.style.overflow = "hidden";
   }
 
