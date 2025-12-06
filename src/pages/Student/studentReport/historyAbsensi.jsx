@@ -160,7 +160,7 @@ const HistoryAbsensi = () => {
               <div className="text-sm text-gray-700 space-y-2">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) =>
-                    i < e.point ? (
+                    i < e.growth_point ? (
                       <StarFilled
                         key={i}
                         style={{
