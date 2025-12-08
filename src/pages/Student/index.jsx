@@ -4,7 +4,7 @@ import { updatePassword } from "../../api/apiMethod";
 import { urlLink } from "../../config/config";
 import { Link } from "react-router-dom";
 import { CloseCircleTwoTone } from "@ant-design/icons";
-import { useStudentProfil } from "../../context/StudentProfilContext";
+import { useStudentProfil } from "../../hooks/useProfileStudent";
 
 const Index = () => {
   const { profile, program, schedule, fees } = useStudentProfil();

@@ -7,7 +7,7 @@ import { StudentsProvider } from "./context/studentsContext";
 import { AuthProvider } from "./hooks/useAuth";
 import { SyllabusProvider } from "./hooks/useGetSyllabus";
 import { ExamSpecimentContext, ExamSpecimentProvider } from "./hooks/useGetExamSpeciment";
-import { StudentProfilProvider } from "./context/studentProfilContext";
+import { StudentProfilProvider } from "./hooks/useProfileStudent";
 
 
 

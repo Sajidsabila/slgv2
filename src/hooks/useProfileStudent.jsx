@@ -14,7 +14,9 @@ export const StudentProfilProvider = ({ children }) => {
       try {
         const res = await methodGet("Student");
         setProfile(res.data[0]);
-      } catch {}
+      } catch (error){
+        console.log(error);
+      }
     };
     fetchProfile();
   }, []);
