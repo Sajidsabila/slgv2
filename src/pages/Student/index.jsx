@@ -107,7 +107,7 @@ const Index = () => {
                         key={index}
                         className="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-400/20"
                       >
-                        {item.class_name}
+                        {item.course}
                       </span>
                     ))}
                   </div>

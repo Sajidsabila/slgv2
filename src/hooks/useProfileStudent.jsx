@@ -27,7 +27,7 @@ export const StudentProfilProvider = ({ children }) => {
         const res = await methodGet(
           "Program Enrollment",
           [["status", "=", "Approved"]],
-          ["name", "class_name", "class_grading"]
+          ["name", "class_name", "class_grading", "course"]
         );
         setProgram(res.data);
       } catch (error) {
@@ -37,33 +37,38 @@ export const StudentProfilProvider = ({ children }) => {
     fetchProgram();
   }, []);
 
-        useEffect(() => {
-        const fetchSchedule = async () => {
-            try {
-            const res = await methodGet(
-                "Course Schedule",
-                {},
-                ["name", "schedule_date", "from_time", "to_time"]
-            );
+      useEffect(() => {
+  const fetchSchedule = async () => {
+    try {
+      const res = await methodGet(
+        "Course Schedule",
+        {},
+        ["name", "schedule_date", "from_time", "to_time"]
+      );
 
-            //   agar jadwal yang tampil di minggu ini aja
-            const today = new Date();
-            const upcoming = res.data
-                .map((item) => ({
-                ...item,
-                date: new Date(`${item.schedule_date}T${item.from_time}`),
-                }))
-                .filter((item) => item.date >= today)
-                .sort((a, b) => a.date - b.date);
+      const today = new Date();
+      const timezoneOffset = today.getTimezoneOffset() * 60000;
 
-            setSchedule(upcoming.slice(0, 1)); 
-            } catch (error) {
-            console.log(error);
-            }
-        };
+      const upcoming = res.data
+        .map((item) => {
+          const localDate = new Date(`${item.schedule_date}T${item.from_time}`);
+          return {
+            ...item,
+            date: new Date(localDate.getTime() - timezoneOffset),
+          };
+        })
+        .filter((item) => item.date >= today)
+        .sort((a, b) => a.date - b.date);
 
-        fetchSchedule();
-        }, []);
+      setSchedule(upcoming.slice(0, 1));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchSchedule();
+}, []);
+
 
   useEffect(() => {
     const fetchFees = async () => {
