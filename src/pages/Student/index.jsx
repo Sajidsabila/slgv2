@@ -121,23 +121,23 @@ const Index = () => {
              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <h2 className="text-lg font-semibold">Kelas Selanjutnya</h2>
-                {schedule.length > 0 ? (
-                  <p className="text-gray-600">
-                    {new Date(`${schedule[0].schedule_date}T${schedule[0].from_time}`).toLocaleDateString(
-                      "id-ID",
-                      {
-                        weekday: "long",
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      }
-                    )}{" "}
-                    <br />
-                    {schedule[0].from_time} - {schedule[0].to_time} WIB
-                  </p>
-                ) : (
-                  <p className="text-gray-500">Tidak ada jadwal minggu ini</p>
-                )}
+              {schedule?.length ? (
+                <p className="text-gray-600">
+                  {new Date(
+                    `${schedule[0]?.schedule_date}T${schedule[0]?.from_time}`
+                  ).toLocaleDateString("id-ID", {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                  <br />
+                  {schedule[0]?.from_time} - {schedule[0]?.to_time} WIB
+                </p>
+              ) : (
+                <p className="text-gray-500">Tidak ada jadwal minggu ini</p>
+              )}
+
               </div>
 
             <div>
