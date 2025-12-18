@@ -63,10 +63,11 @@ const handleCheckStudent = async (e) => {
       return;
     }
 
-    const { username, reset_key} = response;
+    const { email, reset_key, username} = response;
 
-    sessionStorage.setItem("email", username);
+    sessionStorage.setItem("username", username);
     sessionStorage.setItem("key", reset_key);
+    sessionStorage.setItem("email", email);
    
 
     navigate("/update-password");

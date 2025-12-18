@@ -3,11 +3,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { urlLink } from "../../config/config";
 
-const AuthStudent = () => {
+const MainAuth = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
+  const [student, setStudent] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -37,96 +37,84 @@ const AuthStudent = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError(null);
 
-    if (limitRequest >= 5) {
-      setError("Terlalu banyak percobaan login. Coba lagi setelah 1 menit.");
-      setIsLoading(false);
-      return;
-    }
+  if (limitRequest >= 5) {
+    setError("Terlalu banyak percobaan login. Coba lagi setelah 1 menit.");
+    setIsLoading(false);
+    return;
+  }
 
-    setLimitRequest((prev) => prev + 1);
+  setLimitRequest((prev) => prev + 1);
 
-    if (!formData.email || !formData.password) {
-      setIsLoading(false);
-      setError("Email dan Password tidak boleh kosong");
-      return;
-    }
+  if (!formData.email || !formData.password) {
+    setIsLoading(false);
+    setError("Email dan Password tidak boleh kosong");
+    return;
+  }
 
-    try {
-      // Login ke Frappe
-      const response = await fetch(`${urlLink.url}/api/method/login`, {
-        method: "POST",
-        headers,
-        body: new URLSearchParams({
-          usr: formData.email,
-          pwd: formData.password,
-        }),
-        credentials: "include",
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Gagal login");
-      }
-
-      // Ambil user yang sedang login
-      const getLoggedUser = await fetch(
-        `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers,
-          mode: "cors",
-        }
-      );
-
-      const user = await getLoggedUser.json();
-
-      // Ambil detail user
-      const userData = await fetch(
-        `${urlLink.url}/api/resource/User/${user.message}`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers,
-          mode: "cors",
-        }
-      );
-
-      const dataUser = await userData.json();
-
-      const roles = Array.isArray(dataUser.data.roles)
-        ? dataUser.data.roles
-        : [];
-
-      const isStudent = roles.some((roleObj) => roleObj.role === "Student");
-
-      if (!isStudent) {
-        throw new Error("Anda tidak mempunyai akses sebagai Student");
-      }
-
-      const getUser = {
-        full_name: dataUser.data.full_name,
-        user_image: dataUser.data.user_image,
-        email: dataUser.data.email,
-        roles: dataUser.data.roles,
-        mobile_no: dataUser.data.mobile_no,
-      };
-
-      login(getUser);
-      navigate("/student/home");
-    } catch (err) {
-      console.error(err);
-      setError(err.message || "Terjadi kesalahan saat login");
-    } finally {
-      setIsLoading(false);
-    }
+  const fetchJSON = async (url, options = {}) => {
+    const res = await fetch(url, { credentials: "include", headers, ...options });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Request error");
+    return data;
   };
+
+  try {
+    // 1. Login
+    await fetchJSON(`${urlLink.url}/api/method/login`, {
+      method: "POST",
+      body: new URLSearchParams({
+        usr: formData.email,
+        pwd: formData.password,
+      }),
+    });
+
+    // 2. Get logged in user
+    const loggedUser = await fetchJSON(
+      `${urlLink.url}/api/method/frappe.auth.get_logged_user`
+    );
+
+    // 3. Get user detail
+    const userDetail = await fetchJSON(
+      `${urlLink.url}/api/resource/User/${loggedUser.message}`
+    );
+
+    const roles = userDetail.data.roles || [];
+    const isStudent = roles.some((r) => r.role === "Student");
+    const isTeacher = roles.some((r) => r.role === "Instructor");
+    const isGuardian = roles.some((r) => r.role === "Student Guardian");
+
+    // Validasi Role
+    if ((student && !isStudent  || (!student && isTeacher === false))) {
+      throw new Error("Login Failed");
+    }
+
+    const getUser = {
+      full_name: userDetail.data.full_name,
+      user_image: userDetail.data.user_image,
+      email: userDetail.data.email,
+      roles: userDetail.data.roles,
+      mobile_no: userDetail.data.mobile_no,
+    };
+
+    login(getUser);
+
+    // Redirect sesuai role
+    if (isStudent ) navigate("/student");
+    else if (isTeacher) navigate("/teacher");
+
+  } catch (err) {
+    console.error(err);
+    setError(err.message || "Terjadi kesalahan saat login");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <div className="relative min-h-screen w-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat bg-[url(/assets/smile_image/background-page-login.png)] font-['Poppins']">
@@ -151,22 +139,22 @@ const AuthStudent = () => {
 
             {/* Switch Role */}
             <div className="flex flex-wrap gap-3 mb-8">
-              <Link
-                to="/"
-                className={`w-30 text-center py-2 md:py-3 font-semibold rounded-lg shadow-md transition ${
-                  pathname === "/" ? "bg-red-800 text-white" : "bg-gray-200 text-gray-800"
+              <button
+                onClick={() => setStudent(true)}
+                className={`w-30 text-center py-2 md:py-3 font-semibold rounded-lg shadow-md transition hover:cursor-pointer ${
+                  student === true ? "bg-red-800 text-white" : "bg-gray-200 text-gray-800"
                 }`}
               >
                 Student
-              </Link>
-              {/* <Link
-                to="/login-teacher"
-                className={`w-30 text-center py-2 md:py-3 font-semibold rounded-lg shadow-md transition ${
-                  pathname === "/login-teacher" ? "bg-red-800 text-white" : "bg-gray-200 text-gray-800"
+              </button>
+              <button
+                onClick={() => setStudent(false)}
+                className={`w-30 text-center py-2 md:py-3 font-semibold rounded-lg shadow-md transition hover:cursor-pointer ${
+                  student === false ? "bg-red-800 text-white" : "bg-gray-200 text-gray-800"
                 }`}
               >
                 Teacher
-              </Link> */}
+              </button>
             </div>
 
             {/* Error / Success Message */}
@@ -207,8 +195,8 @@ const AuthStudent = () => {
                   className="w-full py-3 px-4 rounded-lg shadow-md border border-gray-300 focus:ring-2 focus:ring-red-700 focus:outline-none"
                 />
               </div>
-
-              <p className="text-sm mb-6">
+            {student && (
+                 <p className="text-sm mb-6">
                 Lupa Password?{" "}
                 <Link
                   to="/set-password"
@@ -217,6 +205,8 @@ const AuthStudent = () => {
                   Klik disini
                 </Link>
               </p>
+            )}
+             
 
               <div className="relative">
                 <button
@@ -235,4 +225,4 @@ const AuthStudent = () => {
   );
 };
 
-export default AuthStudent;
+export default MainAuth;

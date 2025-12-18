@@ -104,3 +104,17 @@ export const getModulTraining = async (filters= {}) => {
     throw error;
   }
 }
+
+export const getDoctypeDetail = async (doctype, id) => {
+  try{
+    const response = await axios.get(
+      `${urlLink.url}/api/resource/${doctype}/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data?.data || [];
+  }catch(error){
+    throw error
+  }
+}

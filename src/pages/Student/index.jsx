@@ -111,9 +111,6 @@ const closePopup = () => {
 
   </div>
 )}
-
-
-    
       <LandingPageLayout>
         <div className="container mx-auto px-6 py-10 bg-white max-w-4xl rounded-xl shadow-xl mt-10">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">

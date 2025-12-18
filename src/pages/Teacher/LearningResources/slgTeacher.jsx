@@ -1,19 +1,18 @@
-import { useSyllabus } from "../../../../hooks/useGetSyllabus"
-import LandingPageLayout from "../../../../layout/landing-page"
+import { useSlg } from "../../../hooks/useGetSlg";
+import LandingPageLayout from "../../../layout/landing-page"
 import { Link } from "react-router-dom"
 
-const Syllabus = () => {
-   const { loading, enroll, materi, enrollWithMateri } = useSyllabus();
-   console.log("ini enroll with materi", enrollWithMateri);
-   console.log("ini enroll", enroll);
-   console.log("ini materi", materi);
+
+const SlgTeacher = () => {
+   const { loading, enroll, materi, enrollWithMateri } = useSlg();
+
     return (
       <LandingPageLayout>
         <div className="px-4 py-6 container mx-auto">
          <div className="flex my-6">
               <img src="/assets/smile_image/icon-1.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
               <div className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-                  <span className="ms-13">Syllabus</span>
+                  <span className="ms-13">SLG</span>
               </div>
           </div>
 
@@ -24,7 +23,7 @@ const Syllabus = () => {
               <Link
                 className="program-edukasi-item w-full md:w-1/4 lg:w-1/4 xl:w-1/6 rounded-md shadow-sm gap-3 my-1"
                 key={index}
-                to={`/student/learning-resources/materi-pembelajaran/syllabus/${item.name}`}
+                to={`/teacher/learning-resources/slg/${item.name}`}
               >
                <div className="bg-red-800 text-white py-3 text-center rounded-lg font-bold hover:bg-red-700 transition hover:scale-105">{item.class_course}</div>
               </Link>
@@ -38,5 +37,4 @@ const Syllabus = () => {
       </LandingPageLayout>
     )
 }
-
-export default Syllabus
+export default SlgTeacher

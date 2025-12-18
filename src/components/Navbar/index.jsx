@@ -9,9 +9,9 @@ const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [activeDropdown2, setActiveDropdown2] = useState(null);
   const [open, setIsOpenModal] = useState(false);
-  const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const location = useLocation().pathname;
 
   const dropdownLinks = [
     {
@@ -33,13 +33,65 @@ const Navbar = () => {
           label: "Learning Material",
           grandchildren: [
               { label: "Syllabus", url: "/student/learning-resources/materi-pembelajaran/syllabus" },
-            { label: "Exam Speciment", url: "/student/learning-resources/materi-pembelajaran/exam-speciment" },
+             { label: "Exam Speciment", url: "/student/learning-resources/materi-pembelajaran/exam-speciment" },
+          
           
           
           ],
         },
       ],
     },
+  ];
+
+  const teacherLinks =[
+     {
+      text: "Learning Resources",
+      
+      children: [
+        { label: "Calender Academic", url: "/teacher/learning-resources/kalender-academic" },
+        { label: "Education Program", url: "/teacher/learning-resources/program-edukasi" },
+        {
+          label: "Learning Material",
+          grandchildren: [
+            { label: "Syllabus", url: "/teacher/learning-resources/syllabus" },
+            { label: "Exam Speciment", url: "/teacher/learning-resources/exam-speciment" },
+            { label: "SLG", url: "/teacher/learning-resources/slg" },
+            { label: "LHB", url: "/teacher/learning-resources/lhb" },
+          ],
+        },
+      ],
+    },
+    {
+      text: "Modul Training",
+      children: [
+        { label: "Student Attendance", grandchildren: [
+          {label: "Product Knowledge", url: "/student/students-report/history-absensi"},
+          {label: "Company Profile", url: "/student/students-report/history-absensi"},
+          {label: "Visi Misi", url: "/student/students-report/history-absensi"},
+          {label: "SMI Learning System Concept ", url: "/student/students-report/history-absensi"},
+        ], 
+      },
+      { label : "Musikal Skill", grandchildren: [
+        {label: "Playing", url: "/student/students-report/fees"},
+        {label: "Improvising (Yafet)", url: "/student/students-report/fees"},
+        {label: "Listening", url: "/student/students-report/fees"},
+        {label: "Reading", url: "/student/students-report/fees"},
+        {label: "IK", url: "/student/students-report/fees"},
+        {label: "dll", url: "/student/students-report/fees"},
+      ]},
+      { label : "Technology Skill", grandchildren:  [
+        {label: "Beginner", url: "/student/students-report/fees"},
+        {label: "Intermediate", url: "/student/students-report/fees"},
+        {label: "Advanced", url: "/student/students-report/fees"},
+      ]},
+        { label : "Pedagogy Skill", grandchildren:  [
+        {label: "Psikology Music", url: "/student/students-report/fees"},
+        {label: "Intermediate", url: "/student/students-report/fees"}
+      ]},
+      {label: "Head Education Modul", url: "/student/students-report/fees"},
+      ],
+    },
+   
   ];
 
   const logoutStudent = async () => {
@@ -90,7 +142,7 @@ const Navbar = () => {
                   if (window.confirm("Are you sure you want to logout?"))
                     logoutStudent();
                 }}
-                className="text-sm font-semibold bg-red-500 py-2 px-3 text-white rounded-md hover:bg-red-600"
+                className="text-sm font-semibold bg-red-500 py-2 px-3 text-white rounded-md hover:bg-red-600 hover:cursor-pointer"
               >
                 Logout
               </button>
@@ -98,30 +150,100 @@ const Navbar = () => {
           </div>
 
           <hr className="border-black my-2 relative z-10 right-100 w-[190%] mt-3" />
-
-          <ul className="items-center w-full text-base text-gray-800">
+          {location.startsWith("/student") && (
+              <ul className="items-center w-full text-base text-gray-800">
             <div className="flex gap-3">
 
               {/* HOME */}
               <li
                 className={`hover:text-red-900 cursor-pointer px-2 py-1 ${
-                  location.pathname === "/home" ? "font-bold" : ""
+                  location.pathname === "/student" ? "font-bold" : ""
                 }`}
               >
                 <Link
-                  to={
-                    !sessionStorage.getItem("profileInstructor")
-                      ? "/student/home"
-                      : "/teacher"
-                  }
+                  to={"/student"}
                 >
                   Home
                 </Link>
               </li>
 
               {/* DROPDOWN */}
-              {sessionStorage.getItem("user") &&
-                dropdownLinks.map((link, index) => (
+
+              {dropdownLinks.map((link, index) => (
+                  <li
+                    key={index}
+                    className="relative hover:text-red-900 cursor-pointer px-2 py-1"
+                    onMouseEnter={() => setActiveDropdown(index)}
+                  >
+                    {link.url ? (
+                      <Link className="w-full" to={link.url}>{link.text}</Link>
+                    ) : (
+                      <span>{link.text}</span>
+                    )}
+
+                    {/* FIRST LEVEL */}
+                    {link.children && activeDropdown === index && (
+                      <ul
+                        className="absolute top-full left-0 bg-white bg-slate-100 shadow-lg py-2 rounded-lg min-w-[200px] my-3"
+                        onMouseLeave={() => {
+                          setActiveDropdown(null);
+                          setActiveDropdown2(null);
+                        }}
+                      >
+                        {link.children.map((child, childIndex) => (
+                          <li
+                            key={childIndex}
+                            className="relative w-full flex items-center"
+                            onMouseEnter={() => child.grandchildren && setActiveDropdown2(childIndex)}
+                            onMouseLeave={() => child.grandchildren && setActiveDropdown2(null)}
+                          >
+                            {child.url ? (
+                              <Link className="relative px-6 py-2 text-sm w-full text-gray-700 hover:bg-gray-200 hover:text-red-900" to={child.url}>{child.label}</Link>
+                            ) : (
+                              <span className="relative px-6 py-2 w-full text-sm text-gray-700 hover:bg-gray-200 hover:text-red-900">{child.label}</span>
+                            )}
+
+                            {/* SECOND LEVEL */}
+                            {child.grandchildren && activeDropdown2 === childIndex && (
+                              <ul className="absolute left-full top-0 bg-white shadow-lg py-2 min-w-[200px] rounded-md">
+                                {child.grandchildren.map((gc, gcIndex) => (
+                                  <li key={gcIndex} className="w-full flex items-center">
+                                    <Link to={gc.url} className="relative w-full border-2relative px-6 py-2 text-sm w-full text-gray-700 hover:bg-gray-200 hover:text-red-900 ">{gc.label}</Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+            </div>
+          </ul>
+          )}
+
+            {location.startsWith("/teacher") && (
+            <ul className="items-center w-full text-base text-gray-800">
+            <div className="flex gap-3">
+
+              {/* HOME */}
+              <li
+                className={`hover:text-red-900 cursor-pointer px-2 py-1 ${
+                  location.pathname === "/teacher" ? "font-bold" : ""
+                }`}
+              >
+                <Link
+                  to={
+                  
+                       "/teacher"
+                  }
+                >
+                  Home
+                </Link>
+              </li>
+
+                {teacherLinks.map((link, index) => (
                   <li
                     key={index}
                     className="relative hover:text-red-900 cursor-pointer px-2 py-1"
@@ -159,8 +281,8 @@ const Navbar = () => {
                             {child.grandchildren && activeDropdown2 === childIndex && (
                               <ul className="absolute left-full top-0 bg-white shadow-lg py-2 min-w-[180px] rounded-md">
                                 {child.grandchildren.map((gc, gcIndex) => (
-                                  <li key={gcIndex} className="px-4 py-1 hover:bg-gray-200">
-                                    <Link to={gc.url}>{gc.label}</Link>
+                                  <li key={gcIndex} className="w-full flex items-center">
+                                    <Link to={gc.url} className="relative w-full border-2relative px-6 py-2 text-sm w-full text-gray-700 hover:bg-gray-200 hover:text-red-900 ">{gc.label}</Link>
                                   </li>
                                 ))}
                               </ul>
@@ -172,7 +294,14 @@ const Navbar = () => {
                   </li>
                 ))}
             </div>
+
+
           </ul>
+
+          )}
+
+          
+        
         </div>
       </div>
 
@@ -240,13 +369,13 @@ const Navbar = () => {
                   </li>
                 ))}
 
-                <li className="px-2 py-2">
+                <li className="px-2 py-2 hover:curor-pointer">
                   <button
                     onClick={() => {
                       if (window.confirm("Are you sure you want to logout?"))
                         logoutStudent();
                     }}
-                    className="w-full text-sm font-semibold bg-red-500 py-2 px-4 text-white rounded-md hover:bg-red-600"
+                    className="w-full text-sm font-semibold bg-red-500 py-2 px-4 text-white rounded-md hover:bg-red-600 hover:cursor-pointer"
                   >
                     Logout
                   </button>
@@ -261,3 +390,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+ 

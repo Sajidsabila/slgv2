@@ -7,7 +7,7 @@ import { Guest} from "../middleware/isGuest.jsx";
 import Index from "../pages/Student/index.jsx";
 import PageProgramMateri from "../pages/pageProgramMateri.jsx";
 import ClassCourseDetail from "../pages/class.jsx";
-import AuthStudent from "../pages/Auth/student.jsx";
+
 import Login from "../pages/Auth/index.jsx";
 import Page404 from "../pages/404.jsx";
 import Dashboard from "../pages/Admin/dashboard.jsx";
@@ -17,20 +17,13 @@ import ProgramMateri from "../pages/Admin/programMateri.jsx";
 import HistoryAbsensi from "../pages/Student/studentReport/historyAbsensi.jsx";
 import EvaluasiSemester from "../pages/Admin/evaluasiSemester.jsx";
 import DetailEvaluasiSemester from "../pages/Admin/detailEvaluasiSemester.jsx";
-import AuthTeacher from "../pages/Auth/teacher.jsx";
-import IndexTeacher from "../pages/Teacher/index.jsx";
-import PageProgramMateriTeacher from "../pages/Teacher/pageProgramMateriTeacher.jsx";
-import ClassGradeTeacher from "../pages/Teacher/classGrade.jsx";
+
 import BookMenu from "../pages/Admin/bookMenu.jsx";
 import DetailBookMenu from "../pages/Admin/detailBookMenu.jsx";
 import CalenderAcademic from "../pages/Admin/calenderAcademic.jsx";
 import ModulTraining from "../pages/Admin/modulTraining.jsx";
 import DetailModulTraining from "../pages/Admin/detailModulTraining.jsx";
-import CourseTeacher from "../pages/Teacher/course.jsx";
 
-import ModulTrainingTeacher from "../pages/Teacher/modulTraining.jsx";
-import DetailModulTrainingTeacher from "../pages/Teacher/detailModulTraining.jsx";
-import EvaluationSemesterTeacher from "../pages/Teacher/evaluationSemester.jsx";
 import FeesList from "../pages/Student/studentReport/feessList.jsx";
 import ParentsGuide from "../pages/Student/parentsGuide/index.jsx";
 import Page7 from "../pages/Student/parentsGuide/page/page7.jsx";
@@ -52,8 +45,16 @@ import SetStudentPassword from "../pages/Auth/setStudentPassword.jsx";
 import DetaiCalenderAcademic from "../pages/Admin/detailCalenderAcademic.jsx";
 import UpdatePassword from "../pages/Auth/updatePassword.jsx";
 import Syllabus from "../pages/Student/learningResources/learningMateri/syllabus.jsx";
-import DetailSyllabus from "../pages/Student/learningResources/learningMateri/detailSyllabus.jsx";
+import DetailSyllabus from "../pages/Student/learningResources/learningMateri/detailLearningMateri.jsx";
 import ExamSpeciment from "../pages/Student/learningResources/learningMateri/examSpeciment.jsx";
+import MainAuth from "../pages/Auth/mainAuth.jsx";
+import IndexTeacher from "../pages/Teacher/index.jsx";
+import SlgTeacher from "../pages/Teacher/LearningResources/slgTeacher.jsx";
+import LhbTeacher from "../pages/Teacher/LearningResources/lhbTeacher.jsx";
+import ExamSpecimentForTeacher from "../pages/Teacher/LearningResources/examSpecimentTeacher.jsx";
+import SyllabusTeacher from "../pages/Teacher/LearningResources/syllabusTeacher.jsx";
+import DetailLearningMateri from "../pages/Student/learningResources/learningMateri/detailLearningMateri.jsx";
+import DetailLearningMateriTeacher from "../pages/Teacher/LearningResources/detailLearningMateriTeacher.jsx";
 
 
 
@@ -69,31 +70,22 @@ const routes = createBrowserRouter([
    
   {
     path: "/",
-    element: <Guest><AuthStudent /></Guest>,
+    element: <Guest><MainAuth /></Guest>,
   },
  {
   path: "/set-password",
   element: <Guest><SetStudentPassword /></Guest>
  },
-  // {
-  //   path: "login-teacher",
-  //   element: (
-  //     <GuestOnly>
-  //       <AuthTeacher />
-  //     </GuestOnly>
-  //   ),
-  // },
-
   { 
     path: "update-password",
     element: <UpdatePassword />
   },
  {
   path: "/student",
-  element:<Middleware allowed={["Student"]}/>,
+  element:<Middleware allowed={["Student", "Student Guardian"]}/>,
   children: [
     {
-      path: "home",
+      path: "",
       element: <Index />,
     },
     {
@@ -155,11 +147,11 @@ const routes = createBrowserRouter([
    },
      {
     path: "learning-resources/materi-pembelajaran/exam-speciment/:id",
-    element: <DetailSyllabus />
+    element: <DetailLearningMateri/>
    },
    {
     path: "learning-resources/materi-pembelajaran/syllabus/:id",
-    element: <DetailSyllabus />
+    element: <DetailLearningMateri />
    },
     {
       path: "profile",
@@ -182,19 +174,47 @@ const routes = createBrowserRouter([
     element:<Middleware allowed={["Instructor"]}/>,
     children:[
       {path: "", element: <IndexTeacher />},
-      {path: "learning-materi", element: <CourseTeacher />},
-      {path: "book-menu", element: <ModulTrainingTeacher url="book-menu" title="Book Menu" placeholder="Book Menu" />},
-      {path: "calender-academic", element: <ModulTrainingTeacher url="calender-academic"  title="Calender Academic" placeholder="Calender Academic"/>},
-      {path: "class-course/:abbr_course", element: <ClassGradeTeacher url="program-materi"/>},
-      {path: "program-materi/:id", element: <PageProgramMateriTeacher filter="Program Materi" url="program-materi" />},
-      {path: "modul-training", element: <ModulTrainingTeacher url="modul-training" title="Modul Training" placeholder="Modul Training"/>},
-      {path: "modul-training/:id", element: <DetailModulTrainingTeacher title="Detail Modul Training"/>},
-      {path: "calender-academic/:id", element: <DetailModulTrainingTeacher title="Detail Calender Academic"/>},
-      {path: "book-menu/:id", element: <DetailModulTrainingTeacher title="Detail Book Menu"/>},
-      {path: "evaluation-semester", element: <EvaluationSemesterTeacher />},
-      {path: "evaluation-semester/class-course/:abbr_course", element: <ClassGradeTeacher url="evaluation-semester-materi" />},
-      {path: "evaluation-semester-materi/:id", element: <PageProgramMateriTeacher filter="Evaluasi Semester" url="evaluation-semester-materi"/>},
-      
+       {
+      path: "learning-resources/kalender-academic",
+      element: <KalenderAkademik />
+    },
+    {
+      path: "learning-resources/program-edukasi",
+      element: <ProgramEdukasi />
+    },
+
+    {
+      path: "learning-resources/slg",
+      element: <SlgTeacher />
+    },
+    { 
+      path: "learning-resources/lhb",
+      element: <LhbTeacher />
+    },
+    {
+      path: "learning-resources/syllabus",
+      element: <SyllabusTeacher/>
+    },
+    { 
+      path: "learning-resources/exam-speciment",
+      element: <ExamSpecimentForTeacher />
+    },
+    {
+      path: "/teacher/learning-resources/syllabus/:id",
+      element: <DetailLearningMateriTeacher/>
+    },
+     {
+      path: "/teacher/learning-resources/exam-speciment/:id",
+      element: <DetailLearningMateriTeacher/>
+    },
+     {
+      path: "/teacher/learning-resources/slg/:id",
+      element: <DetailLearningMateriTeacher/>
+    },
+      {
+      path: "/teacher/learning-resources/lhb/:id",
+      element: <DetailLearningMateriTeacher/>
+    },
     ]
   },
   {
