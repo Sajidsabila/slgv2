@@ -56,28 +56,36 @@ const Index = () => {
 
   return (
     <>
-      {showPopup && (
-        <div className="pop-up fixed inset-0 flex flex-col items-center justify-center backdrop-blur-sm z-20">
-          <CloseCircleTwoTone
-            className="text-4xl cursor-pointer mb-4 hover:scale-110 transition"
-            onClick={closePopup}
-          />
-          <div className="relative w-[90%] sm:w-[60%] md:w-[55%] lg:w-[40%] xl:w-[40%]">
-            <img
-              src="/images/popup_parents_guide.png"
-              alt="Parents Guide"
-              className="rounded-md shadow-xl w-full"
-            />
-            <Link
-              to="/student/parents-guide"
-              onClick={closePopup}
-              className="absolute md:bottom-6 bottom-1 2xl:right-[83%] xl:right-[80%] md:right-[75%] right-[68%] bg-slate-100 px-6 py-1 rounded-md font-medium text-md hover:scale-105 transition"
-            >
-              Start
-            </Link>
-          </div>
-        </div>
-      )}
+
+{showPopup && (
+  <div className="pop-up fixed inset-0 flex flex-col items-center justify-center backdrop-blur-sm z-20">
+
+    {/* Tombol Close */}
+    <CloseCircleTwoTone
+      className="text-4xl cursor-pointer mb-4 hover:scale-110 transition"
+      onClick={closePopup}
+    />
+
+    {/* Container Gambar (relative) */}
+    <div className="relative w-[90%] sm:w-[60%] md:w-[55%] lg:w-[40%] xl:w-[40%]">
+      <img
+        src="/images/popup_parents_guide.png"
+        alt="Parents Guide"
+        className="rounded-md shadow-xl w-full"
+      />
+
+      {/* Tombol Start di dalam gambar */}
+      <Link
+        to="/student/parents-guide"
+        onClick={closePopup}
+        className="absolute md:bottom-6 bottom-1 2xl:right-[83%] xl:right-[80%] lg:[right-70%] md:right-[75%] right-[68%] bg-slate-100 px-6 py-1 rounded-md font-medium text-md  hover:scale-105 transition"
+      >
+        Start
+      </Link>
+    </div>
+
+  </div>
+)}
 
       <LandingPageLayout>
         <div className="container mx-auto px-6 py-10 bg-white max-w-4xl rounded-xl shadow-xl mt-10">

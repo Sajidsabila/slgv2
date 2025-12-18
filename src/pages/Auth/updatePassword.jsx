@@ -49,6 +49,7 @@ const UpdatePassword = () => {
   };
 
   const email = sessionStorage.getItem("email");
+  const username = sessionStorage.getItem("username");
 
   return (
     <div className="relative min-h-screen w-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat bg-[url(/assets/smile_image/background-page-login.png)] font-['Poppins']">
@@ -81,7 +82,16 @@ const UpdatePassword = () => {
                   className="w-full py-3 px-4 rounded-lg shadow-md bg-red-900 text-white focus:ring-2 focus:ring-red-700 focus:outline-none"
                 />
               </div>
-
+               <div className="mb-5">
+                <label className="block font-semibold mb-2 text-gray-800">Username</label>
+                <input
+                  type="text"
+                  value={username || ""}
+                  disabled
+                  readOnly
+                  className="w-full py-3 px-4 rounded-lg shadow-md bg-red-900 text-white focus:ring-2 focus:ring-red-700 focus:outline-none"
+                />
+              </div>
               <div className="mb-6">
                 <label className="block font-semibold mb-2 text-gray-800">New Password</label>
                 <input

@@ -7,6 +7,8 @@ import { StudentsProvider } from "./context/studentsContext";
 import { AuthProvider } from "./hooks/useAuth";
 import { SyllabusProvider } from "./hooks/useGetSyllabus";
 import { ExamSpecimentContext, ExamSpecimentProvider } from "./hooks/useGetExamSpeciment";
+import { SlgProvider } from "./hooks/useGetSlg";
+import { LhbProvider } from "./hooks/useGetLhb";
 import { StudentProfilProvider } from "./hooks/useProfileStudent";
 
 
@@ -15,13 +17,17 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
 
       <AuthProvider>
-      <SyllabusProvider>
-        <ExamSpecimentProvider>
-        <StudentProfilProvider>
-            <RouterProvider router={routes} />
-          </StudentProfilProvider>
-        </ExamSpecimentProvider>
-      </SyllabusProvider>
+        <SyllabusProvider>
+          <ExamSpecimentProvider>
+            <SlgProvider> 
+              <LhbProvider>
+                 <StudentProfilProvider>
+                  <RouterProvider router={routes} />
+                 </StudentProfilProvider>
+              </LhbProvider>
+            </SlgProvider>
+          </ExamSpecimentProvider>
+        </SyllabusProvider>
       </AuthProvider>
   </StrictMode>
 );

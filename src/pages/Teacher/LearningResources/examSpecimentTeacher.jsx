@@ -1,10 +1,9 @@
-import { useExamSpeciment } from "../../../../hooks/useGetExamSpeciment";
-import LandingPageLayout from "../../../../layout/landing-page"
 import { Link } from "react-router-dom"
+import { useExamSpeciment } from "../../../hooks/useGetExamSpeciment";
+import LandingPageLayout from "../../../layout/landing-page";
 
-const ExamSpeciment = () => {
+const ExamSpecimentForTeacher = () => {
    const { loading, enroll, materi, enrollWithMateri } = useExamSpeciment();
-
 
     return (
       <LandingPageLayout>
@@ -26,7 +25,7 @@ const ExamSpeciment = () => {
               <Link
                 className="program-edukasi-item w-full md:w-1/4 lg:w-1/6  rounded-md shadow-sm gap-3 my-1"
                 key={index}
-                to={`/student/learning-resources/materi-pembelajaran/exam-speciment/${item.name}`}
+                to={`/teacher/learning-resources/exam-speciment/${item.name}`}
               >
                <div className="bg-red-800 text-white py-3 text-center rounded-lg font-bold hover:bg-red-700 transition hover:scale-105">{`${item.class_course} | ${item.class_grade}`}</div>
               </Link>
@@ -41,4 +40,4 @@ const ExamSpeciment = () => {
     )
 }
 
-export default ExamSpeciment
+export default ExamSpecimentForTeacher

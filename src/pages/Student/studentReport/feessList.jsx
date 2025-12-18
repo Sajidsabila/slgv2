@@ -124,23 +124,6 @@ const FeesList = () => {
           </div>
         </div>
 
-        {/* <div className="grid md:grid-cols-2 gap-4 mb-6">
-          <div className="bg-green-700 rounded-xl p-4 text-white text-center">
-            <p className="text-sm">Jumlah Uang Terbayar</p>
-            <hr className="my-2 border-white" />
-            <p className="font-bold">
-              {currencyFormat(
-                feesList.reduce((a, b) => a + b.grand_total, 0)
-              )}
-            </p>
-          </div>
-          <div className="bg-red-700 rounded-xl p-4 text-white text-center">
-            <p className="text-sm">Jumlah Tagihan Belum Terbayar</p>
-            <hr className="my-2 border-white" />
-            <p className="font-bold">Rp. 100.000</p>
-          </div>
-        </div> */}
-
         <div className="flex justify-end mb-5">
           <div className="text-lg font-semibold">
             Total Data:{" "}

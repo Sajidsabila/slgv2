@@ -2,36 +2,28 @@ import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { getProgramEnrollment } from "../api/apiPublic";
 import { methodGet } from "../api/apiMethod";
 
-export const SyllabusContext = createContext();
+export const lhbContext = createContext();
 
-export const SyllabusProvider = ({ children }) => {
+export const LhbProvider = ({ children }) => {
   const [enroll, setEnroll] = useState([]);
   const [materi, setMateri] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const loadEnroll = async () => {
-    try {
-      const res = await getProgramEnrollment();
-      setEnroll(res?.data ?? res); // aman untuk berbagai tipe response
-    } catch (e) {
-      console.log(e);
-    }
+    const res = await getProgramEnrollment();
+    setEnroll(res?.data ?? res);
   };
 
   const loadMateri = async () => {
-    try {
-      const res = await methodGet("Program Materi", { type: "Syllabus" });
-      setMateri(res?.data ?? []);
-    } catch (e) {
-      console.log(e);
-    }
+    const res = await methodGet("Program Materi", { type: "LHB" });
+    setMateri(res?.data ?? []);
   };
 
   useEffect(() => {
     const fetchAll = async () => {
       setLoading(true);
       try {
-        // fetch paralel → jauh lebih cepat
+        // Fetch paralel → lebih cepat
         await Promise.all([loadEnroll(), loadMateri()]);
       } finally {
         setLoading(false);
@@ -41,26 +33,20 @@ export const SyllabusProvider = ({ children }) => {
     fetchAll();
   }, []);
 
-  // Hitung enrollWithMateri secara sinkron dan optimal
   const enrollWithMateri = useMemo(() => {
-    if (!Array.isArray(materi) || !Array.isArray(enroll)) return [];
+    if (!Array.isArray(enroll) || !Array.isArray(materi)) return [];
     return materi.filter((item) =>
       enroll.some((m) => m.course === item.class_course)
     );
   }, [enroll, materi]);
 
   return (
-    <SyllabusContext.Provider
-      value={{
-        loading,
-        enroll,
-        materi,
-        enrollWithMateri,
-      }}
+    <lhbContext.Provider
+      value={{ loading, enroll, materi, enrollWithMateri }}
     >
       {children}
-    </SyllabusContext.Provider>
+    </lhbContext.Provider>
   );
 };
 
-export const useSyllabus = () => useContext(SyllabusContext);
+export const useLhb = () => useContext(lhbContext);
