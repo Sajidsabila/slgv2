@@ -55,6 +55,7 @@ import ExamSpecimentForTeacher from "../pages/Teacher/LearningResources/examSpec
 import SyllabusTeacher from "../pages/Teacher/LearningResources/syllabusTeacher.jsx";
 import DetailLearningMateri from "../pages/Student/learningResources/learningMateri/detailLearningMateri.jsx";
 import DetailLearningMateriTeacher from "../pages/Teacher/LearningResources/detailLearningMateriTeacher.jsx";
+import InitialTraining from "../pages/Teacher/ModulTraining/initialTraining.jsx";
 
 
 
@@ -200,21 +201,39 @@ const routes = createBrowserRouter([
       element: <ExamSpecimentForTeacher />
     },
     {
-      path: "/teacher/learning-resources/syllabus/:id",
+      path: "learning-resources/syllabus/:id",
       element: <DetailLearningMateriTeacher/>
     },
      {
-      path: "/teacher/learning-resources/exam-speciment/:id",
+      path: "learning-resources/exam-speciment/:id",
       element: <DetailLearningMateriTeacher/>
     },
      {
-      path: "/teacher/learning-resources/slg/:id",
+      path: "learning-resources/slg/:id",
       element: <DetailLearningMateriTeacher/>
     },
       {
-      path: "/teacher/learning-resources/lhb/:id",
+      path: "learning-resources/lhb/:id",
       element: <DetailLearningMateriTeacher/>
     },
+
+     {
+      path: "initial-training/product-knowledge",
+      element: <InitialTraining  title="Product Knowledge"/>
+     },
+      {
+      path: "initial-training/company-profile",
+      element: <InitialTraining title="Company Profile"/>
+     },
+     {
+      path: "initial-training/visi-misi",
+      element: <InitialTraining title="Visi Misi"/>
+     },
+      {
+      path: "initial-training/learning-system-concept",
+      element: <InitialTraining title="Learning System"/>
+     },
+
     ]
   },
   {

@@ -64,31 +64,31 @@ const Navbar = () => {
     {
       text: "Modul Training",
       children: [
-        { label: "Student Attendance", grandchildren: [
-          {label: "Product Knowledge", url: "/student/students-report/history-absensi"},
-          {label: "Company Profile", url: "/student/students-report/history-absensi"},
-          {label: "Visi Misi", url: "/student/students-report/history-absensi"},
-          {label: "SMI Learning System Concept ", url: "/student/students-report/history-absensi"},
+        { label: "Initial Training", grandchildren: [
+          {label: "Product Knowledge", url: "/teacher/initial-training/product-knowledge"},
+          {label: "Company Profile", url: "/teacher/initial-training/company-profile"},
+          {label: "Visi Misi", url: "/teacher/initial-training/visi-misi"},
+          {label: "SMI Learning System Concept ", url: "/teacher/initial-training/learning-system-concept"},
         ], 
       },
       { label : "Musikal Skill", grandchildren: [
-        {label: "Playing", url: "/student/students-report/fees"},
-        {label: "Improvising (Yafet)", url: "/student/students-report/fees"},
-        {label: "Listening", url: "/student/students-report/fees"},
-        {label: "Reading", url: "/student/students-report/fees"},
-        {label: "IK", url: "/student/students-report/fees"},
-        {label: "dll", url: "/student/students-report/fees"},
+        {label: "Playing", url: "/teacher/students-report/fees"},
+        {label: "Improvising (Yafet)", url: "/teacher/students-report/fees"},
+        {label: "Listening", url: "/teacher/students-report/fees"},
+        {label: "Reading", url: "/teacher/students-report/fees"},
+        {label: "IK", url: "/teacher/students-report/fees"},
+        {label: "dll", url: "/teacher/students-report/fees"},
       ]},
       { label : "Technology Skill", grandchildren:  [
-        {label: "Beginner", url: "/student/students-report/fees"},
-        {label: "Intermediate", url: "/student/students-report/fees"},
-        {label: "Advanced", url: "/student/students-report/fees"},
+        {label: "Beginner", url: "/teacher/students-report/fees"},
+        {label: "Intermediate", url: "/teacher/students-report/fees"},
+        {label: "Advanced", url: "/teacher/students-report/fees"},
       ]},
         { label : "Pedagogy Skill", grandchildren:  [
-        {label: "Psikology Music", url: "/student/students-report/fees"},
-        {label: "Intermediate", url: "/student/students-report/fees"}
+        {label: "Psikology Music", url: "/teacher/students-report/fees"},
+        {label: "Intermediate", url: "/teacher/students-report/fees"}
       ]},
-      {label: "Head Education Modul", url: "/student/students-report/fees"},
+      {label: "Head Education Modul", url: "/teacher/students-report/fees"},
       ],
     },
    
