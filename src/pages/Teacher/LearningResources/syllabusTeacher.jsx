@@ -15,7 +15,7 @@ const SyllabusTeacher = () => {
               </div>
           </div>
 
-         <div className="list-program-edukasi my-5 flex flex-wrap ">
+         <div className="list-program-edukasi my-5 flex flex-wrap gap-2">
             {enrollWithMateri.length > 0  ? (
 
            enrollWithMateri.map((item, index) => (

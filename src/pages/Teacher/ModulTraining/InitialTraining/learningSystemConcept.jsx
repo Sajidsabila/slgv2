@@ -1,4 +1,8 @@
+import { Link } from "react-router-dom"
+import LandingPageLayout from "../../../../layout/landing-page"
+
 const LearningSystemConcept = () => {
+
     return (
         <LandingPageLayout>
              <div className="px-4 py-3 container mx-auto">
@@ -8,9 +12,23 @@ const LearningSystemConcept = () => {
                         <span className="ms-13">Learning System</span>
               </div>
           </div>
+            <div className="list-program-edukasi my-5 flex flex-wrap gap-2">
+               <Link
+                className="program-edukasi-item w-full md:w-1/4 lg:w-1/4 xl:w-1/6 rounded-md shadow-sm gap-3 my-1"
 
-          <div className=""></div>
-          
+                to={`/teacher/initial-training/smi-value`}
+              >
+               <div className="bg-red-800 text-white py-3 text-center rounded-lg font-bold hover:bg-red-700 transition hover:scale-105">SMI Value</div>
+              </Link>
+
+               <Link
+                className="program-edukasi-item w-full md:w-1/4 lg:w-1/4 xl:w-1/6 rounded-md shadow-sm gap-3 my-1"
+
+                to={`/teacher/learning-resources/syllabus/1`}
+              >
+               <div className="bg-red-800 text-white py-3 text-center rounded-lg font-bold hover:bg-red-700 transition hover:scale-105">SMI Value</div>
+              </Link>
+            </div>
           </div>
         </LandingPageLayout>
     )

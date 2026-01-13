@@ -57,6 +57,7 @@ import DetailLearningMateri from "../pages/Student/learningResources/learningMat
 import DetailLearningMateriTeacher from "../pages/Teacher/LearningResources/detailLearningMateriTeacher.jsx";
 import InitialTraining from "../pages/Teacher/ModulTraining/initialTraining.jsx";
 import StaticInitialTrainingFile from "../pages/Teacher/ModulTraining/InitialTraining/staticIntialTrainingFile.jsx";
+import LearningSystemConcept from "../pages/Teacher/ModulTraining/InitialTraining/learningSystemConcept.jsx";
 
 
 
@@ -230,9 +231,13 @@ const routes = createBrowserRouter([
       path: "initial-training/visi-misi",
      element: <StaticInitialTrainingFile  title="Visi Misi" filetitle="Visi Misi Materi" file="/file_modul_training/product_knowladge.pdf"/>
      },
-      {
+     {
+      path: "initial-training/smi-value",
+      element: <StaticInitialTrainingFile  title="SMI Value" filetitle="SMI Value Materi" file="/file_modul_training/product_knowladge.pdf"/>
+     },
+    {
       path: "initial-training/learning-system-concept",
-      element: <InitialTraining title="Learning System"/>
+      element: <LearningSystemConcept />
      },
 
     ]
