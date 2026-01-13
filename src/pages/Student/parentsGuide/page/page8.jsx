@@ -103,7 +103,7 @@ const handlePost = async (e) => {
 
         {success && (
           <Link
-            to={"/student/home"}
+            to={"/student/"}
             onClick={handleEndSession}
             className="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-full shadow-lg transition duration-300 font-bold text-xl xl:text-3xl hover:scale-105"
           >

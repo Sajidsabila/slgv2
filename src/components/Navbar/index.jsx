@@ -84,10 +84,7 @@ const Navbar = () => {
         {label: "Intermediate", url: "/teacher/students-report/fees"},
         {label: "Advanced", url: "/teacher/students-report/fees"},
       ]},
-        { label : "Pedagogy Skill", grandchildren:  [
-        {label: "Psikology Music", url: "/teacher/students-report/fees"},
-        {label: "Intermediate", url: "/teacher/students-report/fees"}
-      ]},
+        { label : "Pedagogy Skill", url: "/teacher/students-report/fees"},
       {label: "Head Education Modul", url: "/teacher/students-report/fees"},
       ],
     },

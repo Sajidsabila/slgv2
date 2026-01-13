@@ -56,6 +56,7 @@ import SyllabusTeacher from "../pages/Teacher/LearningResources/syllabusTeacher.
 import DetailLearningMateri from "../pages/Student/learningResources/learningMateri/detailLearningMateri.jsx";
 import DetailLearningMateriTeacher from "../pages/Teacher/LearningResources/detailLearningMateriTeacher.jsx";
 import InitialTraining from "../pages/Teacher/ModulTraining/initialTraining.jsx";
+import StaticInitialTrainingFile from "../pages/Teacher/ModulTraining/InitialTraining/staticIntialTrainingFile.jsx";
 
 
 
@@ -219,15 +220,15 @@ const routes = createBrowserRouter([
 
      {
       path: "initial-training/product-knowledge",
-      element: <InitialTraining  title="Product Knowledge"/>
+      element: <StaticInitialTrainingFile  title="Product Knowledge" filetitle="Program Knowledge Materi" file="/file_modul_training/product_knowladge.pdf"/>
      },
       {
       path: "initial-training/company-profile",
-      element: <InitialTraining title="Company Profile"/>
+     element: <StaticInitialTrainingFile  title="Company Profile" filetitle="Company Profile Materi" file="/file_modul_training/product_knowladge.pdf"/>
      },
      {
       path: "initial-training/visi-misi",
-      element: <InitialTraining title="Visi Misi"/>
+     element: <StaticInitialTrainingFile  title="Visi Misi" filetitle="Visi Misi Materi" file="/file_modul_training/product_knowladge.pdf"/>
      },
       {
       path: "initial-training/learning-system-concept",

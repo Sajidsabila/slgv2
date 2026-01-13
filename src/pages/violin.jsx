@@ -1,10 +1,10 @@
-import LandingPageLayout from "../layout/landing-page"
+// import LandingPageLayout from "../layout/landing-page"
 
-const Violin =  () => {
-    return (
-        <LandingPageLayout title="Violin">
-           <p>test</p>
-        </LandingPageLayout>
-    )
-}
-export default Violin
+// const Violin =  () => {
+//     return (
+//         <LandingPageLayout title="Violin">
+//            <p>test</p>
+//         </LandingPageLayout>
+//     )
+// }
+// export default Violin
