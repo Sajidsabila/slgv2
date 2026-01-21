@@ -22,8 +22,6 @@ import BookMenu from "../pages/Admin/bookMenu.jsx";
 import DetailBookMenu from "../pages/Admin/detailBookMenu.jsx";
 import CalenderAcademic from "../pages/Admin/calenderAcademic.jsx";
 import ModulTraining from "../pages/Admin/modulTraining.jsx";
-import DetailModulTraining from "../pages/Admin/detailModulTraining.jsx";
-
 import FeesList from "../pages/Student/studentReport/feessList.jsx";
 import ParentsGuide from "../pages/Student/parentsGuide/index.jsx";
 import Page7 from "../pages/Student/parentsGuide/page/page7.jsx";
@@ -42,10 +40,10 @@ import MateriPembelajaran from "../pages/Student/learningResources/materiPembela
 import EvaluasiSemesterStudent from "../pages/Student/studentReport/evaluasiSemesterStudent.jsx";
 
 import SetStudentPassword from "../pages/Auth/setStudentPassword.jsx";
-import DetaiCalenderAcademic from "../pages/Admin/detailCalenderAcademic.jsx";
+
 import UpdatePassword from "../pages/Auth/updatePassword.jsx";
 import Syllabus from "../pages/Student/learningResources/learningMateri/syllabus.jsx";
-import DetailSyllabus from "../pages/Student/learningResources/learningMateri/detailLearningMateri.jsx";
+
 import ExamSpeciment from "../pages/Student/learningResources/learningMateri/examSpeciment.jsx";
 import MainAuth from "../pages/Auth/mainAuth.jsx";
 import IndexTeacher from "../pages/Teacher/index.jsx";
@@ -55,9 +53,14 @@ import ExamSpecimentForTeacher from "../pages/Teacher/LearningResources/examSpec
 import SyllabusTeacher from "../pages/Teacher/LearningResources/syllabusTeacher.jsx";
 import DetailLearningMateri from "../pages/Student/learningResources/learningMateri/detailLearningMateri.jsx";
 import DetailLearningMateriTeacher from "../pages/Teacher/LearningResources/detailLearningMateriTeacher.jsx";
-import InitialTraining from "../pages/Teacher/ModulTraining/initialTraining.jsx";
 import StaticInitialTrainingFile from "../pages/Teacher/ModulTraining/InitialTraining/staticIntialTrainingFile.jsx";
 import LearningSystemConcept from "../pages/Teacher/ModulTraining/InitialTraining/learningSystemConcept.jsx";
+
+import PedagogySkillAdmin from "../pages/Admin/pedagogySkillAdmin.jsx";
+
+import HeadEducationModulAdmin from "../pages/Admin/headEducationModulAdmin.jsx";
+import ModulTrainingForTeacher from "../pages/Admin/modulTrainingForTeacher.jsx";
+import DetailModulTrainingForTeacher from "../pages/Admin/detailModulTrainingForTeacher.jsx";
 
 
 
@@ -254,15 +257,51 @@ const routes = createBrowserRouter([
       { path: "evaluasi-semester/:id", element: <DetailEvaluasiSemester /> },
       { path: "*", element: <Page404 /> },
       {path: "book-menu", element: <BookMenu />},
-      {path: "book-menu/:id", element: <DetailBookMenu />},
-      {path: "calender-academic", element: <CalenderAcademic />},
-      {path: "calender-academic/:id", element: <DetaiCalenderAcademic />},
+      {path: "book-menu/:id", element: <DetailBookMenu url="/admin/book-menu"/>},
+      {path: "calender-academic", element: <CalenderAcademic url="/admin/calender-academic" title="Calender Academic" filter="Calender Academic"/>},
+      {path: "calender-academic/:id", element: <DetailBookMenu url="/admin/calender-academic"/>},
       {path: "modul-training", element: <ModulTraining />},
-      {path: "modul-training/:id", element: <DetailModulTraining />},
+      {path: "modul-training/:id", element: <DetailBookMenu url="/admin/modul-training"/>},
       {path: "program-materi-syllabus", element: <ProgramMateriSyllabus />},
       {path: "program-materi-exam-speciment", element: <ProgramMateriExamSpeciment/>},
       {path: "program-materi-LHB", element: <ProgramMateriLhb/>},
       {path: "program-materi-SLG", element: <ProgramMateriSlg />},
+      {path: "modul-training-teacher/initial-training", element: <ModulTrainingForTeacher
+        valueSelect={[
+            { value: "Syllabus Overview", label: "Syllabus Overview"}, 
+            { value: "IMTE", label: "IMTE"}, 
+            { value: "Classroom SOP", label: "Classroom SOP"}
+          ]}
+          filteredType={[
+            "Syllabus Overview", "IMTE", "Classroom SOP"
+          ]}/>},
+      {path: "modul-training-teacher/musical_skill", element: <ModulTrainingForTeacher 
+        valueSelect={[
+          {value: "Playing", label: "Playing"},
+       
+          {value: "Imrovising", label: "Improvising"},
+          {value: "Listening", label: "Listening"},
+          {value: "Reading", label: "Reading"},
+          {value: "Singing", label: "Singing"},
+          {value: "Instrument Knowledge", label: "Instrument Knowledge"},
+          
+        ]}
+        filteredType={[
+            "Playing", "Improvising", "Listening", "Reading", "Singing", "Instrument Knowledge", "Classroom SOP"
+          ]}/>},
+
+
+      {path: "modul-training-teacher/technology-skill", element: <ModulTrainingForTeacher
+        valueSelect={[
+          {value: "Beginner", label: "Beginner"},
+          {value: "Intermediate", label: "Intermediate"},
+          {value: "Advanced", label: "Advanced"},
+        ]} 
+        
+        filteredType={["Beginner", "Intermediate", "Advanced"]}/>},
+      {path: "modul-training-teacher/pedagogy-skill", element: <PedagogySkillAdmin />},
+      {path: "modul-training-teacher/head-education-modul", element: <HeadEducationModulAdmin />},
+      {path: "modul-training-teacher/initial-training/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/initial-training" title="Detail Modul Training Initial Training" />},
       {
         path: "program-materi-syllabus/:id",
         element: <DetailProgramMateri filetype={["mp4", "pdf"]} type="Syllabus" title="Detail Program Materi Syllabus" back="/admin/program-materi-syllabus"/> ,},

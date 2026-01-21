@@ -2,10 +2,10 @@
 import axios from "axios";
 import { urlLink } from "../config/config";
 
-export const getProgramMateriById = async (id) => {
+export const getProgramMateriById = async (doctype,id) => {
   try {
     const response = await axios.get(
-      `${urlLink.url}/api/resource/Program%20Materi/${id}?fields=["*"]`,
+      `${urlLink.url}/api/resource/${doctype}/${id}?fields=["*"]`,
       {
         withCredentials: true,
         headers: {
@@ -21,10 +21,10 @@ export const getProgramMateriById = async (id) => {
   }
 };
 
-export const addFileToProgramMateri = async (id, newFile) => {
+export const addFileToProgramMateri = async (doctype, id, newFile) => {
   try {
     const getResponse = await axios.get(
-      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/${doctype}/${id}`,
       { withCredentials: true }
     );
 
@@ -38,7 +38,7 @@ export const addFileToProgramMateri = async (id, newFile) => {
     const updatedFiles = [...oldFiles, newFile];
 
     const response = await axios.put(
-      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/${doctype}/${id}`,
       { 
         file: updatedFiles
       },
@@ -63,10 +63,10 @@ export const addFileToProgramMateri = async (id, newFile) => {
   }
 };
 
-export const removeFileProramMateri  = async (id, fileName) => {
+export const removeFileProramMateri  = async (doctype, id, fileName) => {
   try {
     const getResponse = await axios.get(
-      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/${doctype}/${id}`,
       { withCredentials: true }
     );
 
@@ -88,15 +88,17 @@ export const removeFileProramMateri  = async (id, fileName) => {
     return [];
   }
 }
-export const updateFileToProgramMateri = async (id, newFile) => {
+export const updateFileToProgramMateri = async (doctype, id, newFile) => {
   try {
+    // Ambil data lama
     const getResponse = await axios.get(
-      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/${encodeURIComponent(doctype)}/${id}`,
       { withCredentials: true }
     );
 
     const oldData = getResponse.data.data;
-    let oldFiles = Array.isArray(oldData.file) ? oldData.file : [];
+    const oldFiles = Array.isArray(oldData.file) ? oldData.file : [];
+
     const targetFile = newFile.oldFileName || newFile.file;
 
     const fileIndex = oldFiles.findIndex(
@@ -106,6 +108,8 @@ export const updateFileToProgramMateri = async (id, newFile) => {
     if (fileIndex === -1) {
       throw new Error("File yang akan diperbarui tidak ditemukan");
     }
+
+    // Update file
     oldFiles[fileIndex] = {
       ...oldFiles[fileIndex],
       file: newFile.file ?? oldFiles[fileIndex].file,
@@ -114,8 +118,9 @@ export const updateFileToProgramMateri = async (id, newFile) => {
       description: newFile.description ?? oldFiles[fileIndex].description,
     };
 
+    // Gunakan doctype yang diberikan, jangan hardcode
     const response = await axios.put(
-      `${urlLink.url}/api/resource/Program%20Materi/${id}`,
+      `${urlLink.url}/api/resource/${encodeURIComponent(doctype)}/${id}`,
       { file: oldFiles },
       {
         withCredentials: true,
@@ -124,12 +129,12 @@ export const updateFileToProgramMateri = async (id, newFile) => {
     );
 
     return response.data.data;
-
   } catch (error) {
     console.error("UPDATE ERROR:", error);
-    return [];
+    throw error; // jangan return [], lebih aman throw supaya hook bisa catch
   }
 };
+
 
 
 export const createFolderProgramMateri = async (folderName) => {

@@ -47,12 +47,12 @@ const useFileMateri = (id, type) => {
     });
   };
 
-  /** Fetch Program Materi */
+  /** Fetch Program Materi  */
   useEffect(() => {
     if (!id) return;
     const fetchData = async () => {
       try {
-        const response = await getProgramMateriById(id);
+        const response = await getProgramMateriById("Program Materi ", id);
         setProgramMateri(response);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -104,8 +104,8 @@ const handleSubmit = async (event) => {
 
     const folder =
       programMateri?.type === "Exam Specimen"
-        ? `Home/Program Materi/${type}/${programMateri?.abbr_course}/${programMateri?.class_grade}`
-        : `Home/Program Materi/${type}/${programMateri?.abbr_course}`;
+        ? `Home/Program Materi /${type}/${programMateri?.abbr_course}/${programMateri?.class_grade}`
+        : `Home/Program Materi /${type}/${programMateri?.abbr_course}`;
 
     if (!isEditMode) {
       if (formData.file && !formData.useFileUrl) {
@@ -116,7 +116,7 @@ const handleSubmit = async (event) => {
           file: uploadedFile.name,
           title: uploadedFile.file_name,
           file_url: uploadedFile.file_url,
-          type: "Program Materi",
+          type: "Program Materi ",
           description: formData.description
         };
 
@@ -126,13 +126,13 @@ const handleSubmit = async (event) => {
           file_url: formData.file_url,
           title: formData.file_url,
           file: uploadWithUrl.name,
-          type: "Program Materi",
+          type: "Program Materi ",
           description: formData.description
         };
       }
 
       if (newFile) {
-        await addFileToProgramMateri(id, newFile);
+        await addFileToProgramMateri("Program Materi ", id, newFile);
         setProgramMateri((prev) => ({
           ...prev,
           file: [...(prev.file || []), newFile],
@@ -152,7 +152,7 @@ const handleSubmit = async (event) => {
           description: formData.description
         };
 
-        await updateFileToProgramMateri(id, updated);
+        await updateFileToProgramMateri("Program Materi ", id, updated);
 
         setProgramMateri((prev) => ({
           ...prev,
@@ -188,7 +188,7 @@ const handleSubmit = async (event) => {
           description: formData.description,
         };
       }
-      await updateFileToProgramMateri(id, newFile);
+      await updateFileToProgramMateri("Program Materi", id, newFile);
 
       if (formData.oldFileName && newFile.file) {
         try {
@@ -221,11 +221,11 @@ const handleDeleteFile = async (fileName) => {
   setLoading(true);
   try {
     if (!fileName) {
-      // Kalau fileName kosong, cukup hapus program materinya
-      await removeFileProramMateri(id, fileName);
+      // Kalau fileName kosong, cukup hapus Program Materi nya
+      await removeFileProramMateri("Program Materi ", id, fileName);
     } else {
       // Kalau ada fileName, hapus file-nya
-      await removeFileProramMateri(id, fileName);
+      await removeFileProramMateri("Program Materi ", id, fileName);
       await deleteFileProgramMateri(id, fileName);
 
       // Update state lokal

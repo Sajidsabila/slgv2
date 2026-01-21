@@ -34,7 +34,7 @@ const DetailClassFormat = () => {
 
       const fetchData = async () => {
           try {
-              const response = await getProgramMateriById(id);
+              const response = await getProgramMateriById("Program Materi", id);
               setProgramMateri(response);
           } catch (error) {
               console.error(" Error fetching data:", error);
@@ -112,7 +112,7 @@ const DetailClassFormat = () => {
                 type: "Program Materi"
             };
 
-            await addFileToProgramMateri(id, newFile);
+            await addFileToProgramMateri("Program Materi", id, newFile);
             setProgramMateri(prev => ({
                 ...prev,
                 file: [...(prev.file || []), newFile]
@@ -139,7 +139,7 @@ const DetailClassFormat = () => {
                 };
             }
 
-            const update = await updateFileToProgramMateri(id, newFile);
+            const update = await updateFileToProgramMateri("Program Materi", id, newFile);
 
            
                 if (formData.oldFileName && update) {
@@ -159,7 +159,7 @@ const DetailClassFormat = () => {
             }));
         }
 
-        const updatedData = await getProgramMateriById(id);
+        const updatedData = await getProgramMateriById("Program Materi", id);
         setProgramMateri(updatedData);
 
         setLoading(false);
@@ -176,7 +176,7 @@ const DetailClassFormat = () => {
     const handleDeleteFile = async (fileName) => {
       setLoading(true);
       try {
-          await removeFileProramMateri(id, fileName);
+          await removeFileProramMateri("Program Materi", id, fileName);
           await deleteFileProgramMateri(id, fileName);
           setProgramMateri((prevData) => ({
               ...prevData,

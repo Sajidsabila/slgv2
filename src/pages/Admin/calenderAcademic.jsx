@@ -12,13 +12,13 @@ import Modal  from "../../components/modal";
 import InputModal from "../../components/inputModal";
 import { apiResourceAdmin, apiResourceAdminDelete, apiResourceAdminPut, apiResourceAdminPost } from "../../api/apiResourceAdmin";
 
-const CalenderAcademic = () => {
+const CalenderAcademic = ({url, filter, title}) => {
   const [calenderAcademic, seCalenderAcademic] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState({
     description: "",
     file: null,
-    type: "Calender Academic",
+    type: filter,
     file_url: "",
     is_active: false,
     useFileUrl: false,
@@ -37,7 +37,7 @@ const CalenderAcademic = () => {
       try {
         const response = await apiResourceAdmin({
            doctype: "Modul Training",
-          filters: [["type", "=", "Calender Academic"]],
+          filters: [["type", "=", filter]],
         });
         seCalenderAcademic(response);
       } catch (error) {
@@ -79,7 +79,7 @@ const CalenderAcademic = () => {
       title: "",
       file: null,
       file_url: "",
-      type: "Modul Training",
+      type: filter,
       is_active: false,
       useFileUrl: false
     });
@@ -112,7 +112,7 @@ const CalenderAcademic = () => {
   const filteredData = calenderAcademic.filter(
     (item) =>
       item?.description?.toLowerCase().includes(search.toLowerCase()) &&
-      item.type === "Calender Academic"
+      item.type === filter
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
@@ -215,7 +215,7 @@ const CalenderAcademic = () => {
 
   return (
     <AdminLayout>
-      <h3 className="font-bold py-7 text-lg">Calender Academic</h3>
+      <h3 className="font-bold py-7 text-lg">{title}</h3>
 
       {error && <p className="bg-red-700 text-sm text-white py-3 px-4 my-3">{error}</p>}
       {success && <p className="bg-green-700 text-sm text-white py-3 px-4 my-3">{success}</p>}
@@ -336,7 +336,7 @@ const CalenderAcademic = () => {
                         <Trash size={16} /> Delete
                       </button>
                       <Link
-                        to={`/admin/calender-academic/${item.name}`}
+                        to={`${url}/${item.name}`}
                         className="bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 flex items-center gap-1 px-3 py-1 rounded-md hover:cursor-pointer"
                       >
                         <Eye size={16} /> Detail

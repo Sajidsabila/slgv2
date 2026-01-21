@@ -14,7 +14,7 @@ const Dashboard = () => {
     useEffect(() => {
         const countProgram = async () => {
             try {
-                const response = await apiGetProgramMateriPublic();
+                const response = await  apiResourceAdmin({doctype: "Program Materi"});
                const count = response.length;
                setProgram(count);
         }catch (error) {
@@ -57,6 +57,7 @@ const Dashboard = () => {
         countClassFormat();
     })
 
+   
     return ( 
         <AdminLayout>
             <div className="bg-slate-700 h-15 rounded-lg text-xl text-white flex items-center p-4">

@@ -78,6 +78,16 @@ const AdminLayout = ({ children }) => {
     },
     { to: "/admin/evaluasi-semester", label: "Evaluasi Semester" },
     { to: "/admin/modul-training", label: "Modul Training" },
+     {
+      label: "Teacher Materi",
+      children: [
+        { to: "/admin/modul-training-teacher/initial-training", label: "INITIAL TRAINING" },
+        { to: "/admin/modul-training-teacher/musical_skill", label: "MUSICAL SKILL" },
+        { to: "/admin/modul-training-teacher/technology-skill", label: "TECHNOLOGY SKILL" },
+        { to: "/admin/modul-training-teacher/pedagogy-skill", label: "PEDAGOGY SKILL" },
+        { to: "/admin/modul-training-teacher/head-education-modul", label: "HEAD EDUCATION MODUL" },
+      ],
+    },
   ];
 
   return (
@@ -104,10 +114,10 @@ const AdminLayout = ({ children }) => {
                 <>
                   {/* Tombol Dropdown */}
                   <button
-                    className="flex justify-between items-center w-full py-3 px-6 hover:text-gray-300"
+                    className="flex justify-between items-center w-full py-3 px-6 hover:text-gray-300 hover:cursor-pointer  "
                     onClick={() => toggleDropdown(link.label)}
                   >
-                    <span>{link.label}</span>
+                    <span className="hover:cursor-pointer">{link.label}</span>
                     <i
                       className={`fa-solid fa-chevron-${
                         openDropdown === link.label ? "up" : "down"
@@ -126,7 +136,7 @@ const AdminLayout = ({ children }) => {
                               `block py-2 px-6 transition duration-300 ${
                                 isActive
                                   ? "bg-slate-700 text-gray-300"
-                                  : "hover:text-gray-300"
+                                  : "hover:text-gray-300 hover:cursor-pointer"
                               }`
                             }
                             onClick={(e) => {
@@ -149,7 +159,7 @@ const AdminLayout = ({ children }) => {
                     `block py-3 px-6 transition duration-300 ${
                       isActive
                         ? "bg-slate-700 text-gray-300"
-                        : "hover:text-gray-300"
+                        : "hover:text-gray-300 hover:cursor-pointer"
                     }`
                   }
                   onClick={(e) => {

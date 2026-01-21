@@ -1,13 +1,15 @@
 import { useParams, Link } from "react-router-dom";
-import AdminLayout from "../../../layout/admin-layout";
-import Modal from "../../../components/modal";
-import InputModal from "../../../components/inputModal";
+import AdminLayout from "../../layout/admin-layout";
+import Modal from "../../components/modal";
+import InputModal from "../../components/inputModal";
 import { Spin } from "antd";
-import TableDetailProgramMateri from "../../../components/tableDetailProgramMateri";
-import useFileMateri from "../../../hooks/useFileMateri"; // useFileMateri 
 
-const DetailProgramMateri = ({ type, back, title }) => {
-  const { id } = useParams();
+import useFileMateri from "../../hooks/useFileMateri"; // useFileMateri 
+import TableDetailModulTrainingForTeacher from "../../components/tableDEtailMateriiModulTraining";
+import useFileModulTrainingTeacher from "../../hooks/useFileModuTrainingTeacher";
+
+const DetailModulTrainingForTeacher = ({back, title}) => {
+    const { id } = useParams();
   const {
     programMateri,
     loading,
@@ -30,7 +32,7 @@ const DetailProgramMateri = ({ type, back, title }) => {
     coursePaginatedData,
     totalPages,
     itemsPerPage,
-  } = useFileMateri(id, type);
+  } = useFileModulTrainingTeacher(id);
 
   const changePage = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -103,30 +105,13 @@ const DetailProgramMateri = ({ type, back, title }) => {
 
         {programMateri && (
           <div className="flex flex-col gap-6">
-            {/* Info Program */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="font-extrabold text-gray-700">Nama</p>
-                <p className="text-gray-900">{programMateri.name}</p>
-              </div>
-              <div>
-                <p className="font-extrabold text-gray-700">Format Kelas</p>
-                <p className="text-gray-900">{programMateri.class_format ?? "Kosong"}</p>
-              </div>
-              <div>
-                <p className="font-extrabold text-gray-700">Grading Kelas</p>
-                <p className="text-gray-900">{programMateri.class_grade ?? "Kosong"}</p>
-              </div>
-              <div>
-                <p className="font-extrabold text-gray-700">Class Course</p>
-                <p className="text-gray-900">{programMateri.class_course ?? "Kosong"}</p>
-              </div>
-            </div>
+                <p className="text-gray-900">{programMateri.title}</p>
+
 
             <hr className="border-black border-1" />
 
             {/* List File */}
-            <TableDetailProgramMateri
+            <TableDetailModulTrainingForTeacher
               coursePaginatedData={coursePaginatedData}
               currentPage={currentPage}
               itemsPerPage={itemsPerPage}
@@ -223,4 +208,4 @@ const DetailProgramMateri = ({ type, back, title }) => {
   );
 };
 
-export default DetailProgramMateri;
+export default DetailModulTrainingForTeacher;

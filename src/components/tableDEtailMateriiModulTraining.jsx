@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { urlLink } from "../../../config/config";
+import { urlLink } from "../config/config";
 import { Image } from "antd";
-import { googledriveApi } from "../../../api/gooledriveApi";
-import { getDriveFileId, generatePreviewGDriveImage, generatePreviewGDriveVideo } from "../../../helper/helper";
-
-const TableDetailProgramMateri = ({
+import { googledriveApi } from "../api/gooledriveApi";
+import { getDriveFileId, generatePreviewGDriveImage, generatePreviewGDriveVideo } from "../helper/helper";
+const TableDetailModulTrainingForTeacher= ({
   coursePaginatedData,
   currentPage,
   itemsPerPage,
@@ -178,4 +177,5 @@ const TableDetailProgramMateri = ({
   );
 };
 
-export default TableDetailProgramMateri;
+
+export default TableDetailModulTrainingForTeacher

@@ -21,6 +21,7 @@ const FeesList = () => {
     const getFeesFromApi = async () => {
       try {
         const response = await method("smi.helper.get_data_fees");
+        console.log(response);
         setFeesList(response.message);
       } catch (error) {
         console.error("Error fetching fees:", error);

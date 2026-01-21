@@ -169,13 +169,12 @@ const fetchModulTraining = async () => {
       setIsLoading(true);
       setIsOpen(false);
 
-      let payload = {
-        description: formData.description,
-        title: formData.title,
-        type: formData.type || "Modul Training",
-        file:formData.file,
-        is_active: formData.is_active
-      };
+   let payload = {
+  description: formData.description,
+  title: formData.title,
+  type: formData.type,
+  is_active: formData.is_active
+};
 
       if (formData.useFileUrl && formData.file_url) {
          const uploadedWithUrl = await uploadFileProgramMateri(formData.file_url, "Home/Program Materi");

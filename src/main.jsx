@@ -15,7 +15,6 @@ import { StudentProfilProvider } from "./hooks/useProfileStudent";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-
       <AuthProvider>
         <SyllabusProvider>
           <ExamSpecimentProvider>
