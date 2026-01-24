@@ -7,7 +7,7 @@ import { CloseCircleTwoTone } from "@ant-design/icons";
 import { useStudentProfil } from "../../hooks/useProfileStudent";
 
 const Index = () => {
-  const { profile, program, schedule, fees } = useStudentProfil();
+  const { profile, program, schedule, fees, refreshProfileData } = useStudentProfil();
   const [formData, setFormData] = useState({ old_password: "", new_password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -52,6 +52,7 @@ const Index = () => {
   const closePopup = () => {
     setShowPopup(false);
     document.body.style.overflow = "auto";
+    refreshProfileData();
   };
 
   return (

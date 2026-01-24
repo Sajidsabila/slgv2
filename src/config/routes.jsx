@@ -53,14 +53,10 @@ import ExamSpecimentForTeacher from "../pages/Teacher/LearningResources/examSpec
 import SyllabusTeacher from "../pages/Teacher/LearningResources/syllabusTeacher.jsx";
 import DetailLearningMateri from "../pages/Student/learningResources/learningMateri/detailLearningMateri.jsx";
 import DetailLearningMateriTeacher from "../pages/Teacher/LearningResources/detailLearningMateriTeacher.jsx";
-import StaticInitialTrainingFile from "../pages/Teacher/ModulTraining/InitialTraining/staticIntialTrainingFile.jsx";
-import LearningSystemConcept from "../pages/Teacher/ModulTraining/InitialTraining/learningSystemConcept.jsx";
-
-import PedagogySkillAdmin from "../pages/Admin/pedagogySkillAdmin.jsx";
-
-import HeadEducationModulAdmin from "../pages/Admin/headEducationModulAdmin.jsx";
+import StaticInitialTrainingFile from "../pages/Teacher/ModulTraining/staticIntialTrainingFile.jsx";
 import ModulTrainingForTeacher from "../pages/Admin/modulTrainingForTeacher.jsx";
 import DetailModulTrainingForTeacher from "../pages/Admin/detailModulTrainingForTeacher.jsx";
+import ModulTrainingDynamicFile from "../pages/Teacher/ModulTraining/modulTrainingDynamicFile.jsx";
 
 
 
@@ -163,9 +159,7 @@ const routes = createBrowserRouter([
       path: "profile",
       element: <ProfileStudentsFrontend />
     },
-    
-     
-  ]
+   ]
 },
   {
     path: "/login",
@@ -234,14 +228,11 @@ const routes = createBrowserRouter([
       path: "initial-training/visi-misi",
      element: <StaticInitialTrainingFile  title="Visi Misi" filetitle="Visi Misi Materi" file="/file_modul_training/product_knowladge.pdf"/>
      },
-     {
-      path: "initial-training/smi-value",
-      element: <StaticInitialTrainingFile  title="SMI Value" filetitle="SMI Value Materi" file="/file_modul_training/product_knowladge.pdf"/>
-     },
-    {
-      path: "initial-training/learning-system-concept",
-      element: <LearningSystemConcept />
-     },
+      {
+        path: "musical-skill/:id",
+        element: <ModulTrainingDynamicFile />
+      }
+
 
     ]
   },
@@ -274,11 +265,11 @@ const routes = createBrowserRouter([
           ]}
           filteredType={[
             "Syllabus Overview", "IMTE", "Classroom SOP"
-          ]}/>},
+          ]}
+          url="initial-training"/>},
       {path: "modul-training-teacher/musical_skill", element: <ModulTrainingForTeacher 
         valueSelect={[
           {value: "Playing", label: "Playing"},
-       
           {value: "Imrovising", label: "Improvising"},
           {value: "Listening", label: "Listening"},
           {value: "Reading", label: "Reading"},
@@ -288,7 +279,8 @@ const routes = createBrowserRouter([
         ]}
         filteredType={[
             "Playing", "Improvising", "Listening", "Reading", "Singing", "Instrument Knowledge", "Classroom SOP"
-          ]}/>},
+          ]}
+        url="musical-skill"/>},
 
 
       {path: "modul-training-teacher/technology-skill", element: <ModulTrainingForTeacher
@@ -298,10 +290,23 @@ const routes = createBrowserRouter([
           {value: "Advanced", label: "Advanced"},
         ]} 
         
-        filteredType={["Beginner", "Intermediate", "Advanced"]}/>},
-      {path: "modul-training-teacher/pedagogy-skill", element: <PedagogySkillAdmin />},
-      {path: "modul-training-teacher/head-education-modul", element: <HeadEducationModulAdmin />},
+      filteredType={["Beginner", "Intermediate", "Advanced"]}
+      url="technology-skill"/>},
+      {path: "modul-training-teacher/pedagogy-skill", element: <ModulTrainingForTeacher valueSelect={[{value: "Pedagogy Skill", label: "Pedagogy Skill"}]} 
+        filteredType={["Pedagogy Skill"]}
+        url="pedagogy-skill"/>},
+
+      {path: "modul-training-teacher/head-education-modul", element: <ModulTrainingForTeacher valueSelect={[{value: "Head Education Modul", label: "Head Education Modul"}]} 
+        filteredType={["Head Education Modul"]} 
+        url="head-education-modul"
+      />},
       {path: "modul-training-teacher/initial-training/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/initial-training" title="Detail Modul Training Initial Training" />},
+      
+      {path: "modul-training-teacher/musical_skill/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/musical_skill" title="Detail Modul Training Musical Skill" />},
+      {path: "modul-training-teacher/technology-skill/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/technology-skill" title="Detail Modul Training Technology Skill" />},
+      {path: "modul-training-teacher/pedagogy-skill/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/pedagogy-skill" title="Detail Modul Training Pedagogy Skill" />},
+      {path: "modul-training-teacher/head-education-modul/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/head-education-modul" title="Detail Modul Training Head Education Modul" />},
+
       {
         path: "program-materi-syllabus/:id",
         element: <DetailProgramMateri filetype={["mp4", "pdf"]} type="Syllabus" title="Detail Program Materi Syllabus" back="/admin/program-materi-syllabus"/> ,},

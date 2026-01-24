@@ -1,4 +1,4 @@
-import LandingPageLayout from "../../../../layout/landing-page"
+import LandingPageLayout from "../../../layout/landing-page"
 
 const StaticInitialTrainingFile = ({title, filetitle, file}) => {
     return ( 

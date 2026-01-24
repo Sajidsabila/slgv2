@@ -4,13 +4,16 @@ const EvaluasiSemesterStudent = () => {
     return (
         <LandingPageLayout >
                 <div className="px-4 py-6 container mx-auto">
-                 <div className="flex">
-                        <img src="/assets/smile_image/icon-5.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
-                        <div className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-                       <span className="ms-13">Evaluation Semester</span>      
-               
-             </div>
-            </div>
+                    <div className="flex items-center my-6 gap-3 px-2">
+  <img
+    src="/assets/smile_image/icon-5.png"
+    className="w-12 h-12 shrink-0 "
+  />
+
+  <div className="w-[100%] md:w-95 bg-black text-white py-3 px-4 md:px-6 font-bold rounded-lg shadow-xl hover:scale-105 transition">
+    Evaluation Semester
+  </div>
+</div>
           </div>
         </LandingPageLayout>
     )
