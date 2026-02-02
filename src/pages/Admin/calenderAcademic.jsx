@@ -225,7 +225,7 @@ const CalenderAcademic = ({url, filter, title}) => {
           <button
             onClick={() => {
               setIsEditMode(false);
-              setFormData({ description: "", file: null, type: "Calender Academic" });
+              setFormData({ description: "", file: null, type: filter });
               setIsOpen(true);
             }}
             className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded-md shadow hover:cursor-pointer"

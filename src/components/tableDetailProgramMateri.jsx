@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { urlLink } from "../config/config";
 import { Image } from "antd";
 import { googledriveApi } from "../api/gooledriveApi";
-import { getDriveFileId, generatePreviewGDriveImage, generatePreviewGDriveVideo } from "../helper/helper";
+import {
+  getDriveFileId,
+  generatePreviewGDriveImage,
+  generatePreviewGDriveVideo,
+} from "../helper/helper";
 
 const TableDetailProgramMateri = ({
   coursePaginatedData,
@@ -22,7 +26,7 @@ const TableDetailProgramMateri = ({
       if (!fileId) return;
 
       const response = await googledriveApi(fileId);
-      const ext = response.fileExtension || ""; 
+      const ext = response.fileExtension || "";
 
       setExtensions((prev) => ({
         ...prev,
@@ -50,49 +54,69 @@ const TableDetailProgramMateri = ({
   const renderPreview = (file) => {
     const fileType = getFileType(file);
 
-
     if (fileType === "mp3" || fileType === "wav") {
       return (
-        <audio controls className="w-80"  controlsList="nodownload" muted={false}>
-          <source src={file.file_url.startsWith("http") ? generatePreviewGDriveVideo(file.file_url) : urlLink.url + file.file_url}/>
+        <audio
+          controls
+          className="w-80"
+          controlsList="nodownload"
+          muted={false}
+        >
+          <source
+            src={
+              file.file_url.startsWith("http")
+                ? generatePreviewGDriveVideo(file.file_url)
+                : urlLink.url + file.file_url
+            }
+          />
         </audio>
       );
     }
 
     if (fileType === "mp4" || fileType === "webm") {
       return (
-       <Image
-        width={200}
-        preview={{
-        destroyOnHidden: true,
-        imageRender: () => (
-        <video 
-            width="50%"
-            controls
-            src={file.file_url.startsWith("http") ? generatePreviewGDriveVideo(file.file_url) : urlLink.url + file.file_url}
-            controlsList="nodownload"
-            onContextMenu={(e) => e.preventDefault()}
-            />
-        ),
-        toolbarRender: () => null,
-        }}
-        src="/youtube.png"
-    />
+        <Image
+          width={200}
+          preview={{
+            destroyOnHidden: true,
+            imageRender: () => (
+              <video
+                width="50%"
+                controls
+                src={
+                  file.file_url.startsWith("http")
+                    ? generatePreviewGDriveVideo(file.file_url)
+                    : urlLink.url + file.file_url
+                }
+                controlsList="nodownload"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            ),
+            toolbarRender: () => null,
+          }}
+          src="/youtube.png"
+        />
       );
     }
 
     if (fileType === "png" || fileType === "jpg" || fileType === "jpeg") {
       return (
         <Image
-        src={file.file_url.startsWith("http") ? generatePreviewGDriveImage(file.file_url) : urlLink.url + file.file_url}
-        alt="Preview"
-        width={150}
+          src={
+            file.file_url.startsWith("http")
+              ? generatePreviewGDriveImage(file.file_url)
+              : urlLink.url + file.file_url
+          }
+          alt="Preview"
+          width={150}
         />
       );
     }
 
     if (fileType === "pdf") {
-        const preview = file.file_url.startsWith("http") ? file.file_url : urlLink.url + file.file_url;
+      const preview = file.file_url.startsWith("http")
+        ? file.file_url
+        : urlLink.url + file.file_url;
       return (
         <a
           href={preview}
@@ -148,7 +172,7 @@ const TableDetailProgramMateri = ({
                 <td className="p-3">{file.title}</td>
                 <td className="p-3">{file.description}</td>
                 <td className="p-3">{renderPreview(file)}</td>
-           
+
                 <td className="p-3 flex gap-2">
                   <button
                     onClick={() => handleEdit(file)}

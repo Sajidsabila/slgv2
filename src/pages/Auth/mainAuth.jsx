@@ -19,7 +19,7 @@ const MainAuth = () => {
   const message = location.state?.message;
   const pathname = location.pathname;
 
-  const headers = { "Content-Type": "application/x-www-form-urlencoded" };
+  const headers = { "Content-Type": "application/json" };
 
   // Reset limit setelah 1 menit
   useEffect(() => {
@@ -29,6 +29,7 @@ const MainAuth = () => {
     }
   }, [limitRequest]);
 
+    
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({
@@ -57,17 +58,21 @@ const handleSubmit = async (e) => {
   }
 
   const fetchJSON = async (url, options = {}) => {
-    const res = await fetch(url, { credentials: "include", headers, ...options });
+    const res = await fetch(url, { credentials: "include", ...options });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Request error");
     return data;
   };
 
   try {
-    // 1. Login
+
     await fetchJSON(`${urlLink.url}/api/method/login`, {
       method: "POST",
-      body: new URLSearchParams({
+      headers: {
+'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
         usr: formData.email,
         pwd: formData.password,
       }),
@@ -172,7 +177,7 @@ const handleSubmit = async (e) => {
             {/* Form Login */}
             <form onSubmit={handleSubmit}>
               <div className="mb-5">
-                <label className="block font-semibold mb-2 text-gray-800">Email</label>
+                <label className="block font-semibold mb-2 text-gray-800">Email / Username</label>
                 <input
                   type="text"
                   id="email"

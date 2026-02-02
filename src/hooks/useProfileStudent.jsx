@@ -28,9 +28,10 @@ export const StudentProfilProvider = ({ children }) => {
       // hanay muncul jadwal di minggu ini aja 
       const scheduleRes = await methodGet(
         "Course Schedule",
-        {},
+        [["student_name", "=", profileRes.data[0].name]],
         ["name", "schedule_date", "from_time", "to_time"]
       );
+      console.log("ini schedule res", scheduleRes);
       const today = new Date();
       const startOfWeek = new Date(today);
       startOfWeek.setDate(today.getDate() - today.getDay());
@@ -40,7 +41,8 @@ export const StudentProfilProvider = ({ children }) => {
 
       const weekly = (scheduleRes.data || [])
         .map((item) => {
-          const localDate = new Date(`${item.schedule_date}T${item.from_time}`);
+          const date = new Date(item.schedule_date);
+          const localDate = new Date(`${date}T${item.from_time}`);
           return { ...item, date: new Date(localDate.getTime() - timezoneOffset) };
         })
         .filter((item) => item.date >= startOfWeek && item.date <= endOfWeek)

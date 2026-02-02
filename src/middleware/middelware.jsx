@@ -5,8 +5,6 @@ import { Spin } from "antd";
 import { useAuth } from "../hooks/useAuth";
 import axios from "axios";
 
-
-
 export const Middleware = ({ allowed }) => {
   const { user, logout } = useAuth();
   const [userRoles, setUserRoles] = useState(undefined);
@@ -20,11 +18,11 @@ export const Middleware = ({ allowed }) => {
       try {
         const { data: logged } = await axios.get(
           `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
-          { withCredentials: true }
+          { withCredentials: true },
         );
         const { data: userData } = await axios.get(
           `${urlLink.url}/api/resource/User/${logged.message}`,
-          { withCredentials: true }
+          { withCredentials: true },
         );
 
         const roles = userData.data.roles.map((r) => r.role);
@@ -38,11 +36,12 @@ export const Middleware = ({ allowed }) => {
     checkUser();
   }, [user, logout]);
 
-  if (user && userRoles === undefined) return (
-    <div className="flex items-center justify-center h-screen">
-      <Spin />
-    </div>
-  );
+  if (user && userRoles === undefined)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spin />
+      </div>
+    );
 
   if (!user) {
     if (location.startsWith("/admin")) return <Navigate to="/login" replace />;
@@ -56,7 +55,6 @@ export const Middleware = ({ allowed }) => {
 
   return <Outlet />;
 };
-
 
 // export const MiddlewareStudent = () => {
 //   const token = sessionStorage.getItem("token");
@@ -79,10 +77,10 @@ export const Middleware = ({ allowed }) => {
 //         },
 //       }
 //     )
-//     .then(() => setValid(true)) 
+//     .then(() => setValid(true))
 //     .catch(() => {
 //       sessionStorage.clear();
-//       setValid(false);            
+//       setValid(false);
 //     });
 //   }, [token, refreshToken]);
 //   if (valid === null) return null;

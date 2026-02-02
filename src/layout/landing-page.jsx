@@ -20,34 +20,30 @@ const LandingPageLayout = ({ title, children }) => {
     return () => document.removeEventListener("keyup", handleKeyUpF12);
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     if (!sessionStorage.getItem("token")) return;
-     const resfreshToken = async () => {
-          const response = await refreshAccesToken();
-        }
-          resfreshToken();
-   }, [])
+    const resfreshToken = async () => {
+      const response = await refreshAccesToken();
+    };
+    resfreshToken();
+  }, []);
   return (
     <>
       <div className="flex flex-col min-h-screen w-full">
-    
         <div className="fixed top-0 left-0 w-full z-50">
           <Navbar />
         </div>
 
-        
         <div className="flex flex-col flex-1 pt-16">
-          <Header  />
+          <Header />
 
           <main className="flex-1 px-4 py-6 bg-slate-100 h-auto bg-slate-300 ">
             {children}
           </main>
         </div>
 
- 
-        <Footer className="relative z-1"/>
+        <Footer className="relative z-1" />
       </div>
-
 
       <FloatingChatButton className="fixed bottom-4 right-4" />
     </>

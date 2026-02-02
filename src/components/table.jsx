@@ -42,7 +42,8 @@ const FileTable = ({
         <tbody>
           {coursePaginatedData.length > 0 ? (
             coursePaginatedData.map((fileItem, index) => {
-              let fileType = fileItem.title?.split(".").pop()?.toLowerCase() || "";
+              let fileType =
+                fileItem.title?.split(".").pop()?.toLowerCase() || "";
               const fileSrc = fileItem.file_url?.startsWith("http")
                 ? fileItem.file_url
                 : `${urlLink.url}/${fileItem.file_url}`;
@@ -52,7 +53,9 @@ const FileTable = ({
                   <td className="px-4 py-2 text-center border">
                     {(currentPage - 1) * itemsPerPage + index + 1}
                   </td>
-                  <td className="px-4 py-2 font-medium border">{fileItem.title}</td>
+                  <td className="px-4 py-2 font-medium border">
+                    {fileItem.title}
+                  </td>
                   <td className="px-4 py-2 border">
                     <FilePreview
                       fileType={fileType}
@@ -66,7 +69,9 @@ const FileTable = ({
                     <button
                       className="bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 flex items-center gap-1 px-3 py-1 rounded-md"
                       onClick={() =>
-                        window.confirm("Apakah Anda yakin ingin menghapus file ini?") &&
+                        window.confirm(
+                          "Apakah Anda yakin ingin menghapus file ini?",
+                        ) &&
                         handleDeleteFile(fileItem.file ?? fileItem.file_url)
                       }
                     >
@@ -84,7 +89,10 @@ const FileTable = ({
             })
           ) : (
             <tr>
-              <td colSpan="4" className="px-4 py-3 text-center text-gray-500 italic border">
+              <td
+                colSpan="4"
+                className="px-4 py-3 text-center text-gray-500 italic border"
+              >
                 Tidak ada data
               </td>
             </tr>

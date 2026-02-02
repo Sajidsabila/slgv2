@@ -5,6 +5,7 @@ import { formatDateIndonesia } from "../../helper/helper";
 import { Modal } from "antd";
 import { getDoctypeDetail } from "../../api/apiPublic";
 import { urlLink } from "../../config/config";
+import HeadingSection from "../../components/headingSection";
 
 
 
@@ -123,16 +124,8 @@ console.log(student);
         </div>
 
         {/* HEADER STUDENT LIST */}
-        <div className="flex my-6">
-          <img
-            src="/assets/smile_image/icon-6.png"
-            className="w-15 h-15 relative z-1 top-2 left-3"
-          />
-          <div className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-            <span className="ms-13">Student List</span>
-          </div>
-        </div>
-
+        <HeadingSection title="Student List" image="/assets/smile_image/icon-5.png" />
+     
         {/* SEARCH INPUT */}
         <div className="flex lg:flex-row flex-col gap-3 justify-between font-semibold text-lg py-2">
           <input
@@ -188,7 +181,7 @@ console.log(student);
                       <p className="text-sm text-gray-500 font-medium">
                         Joining Date: {" "}
                         <span className="font-medium">
-                          {formatDateIndonesia(item.date_of_birth) || "-"}
+                          {formatDateIndonesia(item.joining_date) || "-"}
                         </span>
                       </p>
                     </>

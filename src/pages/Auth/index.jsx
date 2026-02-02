@@ -104,7 +104,7 @@ const Login = () => {
             </label>
             <input
               className="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
-              type="email"
+              type="text"
               placeholder="Email"
               value={email}
               autoFocus

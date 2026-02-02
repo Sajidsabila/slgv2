@@ -8,6 +8,7 @@ import { googledriveApi } from "../../../api/gooledriveApi";
 import { getDriveFileId, generatePreviewGDriveImage, generatePreviewGDriveVideo } from "../../../helper/helper";
 import { FilePdfTwoTone } from "@ant-design/icons";
 import { getModulTraining } from "../../../api/apiPublic";
+import HeadingSection from "../../../components/headingSection";
 
 const KalenderAkademik = () => {
   const { logout } = useAuth();
@@ -19,7 +20,7 @@ const KalenderAkademik = () => {
   useEffect(() => {
     const getModulFromApi = async () => {
       try {
-        const response = await getModulTraining([["type", "=", "Calender Academic"]]);
+        const response = await getModulTraining([["type", "=", "Calendar Academic"]]);
         setModulTraining(response || []);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -141,14 +142,7 @@ const KalenderAkademik = () => {
   return (
     <LandingPageLayout>
       <div className="px-4 py-6 container mx-auto">
-
-        <div className="flex my-6">
-              <img src="/assets/smile_image/icon-1.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
-              <div className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-                  <span className="ms-13">Calender Academic</span>
-              </div>
-          </div>
-
+      <HeadingSection title="Calender Academic" image="/assets/smile_image/icon-1.png" />
         <div className="list-program-edukasi my-5 flex flex-wrap gap-6">
           {modulTraining.map((item) => (
             <div

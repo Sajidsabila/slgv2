@@ -3,6 +3,7 @@ import LandingPageLayout from "../../../layout/landing-page";
 import { convertDate, formatDateIndonesia } from "../../../helper/helper";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
 import { methodGet } from "../../../api/apiMethod";
+import HeadingSection from "../../../components/headingSection";
 
 
 
@@ -77,17 +78,7 @@ const HistoryAbsensi = () => {
   return (
   <LandingPageLayout title="History Attendance">
     <div className="px-4 py-6 container mx-auto">
-      <div className="flex items-center my-6 gap-3 px-2">
-  <img
-    src="/assets/smile_image/icon-1.png"
-    className="w-12 h-12 shrink-0 "
-  />
-
-  <div className="w-[100%] md:w-95 bg-black text-white py-3 px-4 md:px-6 font-bold rounded-lg shadow-xl hover:scale-105 transition">
-    Student Attendance
-  </div>
-</div>
-
+      <HeadingSection title="Student Attendance" image="/assets/smile_image/icon-1.png" />
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 mb-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex flex-col md:flex-row gap-4 w-full md:w-2/3">

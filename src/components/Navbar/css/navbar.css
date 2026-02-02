@@ -1,210 +1,203 @@
 nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100vw;
-    position: sticky;
-    top: 0px;
-    z-index: 900;
-    background: var(--bgcolor1-5);
-    padding: 0;
-    backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100vw;
+  position: sticky;
+  top: 0px;
+  z-index: 900;
+  background: var(--bgcolor1-5);
+  padding: 0;
+  backdrop-filter: blur(15px);
 }
 
 nav .brand img {
-    height: 30px;
-    object-fit: contain;
+  height: 30px;
+  object-fit: contain;
 }
 
 nav div.brand {
-    margin-left: 2rem;
-    position: relative;
+  margin-left: 2rem;
+  position: relative;
 }
 
 nav div.brand span {
-    position: absolute;
-    left: 150px;
-    top: 50%;
-    transform: translate(0, -50%);
-    width: max-content;
-    font-weight: 200;
+  position: absolute;
+  left: 150px;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: max-content;
+  font-weight: 200;
 }
 
 nav div.menu {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin-right: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2rem;
 }
 
 nav div.menu #menutoggle,
 nav div.menu label {
-    display: none;
+  display: none;
 }
 
-nav div.menu div>i {
-    width: 30px;
-    aspect-ratio: 1/1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    color: var(--fgcolor1);
-    clip-path: var(--clippath);
-    margin-right: 1rem;
+nav div.menu div > i {
+  width: 30px;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: var(--fgcolor1);
+  clip-path: var(--clippath);
+  margin-right: 1rem;
 }
 
 div.menu ul {
-    display: flex;
-    flex-direction: row;
-    list-style: none;
-    margin-bottom: 0;
-    z-index: 5;
-    width: fit-content;
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  margin-bottom: 0;
+  z-index: 5;
+  width: fit-content;
 }
 
 div.menu ul li {
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    border-bottom: solid 0px var(--bgcolor1);
-    transition: all 1s;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-bottom: solid 0px var(--bgcolor1);
+  transition: all 1s;
 }
 
 div.menu ul li.active {
-    border-bottom: solid 3px var(--accolor1);
-    transition: all 500ms;
+  border-bottom: solid 3px var(--accolor1);
+  transition: all 500ms;
 }
 
 div.menu ul li:hover {
-    background: var(--bgcolor1);
-    border-bottom: solid 3px var(--accolor1);
+  background: var(--bgcolor1);
+  border-bottom: solid 3px var(--accolor1);
 }
-
 
 nav div.store {
-    margin-right: 2rem;
+  margin-right: 2rem;
 }
-
-
 
 @media only screen and (min-width: 300px) {
-    nav div.brand {
-        margin-left: 1rem;
-    }
+  nav div.brand {
+    margin-left: 1rem;
+  }
 
-    nav .brand img {
-        height: 30px;
-    }
+  nav .brand img {
+    height: 30px;
+  }
 
-    nav div.brand span {
-        display: none;
-    }
+  nav div.brand span {
+    display: none;
+  }
 
-    nav div.menu {
-        position: relative;
-        justify-content: end;
-        margin-right: 1rem;
-    }
+  nav div.menu {
+    position: relative;
+    justify-content: end;
+    margin-right: 1rem;
+  }
 
-    nav div.menu label {
-        display: flex;
-    }
+  nav div.menu label {
+    display: flex;
+  }
 
-    div.menu ul {
-        flex-direction: column;
-        position: absolute;
-        text-align: right;
-    }
+  div.menu ul {
+    flex-direction: column;
+    position: absolute;
+    text-align: right;
+  }
 
-    nav input#menutoggle~label i {
-        background: var(--bgcolor1);
-        color: var(--accolor1);
-    }
+  nav input#menutoggle ~ label i {
+    background: var(--bgcolor1);
+    color: var(--accolor1);
+  }
 
-    nav input#menutoggle:checked~label i {
-        background: var(--accolor1);
-        color: var(--bgcolor1);
-    }
+  nav input#menutoggle:checked ~ label i {
+    background: var(--accolor1);
+    color: var(--bgcolor1);
+  }
 
-    nav input#menutoggle~ul {
-        top: 60px;
-        right: -60px;
-        opacity: 0;
-        overflow: hidden;
-        height: 0;
-        transition: all 1s;
-    }
+  nav input#menutoggle ~ ul {
+    top: 60px;
+    right: -60px;
+    opacity: 0;
+    overflow: visible;
+    height: 0;
+    transition: all 1s;
+  }
 
-    nav input#menutoggle:checked~ul {
-        top: 50px;
-        right: 0;
-        opacity: 1;
-        height: 190px;
-        transition: all 1s;
-    }
+  nav input#menutoggle:checked ~ ul {
+    top: 50px;
+    right: 0;
+    opacity: 1;
+    height: 190px;
+    transition: all 1s;
+  }
 
-    nav div:hover>i {
-        margin-right: 0;
-    }
+  nav div:hover > i {
+    margin-right: 0;
+  }
 
-    nav div.store {
-        margin-right: 1rem;
-    }
+  nav div.store {
+    margin-right: 1rem;
+  }
 }
 
-
 @media only screen and (min-width: 767px) {
-    nav div.brand {
-        margin-left: 1.5rem;
-    }
+  nav div.brand {
+    margin-left: 1.5rem;
+  }
 
-    nav .brand img {
-        height: 30px;
-    }
+  nav .brand img {
+    height: 30px;
+  }
 
+  nav div.menu {
+    position: relative;
+    justify-content: center;
+    margin-right: 2rem;
+  }
 
-    nav div.menu {
-        position: relative;
-        justify-content: center;
-        margin-right: 2rem;
-    }
+  nav div.menu label {
+    display: none;
+  }
 
-    nav div.menu label {
-        display: none;
-    }
+  div.menu ul {
+    flex-direction: row;
+    position: unset;
+  }
 
-    div.menu ul {
-        flex-direction: row;
-        position: unset;
+  nav input#menutoggle ~ ul {
+    opacity: 1;
+    height: unset;
+  }
 
-    }
+  nav input#menutoggle:checked ~ ul {
+    opacity: 1;
+    height: auto;
+  }
 
-    nav input#menutoggle~ul {
-        opacity: 1;
-        height: unset;
-    }
-
-    nav input#menutoggle:checked~ul {
-        opacity: 1;
-        height: auto;
-
-    }
-
-    nav div.store {
-        margin-right: 2rem;
-    }
+  nav div.store {
+    margin-right: 2rem;
+  }
 }
 
 @media only screen and (min-width: 1000px) {
-    nav div.brand {
-        margin-left: 2rem;
-    }
+  nav div.brand {
+    margin-left: 2rem;
+  }
 
-    nav div.brand span {
-        display: flex;
-    }
+  nav div.brand span {
+    display: flex;
+  }
 }

@@ -12,15 +12,15 @@ const AdminLayout = ({ children }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    try{
-      const response = await logout(); 
+    try {
+      const response = await logout();
       console.log(response);
-    }catch(e){
+    } catch (e) {
       console.log(e);
-    }finally{
+    } finally {
       navigate("/login");
     }
-  } 
+  };
 
   const handleProfileOpen = () => setIsProfileOpen((prev) => !prev);
   const toggleDropdown = (label) => {
@@ -67,6 +67,8 @@ const AdminLayout = ({ children }) => {
     { to: "/admin", label: "Home" },
     { to: "/admin/calender-academic", label: "Calender Academic" },
     { to: "/admin/book-menu", label: "Book Menu" },
+     { to: "/admin/evaluasi-semester", label: "Evaluasi Semester" },
+    { to: "/admin/modul-training", label: "Modul Training" },
     {
       label: "Program Materi",
       children: [
@@ -76,16 +78,30 @@ const AdminLayout = ({ children }) => {
         { to: "/admin/program-materi-lhb", label: "LHB" },
       ],
     },
-    { to: "/admin/evaluasi-semester", label: "Evaluasi Semester" },
-    { to: "/admin/modul-training", label: "Modul Training" },
-     {
+   
+    {
       label: "Teacher Materi",
       children: [
-        { to: "/admin/modul-training-teacher/initial-training", label: "INITIAL TRAINING" },
-        { to: "/admin/modul-training-teacher/musical_skill", label: "MUSICAL SKILL" },
-        { to: "/admin/modul-training-teacher/technology-skill", label: "TECHNOLOGY SKILL" },
-        { to: "/admin/modul-training-teacher/pedagogy-skill", label: "PEDAGOGY SKILL" },
-        { to: "/admin/modul-training-teacher/head-education-modul", label: "HEAD EDUCATION MODUL" },
+        {
+          to: "/admin/modul-training-teacher/initial-training",
+          label: "INITIAL TRAINING",
+        },
+        {
+          to: "/admin/modul-training-teacher/musical_skill",
+          label: "MUSICAL SKILL",
+        },
+        {
+          to: "/admin/modul-training-teacher/technology-skill",
+          label: "TECHNOLOGY SKILL",
+        },
+        {
+          to: "/admin/modul-training-teacher/pedagogy-skill",
+          label: "PEDAGOGY SKILL",
+        },
+        {
+          to: "/admin/modul-training-teacher/head-education-modul",
+          label: "HEAD EDUCATION MODUL",
+        },
       ],
     },
   ];
@@ -164,7 +180,6 @@ const AdminLayout = ({ children }) => {
                   }
                   onClick={(e) => {
                     e.stopPropagation();
-                   
                   }}
                 >
                   {link.label}
@@ -237,4 +252,4 @@ const AdminLayout = ({ children }) => {
   );
 };
 
-export default AdminLayout;
+export default AdminLayout;

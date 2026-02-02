@@ -17,11 +17,8 @@ import ProgramMateri from "../pages/Admin/programMateri.jsx";
 import HistoryAbsensi from "../pages/Student/studentReport/historyAbsensi.jsx";
 import EvaluasiSemester from "../pages/Admin/evaluasiSemester.jsx";
 import DetailEvaluasiSemester from "../pages/Admin/detailEvaluasiSemester.jsx";
-
-import BookMenu from "../pages/Admin/bookMenu.jsx";
 import DetailBookMenu from "../pages/Admin/detailBookMenu.jsx";
 import CalenderAcademic from "../pages/Admin/calenderAcademic.jsx";
-import ModulTraining from "../pages/Admin/modulTraining.jsx";
 import FeesList from "../pages/Student/studentReport/feessList.jsx";
 import ParentsGuide from "../pages/Student/parentsGuide/index.jsx";
 import Page7 from "../pages/Student/parentsGuide/page/page7.jsx";
@@ -56,7 +53,7 @@ import DetailLearningMateriTeacher from "../pages/Teacher/LearningResources/deta
 import StaticInitialTrainingFile from "../pages/Teacher/ModulTraining/staticIntialTrainingFile.jsx";
 import ModulTrainingForTeacher from "../pages/Admin/modulTrainingForTeacher.jsx";
 import DetailModulTrainingForTeacher from "../pages/Admin/detailModulTrainingForTeacher.jsx";
-import ModulTrainingDynamicFile from "../pages/Teacher/ModulTraining/modulTrainingDynamicFile.jsx";
+import PageDynamicModulTraining from "../pages/Teacher/ModulTraining/pageDynamicModulTraining.jsx";
 
 
 
@@ -230,7 +227,19 @@ const routes = createBrowserRouter([
      },
       {
         path: "musical-skill/:id",
-        element: <ModulTrainingDynamicFile />
+        element: <PageDynamicModulTraining />
+      },
+      {
+        path: "technology-skill/:id",
+        element: <PageDynamicModulTraining />
+      },
+      {
+        path: "head-education-modul/:id",
+        element: <PageDynamicModulTraining />
+      },
+      {
+        path: "pedagogy-skill/:id",
+        element: <PageDynamicModulTraining />
       }
 
 
@@ -247,11 +256,11 @@ const routes = createBrowserRouter([
       { path: "evaluasi-semester", element: <EvaluasiSemester /> },
       { path: "evaluasi-semester/:id", element: <DetailEvaluasiSemester /> },
       { path: "*", element: <Page404 /> },
-      {path: "book-menu", element: <BookMenu />},
+      {path: "book-menu", element: <CalenderAcademic url="/admin/book-menu" title="Book Menu" filter="Book Menu"/>},
       {path: "book-menu/:id", element: <DetailBookMenu url="/admin/book-menu"/>},
-      {path: "calender-academic", element: <CalenderAcademic url="/admin/calender-academic" title="Calender Academic" filter="Calender Academic"/>},
+      {path: "calender-academic", element: <CalenderAcademic url="/admin/calender-academic" title="Calendar Academic" filter="Calendar Academic"/>},
       {path: "calender-academic/:id", element: <DetailBookMenu url="/admin/calender-academic"/>},
-      {path: "modul-training", element: <ModulTraining />},
+      {path: "modul-training", element: <CalenderAcademic url="/admin/modul-training" title="Modul Training" filter="Modul Training"/>},
       {path: "modul-training/:id", element: <DetailBookMenu url="/admin/modul-training"/>},
       {path: "program-materi-syllabus", element: <ProgramMateriSyllabus />},
       {path: "program-materi-exam-speciment", element: <ProgramMateriExamSpeciment/>},
@@ -302,7 +311,7 @@ const routes = createBrowserRouter([
       />},
       {path: "modul-training-teacher/initial-training/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/initial-training" title="Detail Modul Training Initial Training" />},
       
-      {path: "modul-training-teacher/musical_skill/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/musical_skill" title="Detail Modul Training Musical Skill" />},
+      {path: "modul-training-teacher/musical-skill/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/musical_skill" title="Detail Modul Training Musical Skill" />},
       {path: "modul-training-teacher/technology-skill/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/technology-skill" title="Detail Modul Training Technology Skill" />},
       {path: "modul-training-teacher/pedagogy-skill/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/pedagogy-skill" title="Detail Modul Training Pedagogy Skill" />},
       {path: "modul-training-teacher/head-education-modul/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/head-education-modul" title="Detail Modul Training Head Education Modul" />},
