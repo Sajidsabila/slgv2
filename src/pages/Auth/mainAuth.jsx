@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { urlLink } from "../../config/config";
+import axios from "axios";
+import autoLogout from "../../components/autoLogout";
 
 const MainAuth = () => {
   const { login } = useAuth();
@@ -17,9 +19,6 @@ const MainAuth = () => {
   const [limitRequest, setLimitRequest] = useState(0);
 
   const message = location.state?.message;
-  const pathname = location.pathname;
-
-  const headers = { "Content-Type": "application/json" };
 
   // Reset limit setelah 1 menit
   useEffect(() => {
@@ -56,46 +55,45 @@ const handleSubmit = async (e) => {
     setError("Email dan Password tidak boleh kosong");
     return;
   }
-
-  const fetchJSON = async (url, options = {}) => {
-    const res = await fetch(url, { credentials: "include", ...options });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Request error");
-    return data;
-  };
-
   try {
-
-    await fetchJSON(`${urlLink.url}/api/method/login`, {
-      method: "POST",
-      headers: {
-'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+    const response = await axios.post(
+      `${urlLink.url}/api/method/login`,
+      {
         usr: formData.email,
         pwd: formData.password,
-      }),
-    });
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
 
-    // 2. Get logged in user
-    const loggedUser = await fetchJSON(
-      `${urlLink.url}/api/method/frappe.auth.get_logged_user`
+    const loggedUser = await axios.get(
+      `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
+      { withCredentials: true }
     );
 
     // 3. Get user detail
-    const userDetail = await fetchJSON(
-      `${urlLink.url}/api/resource/User/${loggedUser.message}`
+    const userDetail = await axios.get(
+      `${urlLink.url}/api/resource/User/${loggedUser.data.message}`,
+      { withCredentials: true }
     );
-
-    const roles = userDetail.data.roles || [];
+    
+    const roles = userDetail.data.data.roles || [];
+    console.log(roles);
     const isStudent = roles.some((r) => r.role === "Student");
     const isTeacher = roles.some((r) => r.role === "Instructor");
     const isGuardian = roles.some((r) => r.role === "Student Guardian");
 
     // Validasi Role
     if ((student && !isStudent  || (!student && isTeacher === false))) {
-      throw new Error("Login Failed");
+      setError("Login Failed");
+      autoLogout();
+      setFormData({ email: "", password: "" });
+      setIsLoading(false);
+      return;
     }
 
     const getUser = {
@@ -110,11 +108,12 @@ const handleSubmit = async (e) => {
 
     // Redirect sesuai role
     if (isStudent ) navigate("/student");
-    else if (isTeacher) navigate("/teacher");
+    else if (isTeacher)  navigate("/teacher");
+  
 
   } catch (err) {
     console.error(err);
-    setError(err.message || "Terjadi kesalahan saat login");
+    setError(err.response.data.message || "Terjadi kesalahan saat login");
   } finally {
     setIsLoading(false);
   }
@@ -144,22 +143,22 @@ const handleSubmit = async (e) => {
 
             {/* Switch Role */}
             <div className="flex flex-wrap gap-3 mb-8">
-              <button
+               <button
                 onClick={() => setStudent(true)}
                 className={`w-30 text-center py-2 md:py-3 font-semibold rounded-lg shadow-md transition hover:cursor-pointer ${
                   student === true ? "bg-red-800 text-white" : "bg-gray-200 text-gray-800"
                 }`}
               >
                 Student
-              </button>
-              <button
+              </button> 
+              {/* <button
                 onClick={() => setStudent(false)}
                 className={`w-30 text-center py-2 md:py-3 font-semibold rounded-lg shadow-md transition hover:cursor-pointer ${
                   student === false ? "bg-red-800 text-white" : "bg-gray-200 text-gray-800"
                 }`}
               >
                 Teacher
-              </button> 
+              </button>  */}
             </div>
 
             {/* Error / Success Message */}

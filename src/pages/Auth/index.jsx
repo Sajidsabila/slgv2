@@ -1,64 +1,67 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { urlLink } from "../../config/config";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom"; 
+import axios from "axios";
+import autoLogout from "../../components/autoLogout";
 
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate(); 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+ const [formData, setFormData] = useState({
+   email: "",
+   password: "",
+ })
   const [error, setError] = useState(null);
   const [loading, setIsLoading] = useState(false);
 
-  const headers = { "Content-Type": "application/x-www-form-urlencoded" };
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    if (!email || !password) {
+    if (!formData.email || !formData.password) {
       setIsLoading(false);
       setError("Email dan Password tidak boleh kosong");
       return;
     }
+   
 
     try {
-      const response = await fetch(`${urlLink.url}/api/method/login`, {
-        method: "POST",
-        headers,
-        body: new URLSearchParams({ usr: email, pwd: password }),
-        credentials: "include",
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        setIsLoading(false);
-        throw new Error(data.message);
-      }
-
-      const getLoggedUser = await fetch(
-        `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
+      const response = await axios.post(
+        `${urlLink.url}/api/method/login`,
         {
-          method: "GET",
-          credentials: "include",
-          headers,
-          mode: "cors",
+          usr: formData.email,
+          pwd: formData.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
         }
       );
-      const user = await getLoggedUser.json();
 
-      const userData = await fetch(
-        `${urlLink.url}/api/resource/User/${user.message}`,
-        {
-          method: "GET",
-          credentials: "include",
-          headers,
-          mode: "cors",
-        }
-      );
-      const dataUser = await userData.json();
+      const loggedUser = await axios.get(
+      `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
+      { withCredentials: true }
+    );
+
+    // 3. Get user detail
+    const userDetail = await axios.get(
+      `${urlLink.url}/api/resource/User/${loggedUser.data.message}`,
+      { withCredentials: true }
+    );
+      const dataUser = userDetail.data;
+      console.log(dataUser);
 
       const getUser = {
         full_name: dataUser.data.full_name,
@@ -68,7 +71,7 @@ const Login = () => {
         mobile_no: dataUser.data.mobile_no,
       };
 
-      const roles = Array.isArray(dataUser.data.roles)
+      const roles = dataUser.data.roles
         ? dataUser.data.roles
         : [];
       const isInstructor = roles.some(
@@ -78,12 +81,16 @@ const Login = () => {
 
       if (!isInstructor) {
         setIsLoading(false);
-        throw new Error("Anda Tidak Mempunyai Akses");
+        autoLogout();
+      setFormData({ email: "", password: "" });
+        setError("Login Failed");
+        return;
       }
       login(getUser);
       navigate("/admin"); 
     } catch (err) {
-      setError(err.message || "Terjadi kesalahan");
+      console.log("ini error", err);
+      setError(err.response.data.message || "Terjadi kesalahan");
       setIsLoading(false);
     }
   };
@@ -106,9 +113,10 @@ const Login = () => {
               className="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
               type="text"
               placeholder="Email"
-              value={email}
+              id="email"
+              value={formData.email}
               autoFocus
-              onChange={(e) => setEmail(e.target.value)}
+             onChange={handleChange}
             />
           </div>
           <div className="mb-4">
@@ -117,10 +125,11 @@ const Login = () => {
             </label>
             <input
               className="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
+              id="password"
               type="password"
               placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+            onChange={handleChange}
             />
           </div>
           <button

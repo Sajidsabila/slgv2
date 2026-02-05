@@ -250,7 +250,7 @@ const Navbar = () => {
                     {link.children && activeDropdown === index && (
                       <ul className="absolute top-full py-3 left-0 bg-white shadow-lg py-2 rounded-lg min-w-[220px] z-50 border border-gray-300">
                         {link.children.map((child, ci) => (
-                          <li
+                          <li                      
                             key={ci}
                             className="relative"
                             onMouseEnter={() => setActiveDropdown2(ci)}
