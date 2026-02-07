@@ -3,10 +3,10 @@ import { urlLink } from "../../config/config";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom"; 
 import axios from "axios";
-import autoLogout from "../../components/autoLogout";
+
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const navigate = useNavigate(); 
  const [formData, setFormData] = useState({
    email: "",
@@ -81,7 +81,7 @@ const Login = () => {
 
       if (!isInstructor) {
         setIsLoading(false);
-        autoLogout();
+        logout();
       setFormData({ email: "", password: "" });
         setError("Login Failed");
         return;

@@ -47,7 +47,7 @@ const Navbar = () => {
         },
         {
           label: "Learning Material",
-          grandchildren: [
+          children: [
             {
               label: "Syllabus",
               url: "/student/learning-resources/materi-pembelajaran/syllabus",
@@ -76,7 +76,7 @@ const Navbar = () => {
         },
         {
           label: "Learning Material",
-          grandchildren: [
+          children: [
             { label: "Syllabus", url: "/teacher/learning-resources/syllabus" },
             {
               label: "Exam Speciment",
@@ -93,7 +93,7 @@ const Navbar = () => {
       children: [
         {
           label: "Initial Training",
-          grandchildren: [
+          children: [
             {
               label: "Product Knowledge",
               url: "/teacher/initial-training/product-knowledge",
@@ -105,10 +105,10 @@ const Navbar = () => {
             { label: "Visi Misi", url: "/teacher/initial-training/visi-misi" },
             {
               label: "SMI Learning System Concept",
-              greatgrandchildren: [
+              children: [
                 {
                   label: "SMI Value",
-                  url: "/teacher/initial-training/smi-learning-system-concept/smi-value",
+                  url: "/teacher/initial-training/smi-value",
                 },
                 {
                   label: "Syllabus Overview",
@@ -128,7 +128,7 @@ const Navbar = () => {
         },
         {
           label: "Musikal Skill",
-          grandchildren: [
+          children: [
             { label: "Playing", url: "/teacher/musical-skill/playing" },
             {
               label: "Improvising (Yafet)",
@@ -145,7 +145,7 @@ const Navbar = () => {
         },
         {
           label: "Technology Skill",
-          grandchildren: [
+          children: [
             { label: "Beginner", url: "/teacher/technology-skill/Beginner" },
             {
               label: "Intermediate",
@@ -177,14 +177,19 @@ const Navbar = () => {
   const toggleDropdown = (i) => {
     setActiveDropdown(activeDropdown === i ? null : i);
     setActiveDropdown2(null);
+    setActiveDropdown3(null);
   };
 
   const toggleDropdown2 = (i) => {
     setActiveDropdown2(activeDropdown2 === i ? null : i);
+    setActiveDropdown3(null);
   };
 
+  const toggleDropdown3 = (i) => {
+    setActiveDropdown3(activeDropdown3 === i ? null : i);
+  };
   return (
-    <nav className="bg-white shadow-lg fixed w-full z-50">
+    <nav className="bg-white shadow-lg fixed w-full z-[200]">
       <div className="container mx-auto flex flex-col justify-between items-center py-3">
         {/* MOBILE HEADER */}
         <div className="md:hidden flex justify-beetween items-center px-2 w-full">
@@ -237,64 +242,99 @@ const Navbar = () => {
                 {dropdownLinks.map((link, index) => (
                   <li
                     key={index}
-                    className="relative hover:text-red-900 cursor-pointer px-2 py-1 "
-                    onMouseEnter={() => setActiveDropdown(index)}
-                    onMouseLeave={() => {
-                      setActiveDropdown(null);
+                    className="relative hover:text-red-900 cursor-pointer px-2 py-1"
+                    // Level 1: Begitu mouse masuk, buka dropdown ini dan tutup level di bawahnya
+                    onMouseEnter={() => {
+                      setActiveDropdown(index);
                       setActiveDropdown2(null);
+                      setActiveDropdown3(null);
                     }}
                   >
                     <span>{link.text}</span>
 
-                    {/* Dropdown Level 1 */}
                     {link.children && activeDropdown === index && (
-                      <ul className="absolute top-full py-3 left-0 bg-white shadow-lg py-2 rounded-lg min-w-[220px] z-50 border border-gray-300">
+                      <ul className="absolute top-full left-0 bg-white shadow-lg py-2 rounded-lg min-w-[260px] border border-gray-300 z-[9999] max-h-[80vh] overflow-y-auto">
                         {link.children.map((child, ci) => (
-                          <li                      
+                          <li
                             key={ci}
-                            className="relative"
-                            onMouseEnter={() => setActiveDropdown2(ci)}
+                            className="flex flex-col"
+                            // Level 2: Mouse masuk ke area menu ini, langsung buka
+                            onMouseEnter={() => {
+                              if (child.children) setActiveDropdown2(ci);
+                              setActiveDropdown3(null); // Reset cucu
+                            }}
                           >
-                            {/* Label utama */}
                             {child.url ? (
                               <Link
-                                className="block px-6 py-2 text-sm w-full hover:bg-gray-200 hover:text-red-900"
+                                className="block px-6 py-2 text-sm hover:bg-gray-100"
                                 to={child.url}
                               >
                                 {child.label}
                               </Link>
                             ) : (
-                              <div
-                                className="flex justify-between items-center px-6 py-2 text-sm hover:bg-gray-200 cursor-pointer"
-                                onClick={() => toggleDropdown2(ci)}
-                              >
-                                <span>{child.label}</span>
-                                <i
-                                  className={`text-red-600 font-bold transition duration-300 fa-solid fa-chevron-${
+                              <div className="flex justify-between items-center px-6 py-2 text-sm hover:bg-gray-100">
+                                <span
+                                  className={
                                     activeDropdown2 === ci
-                                      ? "up"
-                                      : "down"
-                                  }`}
+                                      ? "font-bold text-red-600"
+                                      : ""
+                                  }
+                                >
+                                  {child.label}
+                                </span>
+                                <i
+                                  className={`fa-solid fa-chevron-${activeDropdown2 === ci ? "up" : "down"} text-[10px]`}
                                 />
                               </div>
                             )}
 
-                            {/* Dropdown Level 2 (semua ke bawah) */}
-                            {child.grandchildren &&
-                              activeDropdown2 === ci && (
-                                <ul className="absolute top-full left-0 bg-white shadow-lg rounded-lg py-2 min-w-[220px] z-50">
-                                  {child.grandchildren.map((gc, gci) => (
-                                    <li key={gci}>
+                            {/* Level 2 Content (Ke Bawah) */}
+                            {child.children && activeDropdown2 === ci && (
+                              <ul className="bg-gray-50 py-1">
+                                {child.children.map((gc, gci) => (
+                                  <li
+                                    key={gci}
+                                    className="flex flex-col"
+                                    // Level 3: Mouse masuk, buka cucu
+                                    onMouseEnter={() => {
+                                      if (gc.children) setActiveDropdown3(gci);
+                                    }}
+                                  >
+                                    {gc.url ? (
                                       <Link
+                                        className="block pl-10 pr-6 py-2 text-sm hover:bg-gray-200"
                                         to={gc.url}
-                                        className="block px-8 py-2 text-sm w-full hover:bg-gray-200 hover:text-red-900"
                                       >
                                         {gc.label}
                                       </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
+                                    ) : (
+                                      <div className="flex justify-between items-center pl-10 pr-6 py-2 text-sm hover:bg-gray-200">
+                                        <span>{gc.label}</span>
+                                        <i
+                                          className={`fa-solid fa-chevron-${activeDropdown3 === gci ? "up" : "down"} text-[10px]`}
+                                        />
+                                      </div>
+                                    )}
+
+                                    {/* Level 3 Content (Ke Bawah) */}
+                                    {gc.children && activeDropdown3 === gci && (
+                                      <ul className="bg-gray-100 py-1">
+                                        {gc.children.map((ggc, ggci) => (
+                                          <li key={ggci}>
+                                            <Link
+                                              className="block pl-14 pr-6 py-2 text-xs hover:bg-gray-300"
+                                              to={ggc.url}
+                                            >
+                                              {ggc.label}
+                                            </Link>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
                           </li>
                         ))}
                       </ul>
@@ -306,7 +346,7 @@ const Navbar = () => {
           )}
 
           {isTeacher && (
-            <ul className="items-center w-full text-base text-gray-800 h-full">
+            <ul className="items-center w-full text-base text-gray-800 h-auto">
               <div className="flex gap-3">
                 <li
                   className={`hover:text-red-900 cursor-pointer px-2 py-1 ${pathname === "/teacher" ? "font-bold" : ""}`}
@@ -317,64 +357,99 @@ const Navbar = () => {
                 {teacherLinks.map((link, index) => (
                   <li
                     key={index}
-                    className="relative hover:text-red-900 cursor-pointer px-2 py-1 "
-                    onMouseEnter={() => setActiveDropdown(index)}
-                    onMouseLeave={() => {
-                      setActiveDropdown(null);
+                    className="relative hover:text-red-900 cursor-pointer px-2 py-1"
+                    // Level 1: Begitu mouse masuk, buka dropdown ini dan tutup level di bawahnya
+                    onMouseEnter={() => {
+                      setActiveDropdown(index);
                       setActiveDropdown2(null);
+                      setActiveDropdown3(null);
                     }}
                   >
                     <span>{link.text}</span>
 
-                    {/* Dropdown Level 1 */}
                     {link.children && activeDropdown === index && (
-                      <ul className="absolute top-full left-0 bg-white shadow-lg py-2 rounded-lg min-w-[220px] z-50 border border-gray-300">
+                      <ul className="absolute top-full left-0 bg-white shadow-lg py-2 rounded-lg min-w-[260px] border border-gray-300 z-[9999] max-h-[80vh] overflow-y-auto">
                         {link.children.map((child, ci) => (
                           <li
                             key={ci}
-                            className="relative"
-                            onMouseEnter={() => setActiveDropdown2(ci)}
+                            className="flex flex-col"
+                            // Level 2: Mouse masuk ke area menu ini, langsung buka
+                            onMouseEnter={() => {
+                              if (child.children) setActiveDropdown2(ci);
+                              setActiveDropdown3(null); // Reset cucu
+                            }}
                           >
-                            {/* Label utama */}
                             {child.url ? (
                               <Link
-                                className="block px-6 py-2 text-sm w-full hover:bg-gray-200 hover:text-red-900"
+                                className="block px-6 py-2 text-sm hover:bg-gray-100"
                                 to={child.url}
                               >
                                 {child.label}
                               </Link>
                             ) : (
-                              <div
-                                className="flex justify-between items-center px-6 py-2 text-sm hover:bg-gray-200 cursor-pointer"
-                                onClick={() => toggleDropdown2(ci)}
-                              >
-                                <span>{child.label}</span>
-                                <i
-                                  className={`text-red-600 font-bold transition duration-300 fa-solid fa-chevron-${
+                              <div className="flex justify-between items-center px-6 py-2 text-sm hover:bg-gray-100">
+                                <span
+                                  className={
                                     activeDropdown2 === ci
-                                      ? "up"
-                                      : "down"
-                                  }`}
+                                      ? "font-bold text-red-600"
+                                      : ""
+                                  }
+                                >
+                                  {child.label}
+                                </span>
+                                <i
+                                  className={`fa-solid fa-chevron-${activeDropdown2 === ci ? "up" : "down"} text-[10px]`}
                                 />
                               </div>
                             )}
 
-                            {/* Dropdown Level 2 (semua ke bawah) */}
-                            {child.grandchildren &&
-                              activeDropdown2 === ci && (
-                                <ul className="absolute top-full left-0 bg-white shadow-lg rounded-lg py-2 min-w-[220px] z-50">
-                                  {child.grandchildren.map((gc, gci) => (
-                                    <li key={gci}>
+                            {/* Level 2 Content (Ke Bawah) */}
+                            {child.children && activeDropdown2 === ci && (
+                              <ul className="bg-gray-50 py-1">
+                                {child.children.map((gc, gci) => (
+                                  <li
+                                    key={gci}
+                                    className="flex flex-col"
+                                    // Level 3: Mouse masuk, buka cucu
+                                    onMouseEnter={() => {
+                                      if (gc.children) setActiveDropdown3(gci);
+                                    }}
+                                  >
+                                    {gc.url ? (
                                       <Link
+                                        className="block pl-10 pr-6 py-2 text-sm hover:bg-gray-200"
                                         to={gc.url}
-                                        className="block px-8 py-2 text-sm w-full hover:bg-gray-200 hover:text-red-900"
                                       >
                                         {gc.label}
                                       </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
+                                    ) : (
+                                      <div className="flex justify-between items-center pl-10 pr-6 py-2 text-sm hover:bg-gray-200">
+                                        <span>{gc.label}</span>
+                                        <i
+                                          className={`fa-solid fa-chevron-${activeDropdown3 === gci ? "up" : "down"} text-[10px]`}
+                                        />
+                                      </div>
+                                    )}
+
+                                    {/* Level 3 Content (Ke Bawah) */}
+                                    {gc.children && activeDropdown3 === gci && (
+                                      <ul className="bg-gray-100 py-1">
+                                        {gc.children.map((ggc, ggci) => (
+                                          <li key={ggci}>
+                                            <Link
+                                              className="block pl-14 pr-6 py-2 text-xs hover:bg-gray-300"
+                                              to={ggc.url}
+                                            >
+                                              {ggc.label}
+                                            </Link>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
                           </li>
                         ))}
                       </ul>
@@ -430,7 +505,7 @@ const Navbar = () => {
                             </div>
                           )}
 
-                          {child.grandchildren && activeDropdown2 === idx && (
+                          {child.children && activeDropdown2 === idx && (
                             <ul className="pl-4 mt-1 space-y-3 text-gray-700 py-2">
                               {child.grandchildren.map((gc, gci) => (
                                 <li key={gci}>
@@ -483,7 +558,6 @@ const Navbar = () => {
                       }`}
                     />
                   </div>
-
                   {menu.children && activeDropdown === idx && (
                     <ul className="pl-4 mt-1 space-y-3 text-gray-700 py-2">
                       {menu.children.map((child, ci) => (
@@ -503,12 +577,37 @@ const Navbar = () => {
                               />
                             </div>
                           )}
-
-                          {child.grandchildren && activeDropdown2 === ci && (
+                          {child.children && activeDropdown2 === ci && (
                             <ul className="pl-4 mt-1 space-y-3 text-gray-700 py-2">
-                              {child.grandchildren.map((gc, gci) => (
+                              {child.children.map((gc, gci) => (
                                 <li key={gci}>
-                                  <Link to={gc.url}>{gc.label}</Link>
+                                  {gc.url ? (
+                                    <Link to={gc.url}>{gc.label}</Link>
+                                  ) : (
+                                    <div
+                                      className="flex flex-row justify-between"
+                                      onClick={() => toggleDropdown3(gci)}
+                                    >
+                                      <span>{gc.label}</span>
+                                      <i
+                                        className={`text-red-600 font-bold transition duration-300 fa-solid fa-chevron-${
+                                          activeDropdown3 === idx
+                                            ? "up"
+                                            : "down"
+                                        }`}
+                                      />
+                                    </div>
+                                  )}
+
+                                  {gc.children && activeDropdown3 === gci && (
+                                    <ul className="pl-4 mt-1 space-y-3 text-gray-700 py-2">
+                                      {gc.children.map((ggc, ggci) => (
+                                        <li key={ggci}>
+                                          <Link to={ggc.url}>{ggc.label}</Link>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
                                 </li>
                               ))}
                             </ul>

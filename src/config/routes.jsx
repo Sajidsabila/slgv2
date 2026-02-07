@@ -226,6 +226,10 @@ const routes = createBrowserRouter([
      element: <StaticInitialTrainingFile  title="Visi Misi" filetitle="Visi Misi Materi" file="/file_modul_training/product_knowladge.pdf"/>
      },
       {
+      path: "initial-training/smi-value",
+     element: <StaticInitialTrainingFile  title="SMI VALUE" filetitle="SMI Value Materi" file="/file_modul_training/product_knowladge.pdf"/>
+     },
+      {
         path: "musical-skill/:id",
         element: <PageDynamicModulTraining />
       },

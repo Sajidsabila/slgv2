@@ -3,10 +3,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { urlLink } from "../../config/config";
 import axios from "axios";
-import autoLogout from "../../components/autoLogout";
 
 const MainAuth = () => {
-  const { login } = useAuth();
+  const { login, logout} = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [student, setStudent] = useState(true);
@@ -82,7 +81,7 @@ const handleSubmit = async (e) => {
     );
     
     const roles = userDetail.data.data.roles || [];
-    console.log(roles);
+
     const isStudent = roles.some((r) => r.role === "Student");
     const isTeacher = roles.some((r) => r.role === "Instructor");
     const isGuardian = roles.some((r) => r.role === "Student Guardian");
@@ -90,7 +89,7 @@ const handleSubmit = async (e) => {
     // Validasi Role
     if ((student && !isStudent  || (!student && isTeacher === false))) {
       setError("Login Failed");
-      autoLogout();
+      logout();
       setFormData({ email: "", password: "" });
       setIsLoading(false);
       return;
@@ -151,14 +150,14 @@ const handleSubmit = async (e) => {
               >
                 Student
               </button> 
-              {/* <button
+              <button
                 onClick={() => setStudent(false)}
                 className={`w-30 text-center py-2 md:py-3 font-semibold rounded-lg shadow-md transition hover:cursor-pointer ${
                   student === false ? "bg-red-800 text-white" : "bg-gray-200 text-gray-800"
                 }`}
               >
                 Teacher
-              </button>  */}
+              </button> 
             </div>
 
             {/* Error / Success Message */}

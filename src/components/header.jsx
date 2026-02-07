@@ -9,7 +9,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="relative w-full h-auto text-white flex flex-col items-center justify-center shadow-lg">
+    <header className="relative z-0 w-full h-auto text-white flex flex-col items-center justify-center shadow-lg">
 
       {/* Desktop view */}
       <div className="w-full md:flex hidden flex-row items-center justify-center  ">
@@ -41,7 +41,7 @@ const Header = () => {
       </div>
 
       {/* Footer */}
-      <div className="absolute bottom-0 left-0 w-full bg-red-800 h-16 font-semibold md:text-xl font-l flex items-center justify-center">
+      <div className="absolute bottom-0 left-0 w-full bg-red-800 h-16 font-semibold md:text-xl font-l flex items-center justify-center pointer-events-none">
         WELCOME TO SMI LEARNING SYSTEM
       </div>
     </header>
