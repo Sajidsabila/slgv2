@@ -1,8 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
-
-import {Middleware } from "../middleware/middelware.jsx";
-import { Guest} from "../middleware/isGuest.jsx";
+import { Middleware } from "../middleware/middelware.jsx";
+import { Guest } from "../middleware/isGuest.jsx";
 
 import Index from "../pages/Student/index.jsx";
 import PageProgramMateri from "../pages/pageProgramMateri.jsx";
@@ -55,109 +54,115 @@ import ModulTrainingForTeacher from "../pages/Admin/modulTrainingForTeacher.jsx"
 import DetailModulTrainingForTeacher from "../pages/Admin/detailModulTrainingForTeacher.jsx";
 import PageDynamicModulTraining from "../pages/Teacher/ModulTraining/pageDynamicModulTraining.jsx";
 
-
-
 const routes = createBrowserRouter([
-{
-  path: "/page-7",
-  element: <Page7 />
-},
-{
-  path: "/page-8",
-  element: <Page8 />
-},
-   
+  {
+    path: "/page-7",
+    element: <Page7 />,
+  },
+  {
+    path: "/page-8",
+    element: <Page8 />,
+  },
+
   {
     path: "/",
-    element: <Guest><MainAuth /></Guest>,
+    element: (
+      <Guest>
+        <MainAuth />
+      </Guest>
+    ),
   },
- {
-  path: "/set-password",
-  element: <Guest><SetStudentPassword /></Guest>
- },
-  { 
+  {
+    path: "/set-password",
+    element: (
+      <Guest>
+        <SetStudentPassword />
+      </Guest>
+    ),
+  },
+  {
     path: "update-password",
-    element: <UpdatePassword />
+    element: <UpdatePassword />,
   },
- {
-  path: "/student",
-  element:<Middleware allowed={["Student", "Student Guardian"]}/>,
-  children: [
-    {
-      path: "",
-      element: <Index />,
-    },
-    {
-    path: "parents-guide",
-    element: <ParentsGuide />
-  },
-    {
-      path: "program-materi/:id",
-      element: <PageProgramMateri />,
-    },
-    {
-      path: "class-course/:abbr_course",
-      element: <ClassCourseDetail />,
-    },
-    {
-      path: "students-report/history-absensi",
-      element: <HistoryAbsensi />,
-    },
-    {
-      path: "students-report/evaluasi-semester",
-      element: <EvaluasiSemesterStudent />
-    },
-    {
-      path: "students-report/fees",
-      element: <FeesList />
-    },
+  {
+    path: "/student",
+    element: <Middleware allowed={["Student", "Student Guardian"]} />,
+    children: [
+      {
+        path: "",
+        element: <Index />,
+      },
+      {
+        path: "parents-guide",
+        element: <ParentsGuide />,
+      },
+      {
+        path: "program-materi/:id",
+        element: <PageProgramMateri />,
+      },
+      {
+        path: "class-course/:abbr_course",
+        element: <ClassCourseDetail />,
+      },
+      {
+        path: "students-report/history-absensi",
+        element: <HistoryAbsensi />,
+      },
+      {
+        path: "students-report/evaluasi-semester",
+        element: <EvaluasiSemesterStudent />,
+      },
+      {
+        path: "students-report/fees",
+        element: <FeesList />,
+      },
 
-    {
-      path: "evaluasi-semester",
-      element: <EvaluasiSemester />
-    },
-    {
-      path: "students-report",
-      element: <StudentReport />
-    },
-    {
-      path: "learning-resources",
-      element: <LearningResources />
-    },
-    {
-      path: "learning-resources/kalender-academic",
-      element: <KalenderAkademik />
-    },
-    {
-      path: "learning-resources/program-edukasi",
-      element: <ProgramEdukasi />
-    },
-    {
-      path : "learning-resources/learning-materi",
-      element: <MateriPembelajaran />
-   },
-   {
-    path: "learning-resources/materi-pembelajaran/syllabus",
-    element: <Syllabus />
-   },
-   {
-    path: "learning-resources/materi-pembelajaran/exam-speciment",
-    element: <ExamSpeciment />
-   },
-     {
-    path: "learning-resources/materi-pembelajaran/exam-speciment/:id",
-    element: <DetailLearningMateri/>
-   },
-   {
-    path: "learning-resources/materi-pembelajaran/syllabus/:id",
-    element: <DetailLearningMateri />
-   },
-    {
-      path: "profile",
-      element: <ProfileStudentsFrontend />
-    },
-   ]
-},
+      {
+        path: "evaluasi-semester",
+        element: <EvaluasiSemester />,
+      },
+      {
+        path: "students-report",
+        element: <StudentReport />,
+      },
+      {
+        path: "learning-resources",
+        element: <LearningResources />,
+      },
+      {
+        path: "learning-resources/kalender-academic",
+        element: <KalenderAkademik />,
+      },
+      {
+        path: "learning-resources/program-edukasi",
+        element: <ProgramEdukasi />,
+      },
+      {
+        path: "learning-resources/learning-materi",
+        element: <MateriPembelajaran />,
+      },
+      {
+        path: "learning-resources/materi-pembelajaran/syllabus",
+        element: <Syllabus />,
+      },
+      {
+        path: "learning-resources/materi-pembelajaran/exam-speciment",
+        element: <ExamSpeciment />,
+      },
+      {
+        path: "learning-resources/materi-pembelajaran/exam-speciment/:id",
+        element: <DetailLearningMateri />,
+      },
+      {
+        path: "learning-resources/materi-pembelajaran/syllabus/:id",
+        element: <DetailLearningMateri />,
+      },
+      {
+        path: "profile",
+        element: <ProfileStudentsFrontend />,
+      },
+    ],
+  },
   {
     path: "/login",
     element: (
@@ -168,90 +173,117 @@ const routes = createBrowserRouter([
   },
   {
     path: "/teacher",
-    element:<Middleware allowed={["Instructor"]}/>,
-    children:[
-      {path: "", element: <IndexTeacher />},
-       {
-      path: "learning-resources/kalender-academic",
-      element: <KalenderAkademik />
-    },
-    {
-      path: "learning-resources/program-edukasi",
-      element: <ProgramEdukasi />
-    },
+    element: <Middleware allowed={["Instructor"]} />,
+    children: [
+      { path: "", element: <IndexTeacher /> },
+      {
+        path: "learning-resources/kalender-academic",
+        element: <KalenderAkademik />,
+      },
+      {
+        path: "learning-resources/program-edukasi",
+        element: <ProgramEdukasi />,
+      },
 
-    {
-      path: "learning-resources/slg",
-      element: <SlgTeacher />
-    },
-    { 
-      path: "learning-resources/lhb",
-      element: <LhbTeacher />
-    },
-    {
-      path: "learning-resources/syllabus",
-      element: <SyllabusTeacher/>
-    },
-    { 
-      path: "learning-resources/exam-speciment",
-      element: <ExamSpecimentForTeacher />
-    },
-    {
-      path: "learning-resources/syllabus/:id",
-      element: <DetailLearningMateriTeacher/>
-    },
-     {
-      path: "learning-resources/exam-speciment/:id",
-      element: <DetailLearningMateriTeacher/>
-    },
-     {
-      path: "learning-resources/slg/:id",
-      element: <DetailLearningMateriTeacher/>
-    },
       {
-      path: "learning-resources/lhb/:id",
-      element: <DetailLearningMateriTeacher/>
-    },
+        path: "learning-resources/slg",
+        element: <SlgTeacher />,
+      },
+      {
+        path: "learning-resources/lhb",
+        element: <LhbTeacher />,
+      },
+      {
+        path: "learning-resources/syllabus",
+        element: <SyllabusTeacher />,
+      },
+      {
+        path: "learning-resources/exam-speciment",
+        element: <ExamSpecimentForTeacher />,
+      },
+      {
+        path: "learning-resources/syllabus/:id",
+        element: <DetailLearningMateriTeacher />,
+      },
+      {
+        path: "learning-resources/exam-speciment/:id",
+        element: <DetailLearningMateriTeacher />,
+      },
+      {
+        path: "learning-resources/slg/:id",
+        element: <DetailLearningMateriTeacher />,
+      },
+      {
+        path: "learning-resources/lhb/:id",
+        element: <DetailLearningMateriTeacher />,
+      },
 
-     {
-      path: "initial-training/product-knowledge",
-      element: <StaticInitialTrainingFile  title="Product Knowledge" filetitle="Program Knowledge Materi" file="/file_modul_training/product_knowladge.pdf"/>
-     },
       {
-      path: "initial-training/company-profile",
-     element: <StaticInitialTrainingFile  title="Company Profile" filetitle="Company Profile Materi" file="/file_modul_training/product_knowladge.pdf"/>
-     },
-     {
-      path: "initial-training/visi-misi",
-     element: <StaticInitialTrainingFile  title="Visi Misi" filetitle="Visi Misi Materi" file="/file_modul_training/product_knowladge.pdf"/>
-     },
+        path: "initial-training/product-knowledge",
+        element: (
+          <StaticInitialTrainingFile
+            title="Product Knowledge"
+            filetitle="Program Knowledge Materi"
+            file="/file_modul_training/product_knowladge.pdf"
+          />
+        ),
+      },
       {
-      path: "initial-training/smi-value",
-     element: <StaticInitialTrainingFile  title="SMI VALUE" filetitle="SMI Value Materi" file="/file_modul_training/product_knowladge.pdf"/>
-     },
+        path: "initial-training/company-profile",
+        element: (
+          <StaticInitialTrainingFile
+            title="Company Profile"
+            filetitle="Company Profile Materi"
+            file="/file_modul_training/product_knowladge.pdf"
+          />
+        ),
+      },
+      {
+        path: "initial-training/visi-misi",
+        element: (
+          <StaticInitialTrainingFile
+            title="Visi Misi"
+            filetitle="Visi Misi Materi"
+            file="/file_modul_training/product_knowladge.pdf"
+          />
+        ),
+      },
+      {
+        path: "initial-training/smi-value",
+        element: (
+          <StaticInitialTrainingFile
+            title="SMI VALUE"
+            filetitle="SMI Value Materi"
+            file="/file_modul_training/product_knowladge.pdf"
+          />
+        ),
+      },
+
+      {
+        path: "initial-training/:id",
+        element: <PageDynamicModulTraining />,
+      },
       {
         path: "musical-skill/:id",
-        element: <PageDynamicModulTraining />
+        element: <PageDynamicModulTraining />,
       },
       {
         path: "technology-skill/:id",
-        element: <PageDynamicModulTraining />
+        element: <PageDynamicModulTraining />,
       },
       {
         path: "head-education-modul/:id",
-        element: <PageDynamicModulTraining />
+        element: <PageDynamicModulTraining />,
       },
       {
         path: "pedagogy-skill/:id",
-        element: <PageDynamicModulTraining />
-      }
-
-
-    ]
+        element: <PageDynamicModulTraining />,
+      },
+    ],
   },
   {
     path: "/admin",
-    element: <Middleware allowed={["LMS User"]}/>,
+    element: <Middleware allowed={["LMS User"]} />,
     children: [
       { path: "", element: <Dashboard /> },
       { path: "profile", element: <Profile /> },
@@ -260,78 +292,229 @@ const routes = createBrowserRouter([
       { path: "evaluasi-semester", element: <EvaluasiSemester /> },
       { path: "evaluasi-semester/:id", element: <DetailEvaluasiSemester /> },
       { path: "*", element: <Page404 /> },
-      {path: "book-menu", element: <CalenderAcademic url="/admin/book-menu" title="Book Menu" filter="Book Menu"/>},
-      {path: "book-menu/:id", element: <DetailBookMenu url="/admin/book-menu"/>},
-      {path: "calender-academic", element: <CalenderAcademic url="/admin/calender-academic" title="Calendar Academic" filter="Calendar Academic"/>},
-      {path: "calender-academic/:id", element: <DetailBookMenu url="/admin/calender-academic"/>},
-      {path: "modul-training", element: <CalenderAcademic url="/admin/modul-training" title="Modul Training" filter="Modul Training"/>},
-      {path: "modul-training/:id", element: <DetailBookMenu url="/admin/modul-training"/>},
-      {path: "program-materi-syllabus", element: <ProgramMateriSyllabus />},
-      {path: "program-materi-exam-speciment", element: <ProgramMateriExamSpeciment/>},
-      {path: "program-materi-LHB", element: <ProgramMateriLhb/>},
-      {path: "program-materi-SLG", element: <ProgramMateriSlg />},
-      {path: "modul-training-teacher/initial-training", element: <ModulTrainingForTeacher
-        valueSelect={[
-            { value: "Syllabus Overview", label: "Syllabus Overview"}, 
-            { value: "IMTE", label: "IMTE"}, 
-            { value: "Classroom SOP", label: "Classroom SOP"}
-          ]}
-          filteredType={[
-            "Syllabus Overview", "IMTE", "Classroom SOP"
-          ]}
-          url="initial-training"/>},
-      {path: "modul-training-teacher/musical_skill", element: <ModulTrainingForTeacher 
-        valueSelect={[
-          {value: "Playing", label: "Playing"},
-          {value: "Imrovising", label: "Improvising"},
-          {value: "Listening", label: "Listening"},
-          {value: "Reading", label: "Reading"},
-          {value: "Singing", label: "Singing"},
-          {value: "Instrument Knowledge", label: "Instrument Knowledge"},
-          
-        ]}
-        filteredType={[
-            "Playing", "Improvising", "Listening", "Reading", "Singing", "Instrument Knowledge", "Classroom SOP"
-          ]}
-        url="musical-skill"/>},
+      {
+        path: "book-menu",
+        element: (
+          <CalenderAcademic
+            url="/admin/book-menu"
+            title="Book Menu"
+            filter="Book Menu"
+          />
+        ),
+      },
+      {
+        path: "book-menu/:id",
+        element: <DetailBookMenu url="/admin/book-menu" />,
+      },
+      {
+        path: "calender-academic",
+        element: (
+          <CalenderAcademic
+            url="/admin/calender-academic"
+            title="Calendar Academic"
+            filter="Calendar Academic"
+          />
+        ),
+      },
+      {
+        path: "calender-academic/:id",
+        element: <DetailBookMenu url="/admin/calender-academic" />,
+      },
+      {
+        path: "modul-training",
+        element: (
+          <CalenderAcademic
+            url="/admin/modul-training"
+            title="Modul Training"
+            filter="Modul Training"
+          />
+        ),
+      },
+      {
+        path: "modul-training/:id",
+        element: <DetailBookMenu url="/admin/modul-training" />,
+      },
+      { path: "program-materi-syllabus", element: <ProgramMateriSyllabus /> },
+      {
+        path: "program-materi-exam-speciment",
+        element: <ProgramMateriExamSpeciment />,
+      },
+      { path: "program-materi-LHB", element: <ProgramMateriLhb /> },
+      { path: "program-materi-SLG", element: <ProgramMateriSlg /> },
+      {
+        path: "modul-training-teacher/initial-training",
+        element: (
+          <ModulTrainingForTeacher
+            valueSelect={[
+              { value: "Syllabus Overview", label: "Syllabus Overview" },
+              { value: "IMTE", label: "IMTE" },
+              { value: "Classroom SOP", label: "Classroom SOP" },
+            ]}
+            filteredType={["Syllabus Overview", "IMTE", "Classroom SOP"]}
+            url="initial-training"
+          />
+        ),
+      },
+      {
+        path: "modul-training-teacher/musical_skill",
+        element: (
+          <ModulTrainingForTeacher
+            valueSelect={[
+              { value: "Playing", label: "Playing" },
+              { value: "Imrovising", label: "Improvising" },
+              { value: "Listening", label: "Listening" },
+              { value: "Reading", label: "Reading" },
+              { value: "Singing", label: "Singing" },
+              { value: "Instrument Knowledge", label: "Instrument Knowledge" },
+            ]}
+            filteredType={[
+              "Playing",
+              "Improvising",
+              "Listening",
+              "Reading",
+              "Singing",
+              "Instrument Knowledge",
+              "Classroom SOP",
+            ]}
+            url="musical-skill"
+          />
+        ),
+      },
 
+      {
+        path: "modul-training-teacher/technology-skill",
+        element: (
+          <ModulTrainingForTeacher
+            valueSelect={[
+              { value: "Beginner", label: "Beginner" },
+              { value: "Intermediate", label: "Intermediate" },
+              { value: "Advanced", label: "Advanced" },
+            ]}
+            filteredType={["Beginner", "Intermediate", "Advanced"]}
+            url="technology-skill"
+          />
+        ),
+      },
+      {
+        path: "modul-training-teacher/pedagogy-skill",
+        element: (
+          <ModulTrainingForTeacher
+            valueSelect={[{ value: "Pedagogy Skill", label: "Pedagogy Skill" }]}
+            filteredType={["Pedagogy Skill"]}
+            url="pedagogy-skill"
+          />
+        ),
+      },
 
-      {path: "modul-training-teacher/technology-skill", element: <ModulTrainingForTeacher
-        valueSelect={[
-          {value: "Beginner", label: "Beginner"},
-          {value: "Intermediate", label: "Intermediate"},
-          {value: "Advanced", label: "Advanced"},
-        ]} 
-        
-      filteredType={["Beginner", "Intermediate", "Advanced"]}
-      url="technology-skill"/>},
-      {path: "modul-training-teacher/pedagogy-skill", element: <ModulTrainingForTeacher valueSelect={[{value: "Pedagogy Skill", label: "Pedagogy Skill"}]} 
-        filteredType={["Pedagogy Skill"]}
-        url="pedagogy-skill"/>},
+      {
+        path: "modul-training-teacher/head-education-modul",
+        element: (
+          <ModulTrainingForTeacher
+            valueSelect={[
+              { value: "Head Education Modul", label: "Head Education Modul" },
+            ]}
+            filteredType={["Head Education Modul"]}
+            url="head-education-modul"
+          />
+        ),
+      },
+      {
+        path: "modul-training-teacher/initial-training/:id",
+        element: (
+          <DetailModulTrainingForTeacher
+            back="/admin/modul-training-teacher/initial-training"
+            title="Detail Modul Training Initial Training"
+          />
+        ),
+      },
 
-      {path: "modul-training-teacher/head-education-modul", element: <ModulTrainingForTeacher valueSelect={[{value: "Head Education Modul", label: "Head Education Modul"}]} 
-        filteredType={["Head Education Modul"]} 
-        url="head-education-modul"
-      />},
-      {path: "modul-training-teacher/initial-training/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/initial-training" title="Detail Modul Training Initial Training" />},
-      
-      {path: "modul-training-teacher/musical-skill/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/musical_skill" title="Detail Modul Training Musical Skill" />},
-      {path: "modul-training-teacher/technology-skill/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/technology-skill" title="Detail Modul Training Technology Skill" />},
-      {path: "modul-training-teacher/pedagogy-skill/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/pedagogy-skill" title="Detail Modul Training Pedagogy Skill" />},
-      {path: "modul-training-teacher/head-education-modul/:id", element: <DetailModulTrainingForTeacher back="/admin/modul-training-teacher/head-education-modul" title="Detail Modul Training Head Education Modul" />},
+      {
+        path: "modul-training-teacher/musical-skill/:id",
+        element: (
+          <DetailModulTrainingForTeacher
+            back="/admin/modul-training-teacher/musical_skill"
+            title="Detail Modul Training Musical Skill"
+          />
+        ),
+      },
+      {
+        path: "modul-training-teacher/technology-skill/:id",
+        element: (
+          <DetailModulTrainingForTeacher
+            back="/admin/modul-training-teacher/technology-skill"
+            title="Detail Modul Training Technology Skill"
+          />
+        ),
+      },
+      {
+        path: "modul-training-teacher/pedagogy-skill/:id",
+        element: (
+          <DetailModulTrainingForTeacher
+            back="/admin/modul-training-teacher/pedagogy-skill"
+            title="Detail Modul Training Pedagogy Skill"
+          />
+        ),
+      },
+      {
+        path: "modul-training-teacher/head-education-modul/:id",
+        element: (
+          <DetailModulTrainingForTeacher
+            back="/admin/modul-training-teacher/head-education-modul"
+            title="Detail Modul Training Head Education Modul"
+          />
+        ),
+      },
 
       {
         path: "program-materi-syllabus/:id",
-        element: <DetailProgramMateri filetype={["mp4", "pdf"]} type="Syllabus" title="Detail Program Materi Syllabus" back="/admin/program-materi-syllabus"/> ,},
-        {path: "program-materi-exam-speciment/:id", element: <DetailProgramMateri filetype={["mp4", "pdf"]} type="Exam Speciment" title="Detail Program Materi Exam Speciment" back="/admin/program-materi-exam-speciment"/>},
-        {path: "program-materi-LHB/:id", element: <DetailProgramMateri filetype={["mp4", "pdf"]} type="LHB" title="Detail Program Materi LHB" back="/admin/program-materi-LHB"/>},
-        {path: "program-materi-SLG/:id", element: <DetailProgramMateri filetype={["mp4", "pdf"]} type="SLG" title="Detail Program Materi SLG" back="/admin/program-materi-SLG"/>},
+        element: (
+          <DetailProgramMateri
+            filetype={["mp4", "pdf"]}
+            type="Syllabus"
+            title="Detail Program Materi Syllabus"
+            back="/admin/program-materi-syllabus"
+          />
+        ),
+      },
+      {
+        path: "program-materi-exam-speciment/:id",
+        element: (
+          <DetailProgramMateri
+            filetype={["mp4", "pdf"]}
+            type="Exam Speciment"
+            title="Detail Program Materi Exam Speciment"
+            back="/admin/program-materi-exam-speciment"
+          />
+        ),
+      },
+      {
+        path: "program-materi-LHB/:id",
+        element: (
+          <DetailProgramMateri
+            filetype={["mp4", "pdf"]}
+            type="LHB"
+            title="Detail Program Materi LHB"
+            back="/admin/program-materi-LHB"
+          />
+        ),
+      },
+      {
+        path: "program-materi-SLG/:id",
+        element: (
+          <DetailProgramMateri
+            filetype={["mp4", "pdf"]}
+            type="SLG"
+            title="Detail Program Materi SLG"
+            back="/admin/program-materi-SLG"
+          />
+        ),
+      },
     ],
   },
   {
-    path: "*", 
-    element: <Page404 />
-  }
+    path: "*",
+    element: <Page404 />,
+  },
 ]);
 
 export default routes;

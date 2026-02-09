@@ -112,15 +112,15 @@ const Navbar = () => {
                 },
                 {
                   label: "Syllabus Overview",
-                  url: "/teacher/initial-training/smi-learning-system-concept/smi-process",
+                  url: "/teacher/initial-training/Syllabus Overview",
                 },
                 {
                   label: "IMTE",
-                  url: "/teacher/initial-training/smi-learning-system-concept/smi-outcome",
+                  url: "/teacher/initial-training/IMTE",
                 },
                 {
                   label: "Classroom SOP",
-                  url: "/teacher/initial-training/smi-learning-system-concept/smi-outcome",
+                  url: "/teacher/initial-training/Classroom SOP",
                 },
               ],
             },
@@ -188,6 +188,12 @@ const Navbar = () => {
   const toggleDropdown3 = (i) => {
     setActiveDropdown3(activeDropdown3 === i ? null : i);
   };
+
+  const closeAllDropdown = () => {
+    setActiveDropdown(null);
+    setActiveDropdown2(null);
+    setActiveDropdown3(null);
+  };
   return (
     <nav className="bg-white shadow-lg fixed w-full z-[200]">
       <div className="container mx-auto flex flex-col justify-between items-center py-3">
@@ -253,7 +259,7 @@ const Navbar = () => {
                     <span>{link.text}</span>
 
                     {link.children && activeDropdown === index && (
-                      <ul className="absolute top-full left-0 bg-white shadow-lg py-2 rounded-lg min-w-[260px] border border-gray-300 z-[9999] max-h-[80vh] overflow-y-auto">
+                      <ul className="absolute top-full left-0 bg-white shadow-lg py-2 rounded-lg min-w-[260px] border border-gray-300 z-[9999] ">
                         {link.children.map((child, ci) => (
                           <li
                             key={ci}
@@ -268,6 +274,7 @@ const Navbar = () => {
                               <Link
                                 className="block px-6 py-2 text-sm hover:bg-gray-100"
                                 to={child.url}
+                                onClick={closeAllDropdown}
                               >
                                 {child.label}
                               </Link>
@@ -304,6 +311,7 @@ const Navbar = () => {
                                       <Link
                                         className="block pl-10 pr-6 py-2 text-sm hover:bg-gray-200"
                                         to={gc.url}
+                                        onClick={closeAllDropdown}
                                       >
                                         {gc.label}
                                       </Link>
@@ -324,6 +332,7 @@ const Navbar = () => {
                                             <Link
                                               className="block pl-14 pr-6 py-2 text-xs hover:bg-gray-300"
                                               to={ggc.url}
+                                              onClick={closeAllDropdown}
                                             >
                                               {ggc.label}
                                             </Link>
@@ -358,7 +367,6 @@ const Navbar = () => {
                   <li
                     key={index}
                     className="relative hover:text-red-900 cursor-pointer px-2 py-1"
-                    // Level 1: Begitu mouse masuk, buka dropdown ini dan tutup level di bawahnya
                     onMouseEnter={() => {
                       setActiveDropdown(index);
                       setActiveDropdown2(null);
@@ -368,21 +376,25 @@ const Navbar = () => {
                     <span>{link.text}</span>
 
                     {link.children && activeDropdown === index && (
-                      <ul className="absolute top-full left-0 bg-white shadow-lg py-2 rounded-lg min-w-[260px] border border-gray-300 z-[9999] max-h-[80vh] overflow-y-auto">
+                      <ul className="absolute top-full left-0 bg-white shadow-lg py-2 rounded-lg min-w-[260px] border border-gray-300 z-[9999] ">
                         {link.children.map((child, ci) => (
                           <li
                             key={ci}
                             className="flex flex-col"
-                            // Level 2: Mouse masuk ke area menu ini, langsung buka
                             onMouseEnter={() => {
-                              if (child.children) setActiveDropdown2(ci);
-                              setActiveDropdown3(null); // Reset cucu
+                              if (child.children) {
+                                setActiveDropdown2(ci);
+                              } else {
+                                setActiveDropdown2(null);
+                              }
+                              setActiveDropdown3(null);
                             }}
                           >
                             {child.url ? (
                               <Link
                                 className="block px-6 py-2 text-sm hover:bg-gray-100"
                                 to={child.url}
+                                onClick={closeAllDropdown}
                               >
                                 {child.label}
                               </Link>
@@ -403,22 +415,25 @@ const Navbar = () => {
                               </div>
                             )}
 
-                            {/* Level 2 Content (Ke Bawah) */}
+                            {/* Level 2 Content */}
                             {child.children && activeDropdown2 === ci && (
                               <ul className="bg-gray-50 py-1">
                                 {child.children.map((gc, gci) => (
                                   <li
                                     key={gci}
                                     className="flex flex-col"
-                                    // Level 3: Mouse masuk, buka cucu
                                     onMouseEnter={() => {
-                                      if (gc.children) setActiveDropdown3(gci);
+                                      // Level 3 terbuka
+                                      if (gc.children) {
+                                        setActiveDropdown3(gci);
+                                      }
                                     }}
                                   >
                                     {gc.url ? (
                                       <Link
                                         className="block pl-10 pr-6 py-2 text-sm hover:bg-gray-200"
                                         to={gc.url}
+                                        onClick={closeAllDropdown}
                                       >
                                         {gc.label}
                                       </Link>
@@ -431,7 +446,7 @@ const Navbar = () => {
                                       </div>
                                     )}
 
-                                    {/* Level 3 Content (Ke Bawah) */}
+                                    {/* Level 3 Content */}
                                     {gc.children && activeDropdown3 === gci && (
                                       <ul className="bg-gray-100 py-1">
                                         {gc.children.map((ggc, ggci) => (
@@ -439,6 +454,7 @@ const Navbar = () => {
                                             <Link
                                               className="block pl-14 pr-6 py-2 text-xs hover:bg-gray-300"
                                               to={ggc.url}
+                                              onClick={closeAllDropdown}
                                             >
                                               {ggc.label}
                                             </Link>
