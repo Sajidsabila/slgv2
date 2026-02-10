@@ -3,9 +3,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { urlLink } from "../../config/config";
 import axios from "axios";
+import axiosConfig from "../../config/axiosConfig";
 
 const MainAuth = () => {
-  const { login, logout} = useAuth();
+  const { login, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [student, setStudent] = useState(true);
@@ -27,7 +28,6 @@ const MainAuth = () => {
     }
   }, [limitRequest]);
 
-    
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({
@@ -36,88 +36,70 @@ const MainAuth = () => {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
-  setError(null);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
-  if (limitRequest >= 5) {
-    setError("Terlalu banyak percobaan login. Coba lagi setelah 1 menit.");
-    setIsLoading(false);
-    return;
-  }
-
-  setLimitRequest((prev) => prev + 1);
-
-  if (!formData.email || !formData.password) {
-    setIsLoading(false);
-    setError("Email dan Password tidak boleh kosong");
-    return;
-  }
-  try {
-    const response = await axios.post(
-      `${urlLink.url}/api/method/login`,
-      {
-        usr: formData.email,
-        pwd: formData.password,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      }
-    );
-
-    const loggedUser = await axios.get(
-      `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
-      { withCredentials: true }
-    );
-
-    // 3. Get user detail
-    const userDetail = await axios.get(
-      `${urlLink.url}/api/resource/User/${loggedUser.data.message}`,
-      { withCredentials: true }
-    );
-    
-    const roles = userDetail.data.data.roles || [];
-
-    const isStudent = roles.some((r) => r.role === "Student");
-    const isTeacher = roles.some((r) => r.role === "Instructor");
-    const isGuardian = roles.some((r) => r.role === "Student Guardian");
-
-    // Validasi Role
-    if ((student && !isStudent  || (!student && isTeacher === false))) {
-      setError("Login Failed");
-      logout();
-      setFormData({ email: "", password: "" });
+    if (limitRequest >= 5) {
+      setError("Terlalu banyak percobaan login. Coba lagi setelah 1 menit.");
       setIsLoading(false);
       return;
     }
 
-    const getUser = {
-      full_name: userDetail.data.full_name,
-      user_image: userDetail.data.user_image,
-      email: userDetail.data.email,
-      roles: userDetail.data.roles,
-      mobile_no: userDetail.data.mobile_no,
-    };
+    setLimitRequest((prev) => prev + 1);
 
-    login(getUser);
+    if (!formData.email || !formData.password) {
+      setIsLoading(false);
+      setError("Email dan Password tidak boleh kosong");
+      return;
+    }
+    try {
+      const response = await axiosConfig.post("/api/method/login", {
+        usr: formData.email,
+        pwd: formData.password,
+      });
 
-    // Redirect sesuai role
-    if (isStudent ) navigate("/student");
-    else if (isTeacher)  navigate("/teacher");
-  
+      // 3. Get user detail
+      const userDetail = await axiosConfig.get(
+        `/api/resource/User/${formData.email}`,
+      );
 
-  } catch (err) {
-    console.error(err);
-    setError(err.response.data.message || "Terjadi kesalahan saat login");
-  } finally {
-    setIsLoading(false);
-  }
-};
+      const roles = userDetail.data.data.roles || [];
 
+      const isStudent = roles.some((r) => r.role === "Student");
+      const isTeacher = roles.some((r) => r.role === "Instructor");
+      const isGuardian = roles.some((r) => r.role === "Student Guardian");
+
+      // Validasi Role
+      if ((student && !isStudent) || (!student && isTeacher === false)) {
+        setError("Login Failed");
+        logout();
+        setFormData({ email: "", password: "" });
+        setIsLoading(false);
+        return;
+      }
+
+      const getUser = {
+        full_name: userDetail.data.full_name,
+        user_image: userDetail.data.user_image,
+        email: userDetail.data.email,
+        roles: userDetail.data.roles,
+        mobile_no: userDetail.data.mobile_no,
+      };
+
+      login(getUser);
+
+      // Redirect sesuai role
+      if (isStudent) navigate("/student");
+      else if (isTeacher) navigate("/teacher");
+    } catch (err) {
+      console.error(err);
+      setError(err.response.data.message || "Terjadi kesalahan saat login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="relative min-h-screen w-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat bg-[url(/assets/smile_image/background-page-login.png)] font-['Poppins']">
@@ -126,7 +108,8 @@ const handleSubmit = async (e) => {
           {/* Kiri: Teks Welcome */}
           <div className="lg:block hidden text-center lg:text-left text-white py-2">
             <h1 className="text-4xl md:text-5xl font-bold">
-              Welcome to <br /> <span className="">SMI Learning</span> <br /> System
+              Welcome to <br /> <span className="">SMI Learning</span> <br />{" "}
+              System
             </h1>
           </div>
 
@@ -142,22 +125,26 @@ const handleSubmit = async (e) => {
 
             {/* Switch Role */}
             <div className="flex flex-wrap gap-3 mb-8">
-               <button
+              <button
                 onClick={() => setStudent(true)}
                 className={`w-30 text-center py-2 md:py-3 font-semibold rounded-lg shadow-md transition hover:cursor-pointer ${
-                  student === true ? "bg-red-800 text-white" : "bg-gray-200 text-gray-800"
+                  student === true
+                    ? "bg-red-800 text-white"
+                    : "bg-gray-200 text-gray-800"
                 }`}
               >
                 Student
-              </button> 
+              </button>
               <button
                 onClick={() => setStudent(false)}
                 className={`w-30 text-center py-2 md:py-3 font-semibold rounded-lg shadow-md transition hover:cursor-pointer ${
-                  student === false ? "bg-red-800 text-white" : "bg-gray-200 text-gray-800"
+                  student === false
+                    ? "bg-red-800 text-white"
+                    : "bg-gray-200 text-gray-800"
                 }`}
               >
                 Teacher
-              </button> 
+              </button>
             </div>
 
             {/* Error / Success Message */}
@@ -175,7 +162,9 @@ const handleSubmit = async (e) => {
             {/* Form Login */}
             <form onSubmit={handleSubmit}>
               <div className="mb-5">
-                <label className="block font-semibold mb-2 text-gray-800">Email / Username</label>
+                <label className="block font-semibold mb-2 text-gray-800">
+                  Email / Username
+                </label>
                 <input
                   type="text"
                   id="email"
@@ -188,7 +177,9 @@ const handleSubmit = async (e) => {
               </div>
 
               <div className="mb-6">
-                <label className="block font-semibold mb-2 text-gray-800">Password</label>
+                <label className="block font-semibold mb-2 text-gray-800">
+                  Password
+                </label>
                 <input
                   type="password"
                   id="password"
@@ -198,18 +189,17 @@ const handleSubmit = async (e) => {
                   className="w-full py-3 px-4 rounded-lg shadow-md border border-gray-300 focus:ring-2 focus:ring-red-700 focus:outline-none"
                 />
               </div>
-            {student && (
-                 <p className="text-sm mb-6">
-                Lupa Password?{" "}
-                <Link
-                  to="/set-password"
-                  className="text-red-800 hover:cursor-pointer hover:text-red-600"
-                >
-                  Klik disini
-                </Link>
-              </p>
-            )}
-             
+              {student && (
+                <p className="text-sm mb-6">
+                  Lupa Password?{" "}
+                  <Link
+                    to="/set-password"
+                    className="text-red-800 hover:cursor-pointer hover:text-red-600"
+                  >
+                    Klik disini
+                  </Link>
+                </p>
+              )}
 
               <div className="relative">
                 <button

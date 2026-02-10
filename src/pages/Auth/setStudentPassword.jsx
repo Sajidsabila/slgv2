@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { convertDate } from "../../helper/helper";
+import { convertDate, sanitizeText } from "../../helper/helper";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { authStudent } from "../../api/apiMethod";
 const SetStudentPassword = () => {
-const location = useLocation().pathname;
+  const location = useLocation().pathname;
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     id_siswa: "",
@@ -27,69 +27,73 @@ const location = useLocation().pathname;
     });
   };
 
-const handleCheckStudent = async (e) => {
-  e.preventDefault();
+  const handleCheckStudent = async (e) => {
+    e.preventDefault();
 
-  if (!formData.id_siswa || !formData.tanggal_lahir) {
-    setError("ID Siswa dan Tanggal Lahir harus diisi");
-    return;
-  }
-
-  if (limitRequest >= 5) {
-    setError("Terlalu banyak percobaan login. Coba lagi dalam 1 menit.");
-    return;
-  }
-
-  try {
-    setLoading(true);
-    setError("");
-
-    const data = {
-      name: "0062-" + formData.id_siswa.trim(),
-      date_of_birth: convertDate(formData.tanggal_lahir),
-    };
-
-    const response = await authStudent(data);
-
-    const { status, message } = response.message || {};
-
-    if (status === "failed" || status === "out") {
-      setError(message || "Login gagal atau siswa tidak aktif");
-      setFormData({
-        id_siswa: formData.id_siswa,
-        tanggal_lahir: "",
-      });
-      setLimitRequest((prev) => prev + 1);
+    if (!formData.id_siswa || !formData.tanggal_lahir) {
+      setError("ID Siswa dan Tanggal Lahir harus diisi");
       return;
     }
 
-    const { email, reset_key, username} = response;
+    if (limitRequest >= 5) {
+      setError("Terlalu banyak percobaan login. Coba lagi dalam 1 menit.");
+      return;
+    }
 
-    sessionStorage.setItem("username", username);
-    sessionStorage.setItem("key", reset_key);
-    sessionStorage.setItem("email", email);
-   
+    try {
+      setLoading(true);
+      setError("");
 
-    navigate("/update-password");
-  } catch (err) {
-    setError("Terjadi kesalahan: " + err.message);
-    console.error(err);
-  } finally {
-    setLoading(false);
-  }
-};
-    return (
+      const data = {
+        name: "0062-" + sanitizeText(formData.id_siswa.trim()),
+        date_of_birth: convertDate(formData.tanggal_lahir),
+      };
+
+      const response = await authStudent(data);
+
+      const { status, message } = response.message || {};
+
+      if (status === "failed" || status === "out") {
+        setError(message || "Login gagal atau siswa tidak aktif");
+        setFormData({
+          id_siswa: formData.id_siswa,
+          tanggal_lahir: "",
+        });
+        setLimitRequest((prev) => prev + 1);
+        return;
+      }
+
+      const { email, reset_key, username } = response;
+
+      sessionStorage.setItem("username", username);
+      sessionStorage.setItem("key", reset_key);
+      sessionStorage.setItem("email", email);
+
+      navigate("/update-password");
+    } catch (err) {
+      setError("Terjadi kesalahan: " + err.message);
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
     <div className="relative min-h-screen w-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat bg-[url(/assets/smile_image/background-page-login.png)] font-['Poppins']">
       <div className="container mx-auto px-4 py-10">
         <div className="flex flex-col lg:flex-row justify-between items-center gap-10 md:gap-7">
-      
-
           <div className="lg:block hidden text-center lg:text-left text-white py-2">
-            <h1 className="text-4xl md:text-5xl font-bold">Welcome to <br /> <span className="">SMI Learning</span> <br /> System</h1>
+            <h1 className="text-4xl md:text-5xl font-bold">
+              Welcome to <br /> <span className="">SMI Learning</span> <br />{" "}
+              System
+            </h1>
           </div>
-          <div className="lg:hidden text-white font-bold text-xl">Welcome to SMI Learning System</div>
+          <div className="lg:hidden text-white font-bold text-xl">
+            Welcome to SMI Learning System
+          </div>
           <div className="w-full lg:w-1/2 bg-white/90 backdrop-blur-md rounded-xl shadow-2xl p-6 md:p-10">
-            <h2 className="font-bold text-2xl md:text-3xl mb-6 text-gray-800">Forgot Password</h2>
+            <h2 className="font-bold text-2xl md:text-3xl mb-6 text-gray-800">
+              Forgot Password
+            </h2>
 
             {/* <div className="flex flex-wrap gap-3 mb-8">
               <Link
@@ -111,12 +115,16 @@ const handleCheckStudent = async (e) => {
             </div> */}
 
             {error && (
-              <p className="text-red-600 font-medium text-center mb-4">{error}</p>
+              <p className="text-red-600 font-medium text-center mb-4">
+                {error}
+              </p>
             )}
 
             <form onSubmit={handleCheckStudent}>
               <div className="mb-5">
-                <label className="block font-semibold mb-2 text-gray-800">Student ID</label>
+                <label className="block font-semibold mb-2 text-gray-800">
+                  Student ID
+                </label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -137,9 +145,10 @@ const handleCheckStudent = async (e) => {
                 </div>
               </div>
 
-   
               <div className="mb-6">
-                <label className="block font-semibold mb-2 text-gray-800">Birth Date</label>
+                <label className="block font-semibold mb-2 text-gray-800">
+                  Birth Date
+                </label>
                 <input
                   type="date"
                   id="tanggal_lahir"
@@ -149,24 +158,30 @@ const handleCheckStudent = async (e) => {
                 />
               </div>
 
-                   <p>Kembali ke halaman login ? <Link to="/" className="text-red-800 hover:cursor-pointer hover:text-red-600">Klik disini</Link></p>
-          <div className="relative top-12">
-            <button
-              type="submit"
-              disabled={loading}
-              className="absolute left-1/2 -translate-x-1/2 bottom-[-20px] px-10 py-3 rounded-lg bg-black text-white font-semibold text-lg shadow-lg hover:bg-white hover:border-2 border-red-800 hover:text-red-800 hover:cursor-pointer transition duration-300 ease-in-out"
-            >
-              {loading ? "Memproses..." : "Submit"}
-            </button>
-          </div>
-
+              <p>
+                Kembali ke halaman login ?{" "}
+                <Link
+                  to="/"
+                  className="text-red-800 hover:cursor-pointer hover:text-red-600"
+                >
+                  Klik disini
+                </Link>
+              </p>
+              <div className="relative top-12">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="absolute left-1/2 -translate-x-1/2 bottom-[-20px] px-10 py-3 rounded-lg bg-black text-white font-semibold text-lg shadow-lg hover:bg-white hover:border-2 border-red-800 hover:text-red-800 hover:cursor-pointer transition duration-300 ease-in-out"
+                >
+                  {loading ? "Memproses..." : "Submit"}
+                </button>
+              </div>
             </form>
           </div>
         </div>
       </div>
     </div>
-    )
-}
+  );
+};
 
-
-export default SetStudentPassword
+export default SetStudentPassword;
