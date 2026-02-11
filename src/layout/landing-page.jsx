@@ -3,7 +3,6 @@ import Header from "../components/header";
 import Navbar from "../components/Navbar/index";
 import Footer from "../components/footer";
 import FloatingChatButton from "../components/floatingButton";
-import { refreshAccesToken } from "../api/apiMethod";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const LandingPageLayout = ({ title, children }) => {
@@ -20,13 +19,13 @@ const LandingPageLayout = ({ title, children }) => {
     return () => document.removeEventListener("keyup", handleKeyUpF12);
   }, []);
 
-  useEffect(() => {
-    if (!sessionStorage.getItem("token")) return;
-    const resfreshToken = async () => {
-      const response = await refreshAccesToken();
-    };
-    resfreshToken();
-  }, []);
+  // useEffect(() => {
+  //   if (!sessionStorage.getItem("token")) return;
+  //   const resfreshToken = async () => {
+  //     const response = await refreshAccesToken();
+  //   };
+  //   resfreshToken();
+  // }, []);
   return (
     <>
       <div className="flex flex-col min-h-screen w-full">

@@ -1,17 +1,16 @@
 import { use, useState } from "react";
 import { urlLink } from "../../config/config";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 
 const Login = () => {
   const { login, logout } = useAuth();
-  const navigate = useNavigate(); 
- const [formData, setFormData] = useState({
-   email: "",
-   password: "",
- })
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState(null);
   const [loading, setIsLoading] = useState(false);
 
@@ -33,7 +32,6 @@ const Login = () => {
       setError("Email dan Password tidak boleh kosong");
       return;
     }
-   
 
     try {
       const response = await axios.post(
@@ -47,21 +45,20 @@ const Login = () => {
             "Content-Type": "application/json",
           },
           withCredentials: true,
-        }
+        },
       );
 
       const loggedUser = await axios.get(
-      `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
-      { withCredentials: true }
-    );
+        `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
+        { withCredentials: true },
+      );
 
-    // 3. Get user detail
-    const userDetail = await axios.get(
-      `${urlLink.url}/api/resource/User/${loggedUser.data.message}`,
-      { withCredentials: true }
-    );
+      // 3. Get user detail
+      const userDetail = await axios.get(
+        `${urlLink.url}/api/resource/User/${loggedUser.data.message}`,
+        { withCredentials: true },
+      );
       const dataUser = userDetail.data;
-      console.log(dataUser);
 
       const getUser = {
         full_name: dataUser.data.full_name,
@@ -71,23 +68,21 @@ const Login = () => {
         mobile_no: dataUser.data.mobile_no,
       };
 
-      const roles = dataUser.data.roles
-        ? dataUser.data.roles
-        : [];
+      const roles = dataUser.data.roles ? dataUser.data.roles : [];
       const isInstructor = roles.some(
         (roleObj) =>
-          roleObj.role === "Instructor" || roleObj.role === "LMS User"
+          roleObj.role === "Instructor" || roleObj.role === "LMS User",
       );
 
       if (!isInstructor) {
         setIsLoading(false);
         logout();
-      setFormData({ email: "", password: "" });
+        setFormData({ email: "", password: "" });
         setError("Login Failed");
         return;
       }
       login(getUser);
-      navigate("/admin"); 
+      navigate("/admin");
     } catch (err) {
       console.log("ini error", err);
       setError(err.response.data.message || "Terjadi kesalahan");
@@ -116,7 +111,7 @@ const Login = () => {
               id="email"
               value={formData.email}
               autoFocus
-             onChange={handleChange}
+              onChange={handleChange}
             />
           </div>
           <div className="mb-4">
@@ -129,7 +124,7 @@ const Login = () => {
               type="password"
               placeholder="Password"
               value={formData.password}
-            onChange={handleChange}
+              onChange={handleChange}
             />
           </div>
           <button

@@ -7,8 +7,6 @@ import { getDoctypeDetail } from "../../api/apiPublic";
 import { urlLink } from "../../config/config";
 import HeadingSection from "../../components/headingSection";
 
-
-
 const IndexTeacher = () => {
   const [instructor, setInstructor] = useState([]);
   const [student, setStudent] = useState([]);
@@ -18,24 +16,21 @@ const IndexTeacher = () => {
   const [studentDetail, setStudentDetail] = useState([]);
 
   const itemsPerPage = 9;
- 
-  const defaultImage = "/propic.png"
 
-   const showModal = async (id) => {
+  const defaultImage = "/propic.png";
+
+  const showModal = async (id) => {
     setIsModalOpen(true);
 
     try {
-       const response = await getDoctypeDetail("Student", id);
-       console.log(response);
-       setStudentDetail(response);
+      const response = await getDoctypeDetail("Student", id);
+      setStudentDetail(response);
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log("inidetail student", studentDetail);
-
-   const closeModal = () => {
+  const closeModal = () => {
     setIsModalOpen(false);
   };
   // GET Teacher Profile
@@ -52,8 +47,6 @@ const IndexTeacher = () => {
     getTeacherProfile();
   }, []);
 
-  console.log("ini guru", instructor);  
-
   // GET Student List
   useEffect(() => {
     const getStudentList = async () => {
@@ -67,26 +60,21 @@ const IndexTeacher = () => {
 
     getStudentList();
   }, []);
-console.log(student);
+
   // Search + Filter
   const filteredData = useMemo(() => {
     return student.filter((item) => {
-      const searchContent = [item.name, item.full_name]
-        .join(" ")
-        .toLowerCase();
+      const searchContent = [item.name, item.full_name].join(" ").toLowerCase();
 
       return searchContent.includes(searchTerm.toLowerCase());
     });
   }, [student, searchTerm]);
 
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredData.length / itemsPerPage)
-  );
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
 
   const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const changePage = (newPage) => {
@@ -95,12 +83,9 @@ console.log(student);
     }
   };
 
-
-
   return (
     <LandingPageLayout>
       <div className="container mx-auto px-4">
-
         {/* TEACHER PROFILE CARD */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
           <div className="rounded-lg shadow-md overflow-hidden">
@@ -110,22 +95,27 @@ console.log(student);
 
             <div className="card-body px-3 bg-white py-3 font-medium flex flex-col gap-2">
               <p>
-                <span className="font-bold">Teacher ID : {" "}</span>
+                <span className="font-bold">Teacher ID : </span>
                 <span className="font-medium">{instructor.name}</span>
                 {instructor.length > 0 &&
                   instructor.map((item) => item.name).join(", ")}
               </p>
               <p>
                 <span className="font-bold">Teacher Name : </span>
-                <span className="font-medium">{instructor.instructor_name}</span>
-                </p>
+                <span className="font-medium">
+                  {instructor.instructor_name}
+                </span>
+              </p>
             </div>
           </div>
         </div>
 
         {/* HEADER STUDENT LIST */}
-        <HeadingSection title="Student List" image="/assets/smile_image/icon-5.png" />
-     
+        <HeadingSection
+          title="Student List"
+          image="/assets/smile_image/icon-5.png"
+        />
+
         {/* SEARCH INPUT */}
         <div className="flex lg:flex-row flex-col gap-3 justify-between font-semibold text-lg py-2">
           <input
@@ -138,8 +128,7 @@ console.log(student);
           />
 
           <p>
-            Total Data:{" "}
-            <span className="font-bold">{filteredData.length}</span>
+            Total Data: <span className="font-bold">{filteredData.length}</span>
           </p>
         </div>
 
@@ -170,32 +159,28 @@ console.log(student);
                 <hr className="my-4 border-red-900 border-2" />
 
                 <div className="flex flex-col py-2 gap-2">
-            
-                    <>
-                      <p className="text-sm text-gray-500 font-medium">
-                        Student Full Name : {" "}
-                        <span className="font-medium">
-                          {item.first_name || "-"}
-                        </span>
-                      </p>
-                      <p className="text-sm text-gray-500 font-medium">
-                        Joining Date: {" "}
-                        <span className="font-medium">
-                          {formatDateIndonesia(item.joining_date) || "-"}
-                        </span>
-                      </p>
-                    </>
-            
+                  <>
+                    <p className="text-sm text-gray-500 font-medium">
+                      Student Full Name :{" "}
+                      <span className="font-medium">
+                        {item.first_name || "-"}
+                      </span>
+                    </p>
+                    <p className="text-sm text-gray-500 font-medium">
+                      Joining Date:{" "}
+                      <span className="font-medium">
+                        {formatDateIndonesia(item.joining_date) || "-"}
+                      </span>
+                    </p>
+                  </>
                 </div>
 
-            
-                  <button
-                    onClick={() =>showModal(item.name)}
-                    className="w-full bg-green-700 py-2 rounded-full text-white text-center font-bold hover:bg-green-800 transition-all my-2 cursor-pointer"
-                  >
-                    Lihat Detail
-                  </button>
-         
+                <button
+                  onClick={() => showModal(item.name)}
+                  className="w-full bg-green-700 py-2 rounded-full text-white text-center font-bold hover:bg-green-800 transition-all my-2 cursor-pointer"
+                >
+                  Lihat Detail
+                </button>
               </div>
             ))}
           </div>
@@ -233,7 +218,7 @@ console.log(student);
                 >
                   {page}
                 </button>
-              )
+              ),
             )}
 
             <button
@@ -250,62 +235,65 @@ console.log(student);
           </div>
         )}
       </div>
-       <Modal
+      <Modal
         title="Student Detail"
-       closable={{ 'aria-label': 'Custom Close Button' }}
+        closable={{ "aria-label": "Custom Close Button" }}
         open={isModalOpen}
         onOk={closeModal}
         onCancel={closeModal}
       >
         <div className="flex justify-center items-center">
-            <img className="w-50 rounded-lg py-3"
-               src={`${studentDetail.image ? urlLink.url +  "/" + studentDetail.image : defaultImage } `} />
-      </div>
-        
-      <div className="flex flex-col my-6 gap-2">
+          <img
+            className="w-50 rounded-lg py-3"
+            src={`${studentDetail.image ? urlLink.url + "/" + studentDetail.image : defaultImage} `}
+          />
+        </div>
+
+        <div className="flex flex-col my-6 gap-2">
           <div className="flex flex-row gap-2 justify-between">
-        
-            <span className="font-bold"> Student ID {" "} </span>
+            <span className="font-bold"> Student ID </span>
             <span className="font-medium">{studentDetail.name}</span>
-          
-        </div>
-        <div className="name">
-          <p className="flex flex-row gap-2 justify-between">
-          <span className="font-bold"> Student Full Name {" "} </span>
-            <span className="font-medium">{studentDetail.first_name + " " + studentDetail.last_name}</span>
-          </p>
-        </div>
+          </div>
+          <div className="name">
+            <p className="flex flex-row gap-2 justify-between">
+              <span className="font-bold"> Student Full Name </span>
+              <span className="font-medium">
+                {studentDetail.first_name + " " + studentDetail.last_name}
+              </span>
+            </p>
+          </div>
 
-         <div className="flex flex-row gap-2 justify-between">
-       
-          <span className="font-bold"> Email : {" "} </span>
-          <span className="font-medium">{studentDetail.student_email_id}</span>
-      
-        </div>
+          <div className="flex flex-row gap-2 justify-between">
+            <span className="font-bold"> Email : </span>
+            <span className="font-medium">
+              {studentDetail.student_email_id}
+            </span>
+          </div>
 
-        <div className="flex flex-row gap-2 justify-between">
-         
-          <span className="font-bold">Student Mobile Phone : {" "} </span>
-            <span className="font-medium">{studentDetail.student_mobile_number}</span>
-          
-        </div>
+          <div className="flex flex-row gap-2 justify-between">
+            <span className="font-bold">Student Mobile Phone : </span>
+            <span className="font-medium">
+              {studentDetail.student_mobile_number}
+            </span>
+          </div>
 
-         <div className="flex flex-row gap-2 justify-between">
-          <span className="font-bold">Joining Date: {" "} </span>
-          <span className="font-medium">{formatDateIndonesia(studentDetail.joining_date)}</span>
-        </div>
+          <div className="flex flex-row gap-2 justify-between">
+            <span className="font-bold">Joining Date: </span>
+            <span className="font-medium">
+              {formatDateIndonesia(studentDetail.joining_date)}
+            </span>
+          </div>
 
-        <div className="flex flex-row gap-2 justify-between">
-          <span className="font-bold">Status{" "} </span>
-          <span className="font-medium">{studentDetail.status}</span>
-        </div>
+          <div className="flex flex-row gap-2 justify-between">
+            <span className="font-bold">Status </span>
+            <span className="font-medium">{studentDetail.status}</span>
+          </div>
 
-         {/* <div className="flex flex-row gap-2 justify-between">
+          {/* <div className="flex flex-row gap-2 justify-between">
           <span className="font-bold">Program{" "} </span>
           <span className="font-medium">{studentDetail.status}</span>
         </div> */}
-      </div>
-        
+        </div>
       </Modal>
     </LandingPageLayout>
   );

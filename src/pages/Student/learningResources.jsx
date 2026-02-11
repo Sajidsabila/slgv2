@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom"
-import LandingPageLayout from "../../layout/landing-page"
+import { Link } from "react-router-dom";
+import LandingPageLayout from "../../layout/landing-page";
 
 const LearningResources = () => {
   return (
@@ -12,35 +12,52 @@ const LearningResources = () => {
             className="hidden lg:block lg:w-80 xl:w-95 lg:mt-5 xl:mt-10"
           />
 
- 
           <div className="flex flex-col md:ml-20 xl:mt-50 lg:mt-40 text-center md:text-left">
             <p className="font-extrabold text-2xl md:text-center self-start">
               LEARNING RESOURCES
             </p>
 
             <div className="flex">
-            <img src="/assets/smile_image/icon-4.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
-            <Link to="/student/learning-resources/kalender-academic" className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
+              <img
+                src="/assets/smile_image/icon-4.png"
+                className="w-15 h-15 relative z-1 top-2 left-3"
+              />
+              <Link
+                to="/student/learning-resources/kalender-academic"
+                className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition"
+              >
                 <span className="ms-13">Calender Academic</span>
-            </Link>
-          </div>
-          <div className="flex">
-               <img src="/assets/smile_image/icon-3.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
-            <Link to="/student/learning-resources/program-edukasi" className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-             <span className="ms-13">Educational Program</span>
-            </Link>
-          </div>
-          <div className="flex">
-              <img src="/assets/smile_image/icon-1.png" className="w-15 h-15 relative z-1 top-2 left-3"/>
-            <Link to="/student/learning-resources/learning-materi" className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition">
-            <span className="ms-13">Learning Materi</span>      
-             </Link>
-             </div>
+              </Link>
+            </div>
+            <div className="flex">
+              <img
+                src="/assets/smile_image/icon-3.png"
+                className="w-15 h-15 relative z-1 top-2 left-3"
+              />
+              <Link
+                to="/student/learning-resources/program-edukasi"
+                className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition"
+              >
+                <span className="ms-13">Educational Program</span>
+              </Link>
+            </div>
+            <div className="flex">
+              <img
+                src="/assets/smile_image/icon-1.png"
+                className="w-15 h-15 relative z-1 top-2 left-3"
+              />
+              <Link
+                to="/student/learning-resources/learning-materi"
+                className="relative right-15 z-0 w-full md:w-72 bg-black text-white py-3 px-6 font-bold mt-4 rounded-lg shadow-xl hover:scale-105 transition"
+              >
+                <span className="ms-13">Learning Materi</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
     </LandingPageLayout>
-  )
-}
+  );
+};
 
-export default LearningResources
+export default LearningResources;

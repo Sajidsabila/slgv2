@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import LandingPageLayout from "../../../layout/landing-page";
 import { currencyFormat } from "../../../helper/helper";
 import { Button, Modal } from "antd";
-import { method, methodGet} from "../../../api/apiMethod";
+import { method, methodGet } from "../../../api/apiMethod";
 import { formatDateIndonesia } from "../../../helper/helper";
 import HeadingSection from "../../../components/headingSection";
 
@@ -22,7 +22,6 @@ const FeesList = () => {
     const getFeesFromApi = async () => {
       try {
         const response = await method("smi.helper.get_data_fees");
-        console.log(response);
         setFeesList(response.message);
       } catch (error) {
         console.error("Error fetching fees:", error);
@@ -61,7 +60,7 @@ const FeesList = () => {
   const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
   const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const changePage = (newPage) => {
@@ -69,14 +68,13 @@ const FeesList = () => {
   };
 
   const openModal = (detailData) => {
-  feesList.filter((item) => {
-    if (item.name === detailData) {
-      setDetail(item);
-    }
-  })
+    feesList.filter((item) => {
+      if (item.name === detailData) {
+        setDetail(item);
+      }
+    });
     setIsModalOpen(true);
   };
-  console.log(detail);
   const closeModal = () => {
     setIsModalOpen(false);
     setDetail(null);
@@ -85,7 +83,10 @@ const FeesList = () => {
   return (
     <LandingPageLayout>
       <div className="px-4 py-6 container mx-auto">
-        <HeadingSection title="Fees List" image="/assets/smile_image/icon-6.png" />
+        <HeadingSection
+          title="Fees List"
+          image="/assets/smile_image/icon-6.png"
+        />
         <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-4 mb-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex flex-col md:flex-row gap-4 w-full md:w-2/3">
@@ -167,14 +168,15 @@ const FeesList = () => {
 
                   {item.docstatus === 0 ? (
                     <p className="text-center font-medium w-full mx-auto bg-red-200 py-2 rounded-full text-red-600">
-                      Anda di bulan ini tidak di digenerate oleh 
+                      Anda di bulan ini tidak di digenerate oleh
                     </p>
                   ) : (
                     <>
                       <p className="text-sm text-gray-500">
                         Fee Structure:{" "}
-                        <span className="font-medium">{item.fee_structure
-                     || "-"}</span>
+                        <span className="font-medium">
+                          {item.fee_structure || "-"}
+                        </span>
                       </p>
                       <p className="text-sm text-gray-500">
                         Grand Total:{" "}
@@ -230,7 +232,7 @@ const FeesList = () => {
                 >
                   {page}
                 </button>
-              )
+              ),
             )}
 
             <button
@@ -256,83 +258,89 @@ const FeesList = () => {
         footer={null}
       >
         {detail ? (
-    
           <div className="w-full my-4">
             <div className="flex justify-between items-start ">
-                  <h2 className=" font-bold text-gray-800">
-                    SPP{" "}
-                    {detail.due_date
-                      ? `${new Date(detail.due_date).toLocaleString("id-ID", {
-                          month: "long",
-                        })} ${new Date(detail.due_date).getFullYear()}`
-                      : "-"}
-                  </h2>
-                  <span
-                    className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                      detail.status === "Paid"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {detail.status || "-"}
-                  </span>
-                </div>
-              <hr className="my-2 border-red-900"/>
+              <h2 className=" font-bold text-gray-800">
+                SPP{" "}
+                {detail.due_date
+                  ? `${new Date(detail.due_date).toLocaleString("id-ID", {
+                      month: "long",
+                    })} ${new Date(detail.due_date).getFullYear()}`
+                  : "-"}
+              </h2>
+              <span
+                className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                  detail.status === "Paid"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-red-100 text-red-700"
+                }`}
+              >
+                {detail.status || "-"}
+              </span>
+            </div>
+            <hr className="my-2 border-red-900" />
 
-              <div className="flex flex-col py-2 gap-2 ms-4">
-                <p className="text-sm">
-                  Nomor Tagihan {" "} : {" "}
-                  <span className="font-medium">SPP {detail.name || "-"}</span>
-                </p>
-                <p className="text-sm">
-                  Grand Total{" "} : {" "}
-                  <span className="font-medium">
-                    {currencyFormat(detail.grand_total)}
-                  </span>
-                </p>
-                 <p className="text-sm">
-                  Total Terbayar{" "} : {" "}
-                  <span className="font-medium text-green-600">
-                    {currencyFormat(detail.grand_total - detail.outstanding_amount)}
-                  </span>
-                </p>
-                <p className="text-sm ">
-                  Sisa Tagihan{" "} : {" "}
-                  <span className="font-medium text-red-600">
-                    {currencyFormat(detail.outstanding_amount)}
-                  </span>
-                </p>
-                <hr className="mt-2 border-red-900 border-2"/>
-                <p className="font-bold">History Pembayaran</p>
+            <div className="flex flex-col py-2 gap-2 ms-4">
+              <p className="text-sm">
+                Nomor Tagihan :{" "}
+                <span className="font-medium">SPP {detail.name || "-"}</span>
+              </p>
+              <p className="text-sm">
+                Grand Total :{" "}
+                <span className="font-medium">
+                  {currencyFormat(detail.grand_total)}
+                </span>
+              </p>
+              <p className="text-sm">
+                Total Terbayar :{" "}
+                <span className="font-medium text-green-600">
+                  {currencyFormat(
+                    detail.grand_total - detail.outstanding_amount,
+                  )}
+                </span>
+              </p>
+              <p className="text-sm ">
+                Sisa Tagihan :{" "}
+                <span className="font-medium text-red-600">
+                  {currencyFormat(detail.outstanding_amount)}
+                </span>
+              </p>
+              <hr className="mt-2 border-red-900 border-2" />
+              <p className="font-bold">History Pembayaran</p>
 
               {detail.payment_entry.length > 0 ? (
                 detail.payment_entry.map((item, index) => (
-                  <div key={index} className="w-full bg-red-800 h-20 rounded-xl">
+                  <div
+                    key={index}
+                    className="w-full bg-red-800 h-20 rounded-xl"
+                  >
                     <div className="flex flex-col  justify-center h-full gap-2">
-                      <p className="text-sm ms-6  text-white font-semibold">Tanggal Pembayaran :  {formatDateIndonesia(item.posting_date)}</p>
-                      <p className="text-sm ms-6 text-white font-semibold">Jumlah Pembayaran : {currencyFormat(item.paid_amount)}</p>
+                      <p className="text-sm ms-6  text-white font-semibold">
+                        Tanggal Pembayaran :{" "}
+                        {formatDateIndonesia(item.posting_date)}
+                      </p>
+                      <p className="text-sm ms-6 text-white font-semibold">
+                        Jumlah Pembayaran : {currencyFormat(item.paid_amount)}
+                      </p>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-sm bg-red-800 py-4 rounded-xl text-white text-center sans-serif">Belum ada pembayaran</p>
-              )}              
-              </div>
+                <p className="text-sm bg-red-800 py-4 rounded-xl text-white text-center sans-serif">
+                  Belum ada pembayaran
+                </p>
+              )}
+            </div>
           </div>
         ) : (
           <p>Data tidak tersedia</p>
         )}
 
-      <div className="flex justify-end mt-4">
-        <Button
-          onClick={closeModal}
-          color="danger"
-          variant="solid"
-        >
-          Tutup
-      </Button>
-    </div>
-
+        <div className="flex justify-end mt-4">
+          <Button onClick={closeModal} color="danger" variant="solid">
+            Tutup
+          </Button>
+        </div>
       </Modal>
     </LandingPageLayout>
   );

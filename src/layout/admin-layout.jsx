@@ -14,7 +14,7 @@ const AdminLayout = ({ children }) => {
   const handleLogout = async () => {
     try {
       const response = await logout();
-      console.log(response);
+      // console.log(response);
     } catch (e) {
       console.log(e);
     } finally {
@@ -67,7 +67,7 @@ const AdminLayout = ({ children }) => {
     { to: "/admin", label: "Home" },
     { to: "/admin/calender-academic", label: "Calender Academic" },
     { to: "/admin/book-menu", label: "Book Menu" },
-     { to: "/admin/evaluasi-semester", label: "Evaluasi Semester" },
+    { to: "/admin/evaluasi-semester", label: "Evaluasi Semester" },
     { to: "/admin/modul-training", label: "Modul Training" },
     {
       label: "Program Materi",
@@ -78,7 +78,7 @@ const AdminLayout = ({ children }) => {
         { to: "/admin/program-materi-lhb", label: "LHB" },
       ],
     },
-   
+
     {
       label: "Teacher Materi",
       children: [

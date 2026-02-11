@@ -4,9 +4,6 @@ import { Middleware } from "../middleware/middelware.jsx";
 import { Guest } from "../middleware/isGuest.jsx";
 
 import Index from "../pages/Student/index.jsx";
-import PageProgramMateri from "../pages/pageProgramMateri.jsx";
-import ClassCourseDetail from "../pages/class.jsx";
-
 import Login from "../pages/Auth/index.jsx";
 import Page404 from "../pages/404.jsx";
 import Dashboard from "../pages/Admin/dashboard.jsx";
@@ -95,14 +92,6 @@ const routes = createBrowserRouter([
       {
         path: "parents-guide",
         element: <ParentsGuide />,
-      },
-      {
-        path: "program-materi/:id",
-        element: <PageProgramMateri />,
-      },
-      {
-        path: "class-course/:abbr_course",
-        element: <ClassCourseDetail />,
       },
       {
         path: "students-report/history-absensi",

@@ -21,17 +21,17 @@ export const StudentProfilProvider = ({ children }) => {
       const programRes = await methodGet(
         "Program Enrollment",
         [["status", "=", "Approved"]],
-        ["name", "class_name", "class_grading", "course"]
+        ["name", "class_name", "class_grading", "course"],
       );
       setProgram(programRes.data || []);
 
-      // hanay muncul jadwal di minggu ini aja 
+      // hanay muncul jadwal di minggu ini aja
       const scheduleRes = await methodGet(
         "Course Schedule",
         [["student_name", "=", profileRes.data[0].name]],
-        ["name", "schedule_date", "from_time", "to_time"]
+        ["name", "schedule_date", "from_time", "to_time"],
       );
-      console.log("ini schedule res", scheduleRes);
+      // console.log("ini schedule res", scheduleRes);
       const today = new Date();
       const startOfWeek = new Date(today);
       startOfWeek.setDate(today.getDate() - today.getDay());
@@ -43,7 +43,10 @@ export const StudentProfilProvider = ({ children }) => {
         .map((item) => {
           const date = new Date(item.schedule_date);
           const localDate = new Date(`${date}T${item.from_time}`);
-          return { ...item, date: new Date(localDate.getTime() - timezoneOffset) };
+          return {
+            ...item,
+            date: new Date(localDate.getTime() - timezoneOffset),
+          };
         })
         .filter((item) => item.date >= startOfWeek && item.date <= endOfWeek)
         .sort((a, b) => a.date - b.date);
@@ -51,13 +54,15 @@ export const StudentProfilProvider = ({ children }) => {
       setSchedule(weekly.length > 0 ? [weekly[0]] : []);
 
       // Fees
-      const feesRes = await methodGet(
-        "Fees",
-        {},
-        ["name", "student_name", "outstanding_amount", "status", "posting_date"]
-      );
+      const feesRes = await methodGet("Fees", {}, [
+        "name",
+        "student_name",
+        "outstanding_amount",
+        "status",
+        "posting_date",
+      ]);
       const sorted = (feesRes.data || []).sort(
-        (a, b) => new Date(b.posting_date) - new Date(a.posting_date)
+        (a, b) => new Date(b.posting_date) - new Date(a.posting_date),
       );
       setFees(sorted[0] ? [sorted[0]] : []);
     } catch (error) {
@@ -67,14 +72,21 @@ export const StudentProfilProvider = ({ children }) => {
     }
   };
 
-  // refresh data setelah pop up ditutup 
+  // refresh data setelah pop up ditutup
   useEffect(() => {
     fetchProfileData();
   }, []);
 
   return (
     <StudentProfilContext.Provider
-      value={{ profile, program, schedule, fees, refreshProfileData: fetchProfileData, loading }}
+      value={{
+        profile,
+        program,
+        schedule,
+        fees,
+        refreshProfileData: fetchProfileData,
+        loading,
+      }}
     >
       {children}
     </StudentProfilContext.Provider>

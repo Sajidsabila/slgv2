@@ -60,9 +60,13 @@ const MainAuth = () => {
         pwd: formData.password,
       });
 
+      const loggedUser = await axiosConfig.get(
+        "/api/method/frappe.auth.get_logged_user",
+      );
+
       // 3. Get user detail
       const userDetail = await axiosConfig.get(
-        `/api/resource/User/${formData.email}`,
+        `/api/resource/User/${loggedUser.data.message}`,
       );
 
       const roles = userDetail.data.data.roles || [];
