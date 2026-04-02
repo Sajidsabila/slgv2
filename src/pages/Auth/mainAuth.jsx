@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { urlLink } from "../../config/config";
 import axios from "axios";
 import axiosConfig from "../../config/axiosConfig";
 
@@ -9,11 +8,13 @@ const MainAuth = () => {
   const { login, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
   const [student, setStudent] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
   const [loading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [limitRequest, setLimitRequest] = useState(0);
@@ -36,74 +37,103 @@ const MainAuth = () => {
     }));
   };
 
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    if (limitRequest >= 5) {
-      setError("Terlalu banyak percobaan login. Coba lagi setelah 1 menit.");
-      setIsLoading(false);
-      return;
-    }
-
-    setLimitRequest((prev) => prev + 1);
-
-    if (!formData.email || !formData.password) {
-      setIsLoading(false);
-      setError("Email dan Password tidak boleh kosong");
-      return;
-    }
     try {
+      if (limitRequest >= 5) {
+        throw new Error("Terlalu banyak percobaan login. Coba lagi 1 menit.");
+      }
+
+      setLimitRequest((prev) => prev + 1);
+
+    
+      if (!formData.email || !formData.password) {
+        throw new Error("Email dan Password tidak boleh kosong");
+      }
+
       const response = await axiosConfig.post("/api/method/login", {
         usr: formData.email,
         pwd: formData.password,
       });
 
-      const loggedUser = await axiosConfig.get(
-        "/api/method/frappe.auth.get_logged_user",
+      if (!response?.data?.message) {
+        throw new Error("Login gagal");
+      }
+      await delay(300);
+      let loggedUser = null;
+
+      for (let i = 0; i < 3; i++) {
+        try {
+          const res = await axiosConfig.get(
+            "/api/method/frappe.auth.get_logged_user"
+          );
+
+          if (res?.data?.message) {
+            loggedUser = res.data.message;
+            break;
+          }
+        } catch {}
+
+        await delay(200);
+      }
+
+      if (!loggedUser) {
+        throw new Error("Session gagal dibuat (cookie tidak terbaca)");
+      }
+      const userDetailRes = await axiosConfig.get(
+        `/api/resource/User/${loggedUser}`
       );
 
-      // 3. Get user detail
-      const userDetail = await axiosConfig.get(
-        `/api/resource/User/${loggedUser.data.message}`,
-      );
+      const userData = userDetailRes?.data?.data;
 
-      const roles = userDetail.data.data.roles || [];
+      if (!userData) {
+        throw new Error("Gagal mengambil data user");
+      }
+
+      const roles = userData?.roles || [];
 
       const isStudent = roles.some((r) => r.role === "Student");
       const isTeacher = roles.some((r) => r.role === "Instructor");
-      const isGuardian = roles.some((r) => r.role === "Student Guardian");
 
-      // Validasi Role
-      if ((student && !isStudent) || (!student && isTeacher === false)) {
-        setError("Login Failed");
-        logout();
-        setFormData({ email: "", password: "" });
-        setIsLoading(false);
-        return;
+      // 🚫 Validasi role
+      if ((student && !isStudent) || (!student && !isTeacher)) {
+        throw new Error("Role tidak sesuai");
       }
 
+     
       const getUser = {
-        full_name: userDetail.data.full_name,
-        user_image: userDetail.data.user_image,
-        email: userDetail.data.email,
-        roles: userDetail.data.roles,
-        mobile_no: userDetail.data.mobile_no,
+        full_name: userData.full_name,
+        user_image: userData.user_image,
+        email: userData.email,
+        roles: roles,
+        mobile_no: userData.mobile_no,
       };
 
       login(getUser);
-
-      // Redirect sesuai role
       if (isStudent) navigate("/student");
       else if (isTeacher) navigate("/teacher");
     } catch (err) {
-      console.error(err);
-      setError(err.response.data.message || "Terjadi kesalahan saat login");
+      console.error("Login error:", err);
+
+      setError(
+        err?.response?.data?.message ||
+          err?.message ||
+          "Terjadi kesalahan saat login"
+      );
+      if (err?.message?.includes("Session")) {
+        logout();
+      }
     } finally {
       setIsLoading(false);
     }
   };
+
+
 
   return (
     <div className="relative min-h-screen w-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat bg-[url(/assets/smile_image/background-page-login.png)] font-['Poppins']">

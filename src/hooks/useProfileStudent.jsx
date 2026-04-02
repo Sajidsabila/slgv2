@@ -66,7 +66,7 @@ export const StudentProfilProvider = ({ children }) => {
       );
       setFees(sorted[0] ? [sorted[0]] : []);
     } catch (error) {
-      console.log(error);
+      console.error("Terjadi kesalahan ");
     } finally {
       setLoading(false);
     }
