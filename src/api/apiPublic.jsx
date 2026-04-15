@@ -1,10 +1,10 @@
 import axios from "axios";
 import { urlLink } from "../config/config";
+import axiosConfig from "../config/axiosConfig";
 export const apiGetProgramMateriPublic = async () => {
   try {
-    const response = await axios.get(
-      `${urlLink.url}/api/resource/Program%20Materi?fields=["*"]&order_by=creation desc`,
-    );
+    const response = await axiosConfig.get(
+      `/api/resource/Program%20Materi?fields=["*"]&order_by=creation desc`);
     return response.data?.data || [];
   } catch (error) {
     throw error;
@@ -13,8 +13,8 @@ export const apiGetProgramMateriPublic = async () => {
 
 export const apiGetProgramMateriPublicById = async (id) => {
   try {
-    const response = await axios.get(
-      `${urlLink.url}/api/resource/Program%20Materi/${id}?fields=["*"]`,
+    const response = await axiosConfig.get(
+      `/api/resource/Program%20Materi/${id}?fields=["*"]`,
     );
     return response.data?.data || [];
   } catch (error) {
@@ -62,16 +62,9 @@ export const getFees = async (filters) => {
 export const updateStudent = async (data, id) => {
   try {
     const token = sessionStorage.getItem("api_key");
-    const response = await axios.put(
+    const response = await axiosConfig.put(
       `${urlLink.url}/api/resource/Student/${id}`,
-      data,
-      {
-        headers: {
-          Accept: "application/json",
-        },
-        withCredentials: true,
-      },
-    );
+      data);
     return response.data?.data || [];
   } catch (error) {
     throw error;
@@ -80,12 +73,8 @@ export const updateStudent = async (data, id) => {
 
 export const getProgramEnrollment = async () => {
   try {
-    const response = await axios.get(
-      `${urlLink.url}/api/resource/Program%20Enrollment?fields=["course", "class_grading"]&filters=[["workflow_state","in",["Approved","Idle"]]]&order_by=creation desc`,
-      {
-        withCredentials: true,
-      },
-    );
+    const response = await axiosConfig.get(
+      `/api/resource/Program%20Enrollment?fields=["course", "class_grading"]&filters=[["workflow_state","in",["Approved","Idle"]]]&order_by=creation desc`);
     return response.data?.data || [];
   } catch (error) {
     throw error;
@@ -95,12 +84,8 @@ export const getProgramEnrollment = async () => {
 export const getModulTraining = async (filters = {}) => {
   try {
     const filterParam = encodeURIComponent(JSON.stringify(filters));
-    const response = await axios.get(
-      `${urlLink.url}/api/resource/Modul%20Training?order_by=creation%20desc&limit_page_length=1&fields=["*"]&filters=${filterParam}`,
-      {
-        withCredentials: true,
-      },
-    );
+    const response = await axiosConfig.get(
+      `/api/resource/Modul%20Training?order_by=creation%20desc&limit_page_length=1&fields=["*"]&filters=${filterParam}`);
     return response.data?.data || [];
   } catch (error) {
     throw error;
@@ -109,12 +94,8 @@ export const getModulTraining = async (filters = {}) => {
 
 export const getDoctypeDetail = async (doctype, id) => {
   try {
-    const response = await axios.get(
-      `${urlLink.url}/api/resource/${doctype}/${id}`,
-      {
-        withCredentials: true,
-      },
-    );
+    const response = await axiosConfig.get(
+      `/api/resource/${doctype}/${id}`);
     return response.data?.data || [];
   } catch (error) {
     throw error;

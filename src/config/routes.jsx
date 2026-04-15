@@ -50,6 +50,7 @@ import StaticInitialTrainingFile from "../pages/Teacher/ModulTraining/staticInti
 import ModulTrainingForTeacher from "../pages/Admin/modulTrainingForTeacher.jsx";
 import DetailModulTrainingForTeacher from "../pages/Admin/detailModulTrainingForTeacher.jsx";
 import PageDynamicModulTraining from "../pages/Teacher/ModulTraining/pageDynamicModulTraining.jsx";
+import { MiddlewareAdmin } from "../middleware/middlewareAdmin.jsx";
 
 const routes = createBrowserRouter([
   {
@@ -272,7 +273,7 @@ const routes = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <Middleware allowed={["LMS User"]} />,
+    element: <MiddlewareAdmin allowed={["LMS User"]} />,
     children: [
       { path: "", element: <Dashboard /> },
       { path: "profile", element: <Profile /> },

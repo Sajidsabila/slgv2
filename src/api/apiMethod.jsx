@@ -1,18 +1,12 @@
 import axios from "axios";
 import { urlLink } from "../config/config";
+import axiosConfig from "../config/axiosConfig";
 
 export const updatePassword = async (data) => {
   try {
-    const response = await axios.post(
+    const response = await axiosConfig.post(
       `${urlLink.url}/api/method/frappe.core.doctype.user.user.update_password`,
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      },
-    );
+      data);
     return response.data || [];
   } catch (error) {
     throw error;
@@ -24,15 +18,8 @@ export const methodGet = async (doctype, filters = {}, fields = ["*"]) => {
     const filterParam = encodeURIComponent(JSON.stringify(filters));
     const fieldParam = encodeURIComponent(JSON.stringify(fields));
 
-    const response = await axios.get(
-      `${urlLink.url}/api/resource/${doctype}?fields=${fieldParam}&filters=${filterParam}`,
-      {
-        headers: {
-          Accept: "application/json",
-        },
-        withCredentials: true,
-      },
-    );
+    const response = await axiosConfig.get(
+      `/api/resource/${doctype}?fields=${fieldParam}&filters=${filterParam}`);
 
     return response.data;
   } catch (error) {
@@ -42,12 +29,7 @@ export const methodGet = async (doctype, filters = {}, fields = ["*"]) => {
 
 export const method = async (url) => {
   try {
-    const response = await axios.get(`${urlLink.url}/api/method/${url}`, {
-      headers: {
-        Accept: "application/json",
-      },
-      withCredentials: true,
-    });
+    const response = await axiosConfig.get(`/api/method/${url}`);
     return response.data;
   } catch (error) {
     throw error;

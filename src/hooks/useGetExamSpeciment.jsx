@@ -11,6 +11,7 @@ export const ExamSpecimentProvider = ({ children }) => {
 
   const loadEnroll = async () => {
     try {
+           if(!sessionStorage.getItem('user')) return
       const res = await getProgramEnrollment();
       setEnroll(res?.data ?? res); // aman
     } catch (e) {
@@ -20,6 +21,7 @@ export const ExamSpecimentProvider = ({ children }) => {
 
   const loadMateri = async () => {
     try {
+           if(!sessionStorage.getItem('user')) return
       const res = await methodGet("Program Materi", { type: "Exam Specimen" });
       setMateri(res?.data ?? []); // aman
     } catch (e) {

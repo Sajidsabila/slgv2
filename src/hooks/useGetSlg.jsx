@@ -10,11 +10,13 @@ export const SlgProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const loadEnroll = async () => {
+     if(!sessionStorage.getItem('user')) return
     const res = await getProgramEnrollment();
     setEnroll(res?.data ?? res);
   };
 
   const loadMateri = async () => {
+     if(!sessionStorage.getItem('user')) return
     const res = await methodGet("Program Materi", { type: "SLG" });
     setMateri(res?.data ?? []);
   };

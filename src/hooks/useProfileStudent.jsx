@@ -12,12 +12,15 @@ export const StudentProfilProvider = ({ children }) => {
 
   const fetchProfileData = async () => {
     setLoading(true);
+       if(!sessionStorage.getItem('user')) return
     try {
       // Profile
+   
       const profileRes = await methodGet("Student");
       setProfile(profileRes.data[0] || {});
 
       // Program
+
       const programRes = await methodGet(
         "Program Enrollment",
         [["status", "=", "Approved"]],
@@ -31,6 +34,7 @@ export const StudentProfilProvider = ({ children }) => {
         [["student_name", "=", profileRes.data[0].name]],
         ["name", "schedule_date", "from_time", "to_time"],
       );
+      console.log("ini schedule res", scheduleRes);
       // console.log("ini schedule res", scheduleRes);
       const today = new Date();
       const startOfWeek = new Date(today);
@@ -66,7 +70,7 @@ export const StudentProfilProvider = ({ children }) => {
       );
       setFees(sorted[0] ? [sorted[0]] : []);
     } catch (error) {
-      console.error("Terjadi kesalahan ");
+      console.error("Terjadi kesalahan ", error?.response?.data || error.message);
     } finally {
       setLoading(false);
     }

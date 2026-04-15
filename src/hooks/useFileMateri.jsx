@@ -52,6 +52,7 @@ const useFileMateri = (id, type) => {
     if (!id) return;
     const fetchData = async () => {
       try {
+             if(!sessionStorage.getItem('user')) return
         const response = await getProgramMateriById("Program Materi", id);
         setProgramMateri(response);
       } catch (err) {

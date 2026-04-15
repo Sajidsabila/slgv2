@@ -11,6 +11,7 @@ export const SyllabusProvider = ({ children }) => {
 
   const loadEnroll = async () => {
     try {
+       if(!sessionStorage.getItem('user')) return
       const res = await getProgramEnrollment();
       setEnroll(res?.data ?? res); // aman untuk berbagai tipe response
     } catch (e) {
@@ -20,6 +21,7 @@ export const SyllabusProvider = ({ children }) => {
 
   const loadMateri = async () => {
     try {
+           if(!sessionStorage.getItem('user')) return
       const res = await methodGet("Program Materi", { type: "Syllabus" });
       setMateri(res?.data ?? []);
     } catch (e) {

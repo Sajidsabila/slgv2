@@ -1,11 +1,10 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { urlLink } from "../config/config";
-import axiosConfig from "../config/axiosConfig";
 
-const AuthContext = createContext(null);
+const AuthContextAdmin = createContext(null);
 
-export const AuthProvider = ({ children }) => {
+export const AuthProviderAdmin = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
       const savedUser = sessionStorage.getItem("user");
@@ -30,7 +29,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     try{
-     const response = axiosConfig.get(`${urlLink.url}/api/method/logout`, {withCredentials: true});
+     const response = axios.get(${urlLink.url}/api/method/logout, {withCredentials: true});
    }catch(e){
        console.log(e);
    }finally{
@@ -40,15 +39,15 @@ export const AuthProvider = ({ children }) => {
    }
   };
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContextAdmin.Provider value={{ user, login, logout }}>
       {children}
-    </AuthContext.Provider>
+    </AuthContextAdmin.Provider>
   );
 };
-export const useAuth = () => {
-  const context = useContext(AuthContext);
+export const useAuthAdmin = () => {
+  const context = useContext(AuthContextAdmin);
   if (!context) {
-    throw new Error("terjadi kesalahan");
+    throw new Error("useAuth must be used inside AuthProviderAdmin");
   }
   return context;
 };
