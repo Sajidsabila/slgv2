@@ -28,35 +28,26 @@ export const StudentProfilProvider = ({ children }) => {
       );
       setProgram(programRes.data || []);
 
-      // hanay muncul jadwal di minggu ini aja
-      const scheduleRes = await methodGet(
-        "Course Schedule",
-        [["student_name", "=", profileRes.data[0].name]],
-        ["name", "schedule_date", "from_time", "to_time"],
-      );
-      console.log("ini schedule res", scheduleRes);
-      // console.log("ini schedule res", scheduleRes);
       const today = new Date();
       const startOfWeek = new Date(today);
       startOfWeek.setDate(today.getDate() - today.getDay());
+
       const endOfWeek = new Date(today);
       endOfWeek.setDate(today.getDate() + (6 - today.getDay()));
-      const timezoneOffset = today.getTimezoneOffset() * 60000;
+      const start = startOfWeek.toISOString().split("T")[0];
+      const end = endOfWeek.toISOString().split("T")[0];
 
-      const weekly = (scheduleRes.data || [])
-        .map((item) => {
-          const date = new Date(item.schedule_date);
-          const localDate = new Date(`${date}T${item.from_time}`);
-          return {
-            ...item,
-            date: new Date(localDate.getTime() - timezoneOffset),
-          };
-        })
-        .filter((item) => item.date >= startOfWeek && item.date <= endOfWeek)
-        .sort((a, b) => a.date - b.date);
-
-      setSchedule(weekly.length > 0 ? [weekly[0]] : []);
-
+    // lebih ringan fiter dari api
+      const scheduleRes = await methodGet(
+        "Course Schedule",
+        [
+          ["schedule_date", ">=", start],
+          ["schedule_date", "<=", end],
+        ],
+        ["name", "schedule_date", "from_time", "to_time"]
+      );
+      setSchedule(scheduleRes.data || []);
+      console.log(scheduleRes.data);
       // Fees
       const feesRes = await methodGet("Fees", {}, [
         "name",
