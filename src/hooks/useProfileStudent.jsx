@@ -47,7 +47,6 @@ export const StudentProfilProvider = ({ children }) => {
         ["name", "schedule_date", "from_time", "to_time"]
       );
       setSchedule(scheduleRes.data || []);
-      console.log(scheduleRes.data);
       // Fees
       const feesRes = await methodGet("Fees", {}, [
         "name",
