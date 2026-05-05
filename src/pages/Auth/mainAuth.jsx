@@ -74,7 +74,7 @@ const MainAuth = () => {
         `/api/resource/User/${loggedUser.data.message}`,
       );
 
-      console.log(userDetail);
+      // console.log(userDetail);
 
       const roles = userDetail.data.data.roles || [];
 
