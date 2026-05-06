@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { methodGet } from "../api/apiMethod";
+import { method, methodGet } from "../api/apiMethod";
 
 const StudentProfilContext = createContext();
 
@@ -36,17 +36,25 @@ export const StudentProfilProvider = ({ children }) => {
       endOfWeek.setDate(today.getDate() + (6 - today.getDay()));
       const start = startOfWeek.toISOString().split("T")[0];
       const end = endOfWeek.toISOString().split("T")[0];
-
+      const studGroup = await methodGet(
+      "Student Group",
+      [["Student Group Student", "student", "=", profileRes.data[0].name]],
+      ["name"]
+      );
+      const getstudenGroupName = JSON.parse(JSON.stringify(studGroup.data))[0] || studGroup.data;
     // lebih ringan fiter dari api
       const scheduleRes = await methodGet(
         "Course Schedule",
         [
           ["schedule_date", ">=", start],
           ["schedule_date", "<=", end],
+          ["student_group", "=", getstudenGroupName.name],
         ],
+     
         ["name", "schedule_date", "from_time", "to_time"]
       );
       setSchedule(scheduleRes.data || []);
+      console.log(scheduleRes.data)
       // Fees
       const feesRes = await methodGet("Fees", {}, [
         "name",
