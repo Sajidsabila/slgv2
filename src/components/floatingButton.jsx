@@ -1,5 +1,5 @@
 import { FloatButton, notification, Spin } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import { CommentOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { useState, useRef, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { postIssue, getIssueTypeList, apiSendWa } from "../api/apiSendIssue";
@@ -112,9 +112,25 @@ const FloatingChatButton = () => {
       {loading && <Spin spinning={loading} fullscreen />}
 
       {!modal && (
-        <FloatButton
-          icon={<QuestionCircleOutlined style={{ fontSize: 18 }} />}
-          type="primary"
+        // <FloatButton
+        //   icon={<QuestionCircleOutlined style={{ fontSize: 18 }} />}
+        //   type="primary"
+        //   style={{
+        //     right: 30,
+        //     bottom: 24,
+        //     width: 40,
+        //     height: 40,
+        //     poistion: `fixed`,
+        //   }}
+        //   onClick={showModal}
+        // />
+          <FloatButton.Group
+        
+            trigger="click"
+          >
+            <a href="https://help.sekolahmusik.co.id/" target="_blank" rel="noopener noreferrer"><FloatButton/></a>
+            <FloatButton icon={<CommentOutlined style={{ fontSize: 18 }}  
+            />} type="primary"
           style={{
             right: 30,
             bottom: 24,
@@ -122,10 +138,11 @@ const FloatingChatButton = () => {
             height: 40,
             poistion: `fixed`,
           }}
-          onClick={showModal}
-        />
-      )}
+          onClick={showModal}/>
+          </FloatButton.Group>
 
+      )}
+    
       {modal && (
         <div
           className="fixed top-[75px] right-6 z-[1050] w-[360px] max-w-[90vw] rounded-xl overflow-hidden bg-white shadow-lg"

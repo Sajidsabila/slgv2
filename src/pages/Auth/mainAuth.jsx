@@ -4,6 +4,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { urlLink } from "../../config/config";
 import axios from "axios";
 import axiosConfig from "../../config/axiosConfig";
+import FloatingChatButton from "../../components/floatingButton";
 
 const MainAuth = () => {
   const { login, logout } = useAuth();
@@ -224,7 +225,9 @@ const MainAuth = () => {
           </div>
         </div>
       </div>
+      <FloatingChatButton />
     </div>
+  
   );
 };
 
