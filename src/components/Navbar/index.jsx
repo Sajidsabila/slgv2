@@ -487,13 +487,13 @@ const Navbar = () => {
             </li>
 
             <>
-              {dropdownLinks.map((menu, idx) => (
+              {dropdownLinks.map((link, idx) => (
                 <li key={idx} className="px-2 py-2 border-b border-gray-200">
                   <div
                     className="flex flex-row justify-between"
                     onClick={() => toggleDropdown(idx)}
                   >
-                    <span className="font-bold">{menu.text}</span>
+                    <span className="font-bold">{link.text}</span>
                     <i
                       className={`text-red-600 font-bold transition duration-300 fa-solid fa-chevron-${
                         activeDropdown === idx ? "up" : "down"
@@ -501,9 +501,9 @@ const Navbar = () => {
                     />
                   </div>
 
-                  {menu.children && activeDropdown === idx && (
+                  {link.children && activeDropdown === idx && (
                     <ul className="pl-4 mt-1 space-y-3 text-gray-700 py-2">
-                      {menu.children.map((child, ci) => (
+                      {link.children.map((child, ci) => (
                         <li key={ci}>
                           {child.url ? (
                             <Link to={child.url}>{child.label}</Link>
@@ -523,7 +523,7 @@ const Navbar = () => {
 
                           {child.children && activeDropdown2 === idx && (
                             <ul className="pl-4 mt-1 space-y-3 text-gray-700 py-2">
-                              {child.grandchildren.map((gc, gci) => (
+                              {child.children.map((gc, gci) => (
                                 <li key={gci}>
                                   <Link to={gc.url}>{gc.label}</Link>
                                 </li>
