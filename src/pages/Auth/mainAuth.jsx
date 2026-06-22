@@ -81,10 +81,10 @@ const MainAuth = () => {
 
       const isStudent = roles.some((r) => r.role === "Student");
       const isTeacher = roles.some((r) => r.role === "Instructor");
-      // const isGuardian = roles.some((r) => r.role === "Student Guardian");
+      const isGuardian = roles.some((r) => r.role === "Student Guardian");
 
       // Validasi Role
-      if ((student && !isStudent) || (!student && isTeacher === false)) {
+      if ((student && (!isStudent && !isGuardian)) || (!student && isTeacher === false)) {
         setError("Login Failed");
         logout();
         setFormData({ email: "", password: "" });
@@ -102,8 +102,9 @@ const MainAuth = () => {
       login(getUser);
 
       // Redirect sesuai role
-      if (isStudent) navigate("/student");
+      if (isGuardian) navigate("/guardian");
       else if (isTeacher) navigate("/teacher");
+      else if (isStudent) navigate("/student");
     } catch (err) {
       console.error(err);
       setError(err.response.data.message || "Terjadi kesalahan saat login");

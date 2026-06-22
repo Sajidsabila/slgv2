@@ -19,7 +19,7 @@ export const methodGet = async (doctype, filters = {}, fields = ["*"]) => {
     const fieldParam = encodeURIComponent(JSON.stringify(fields));
 
     const response = await axiosConfig.get(
-      `/api/resource/${doctype}?fields=${fieldParam}&filters=${filterParam}`);
+      `/api/resource/${doctype}?fields=${fieldParam}&filters=${filterParam}&limit_page_length=None`);
 
     return response.data;
   } catch (error) {
@@ -71,6 +71,18 @@ export const authStudent = async (data) => {
     throw error;
   }
 };
+
+export const apiMethodPost = async (data) =>{
+  try {
+    const response = await axiosConfig.post(
+      `${urlLink.url}/api/method/smi.helper.get_data_fees`,
+      data
+    )
+    return response.data || [];
+  } catch (error) {
+    throw error;
+  }
+}
 
 // export const refreshAccesToken = async () => {
 //   const token = sessionStorage.getItem("token");

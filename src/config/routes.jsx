@@ -51,6 +51,8 @@ import ModulTrainingForTeacher from "../pages/Admin/modulTrainingForTeacher.jsx"
 import DetailModulTrainingForTeacher from "../pages/Admin/detailModulTrainingForTeacher.jsx";
 import PageDynamicModulTraining from "../pages/Teacher/ModulTraining/pageDynamicModulTraining.jsx";
 import { MiddlewareAdmin } from "../middleware/middlewareAdmin.jsx";
+import ProfilGuardian from "../pages/Guardian/profilGuardian.jsx";
+import UserProfile from "../pages/userProfile.jsx";
 
 const routes = createBrowserRouter([
   {
@@ -84,12 +86,13 @@ const routes = createBrowserRouter([
   },
   {
     path: "/student",
-    element: <Middleware allowed={["Student", "Student Guardian"]} />,
+    element: <Middleware allowed={["Student"]} />,
     children: [
       {
         path: "",
         element: <Index />,
       },
+      {path: "profil-user", element: <UserProfile/>},
       {
         path: "parents-guide",
         element: <ParentsGuide />,
@@ -105,11 +108,6 @@ const routes = createBrowserRouter([
       {
         path: "students-report/fees",
         element: <FeesList />,
-      },
-
-      {
-        path: "evaluasi-semester",
-        element: <EvaluasiSemester />,
       },
       {
         path: "students-report",
@@ -153,6 +151,34 @@ const routes = createBrowserRouter([
       },
     ],
   },
+
+  {
+    path: "/guardian",
+    element: <Middleware allowed={["Student Guardian"]} />,
+    children: [
+      {
+        path: "",
+        element: 
+        <ProfilGuardian />,
+      },
+      {
+        path: "profil-user",
+        element: <UserProfile/>
+      },
+      {
+        path: "fees-list",
+        element: <FeesList />,
+      },
+      {
+        path: "history-absensi",
+        element: <HistoryAbsensi />,
+      },
+      {
+        path: "evaluasi-semester",
+        element: <EvaluasiSemesterStudent />,
+      }
+    ]
+  },
   {
     path: "/login",
     element: (
@@ -166,6 +192,7 @@ const routes = createBrowserRouter([
     element: <Middleware allowed={["Instructor"]} />,
     children: [
       { path: "", element: <IndexTeacher /> },
+      {path: "profil-user", element: <UserProfile/>},
       {
         path: "learning-resources/kalender-academic",
         element: <KalenderAkademik />,

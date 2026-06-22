@@ -60,3 +60,17 @@ export const generatePreviewGDriveVideo = (url) => {
 export const sanitizeText = (text) => {
   return text.replace(/<[^>]+>/g, "");
 };
+
+export const firstLetterFunction = (string) => {
+  if (!string || typeof string !== "string") {
+    return "S";
+  }
+
+  const clean = string.trim();
+
+  if (clean.length === 0) {
+    return "S";
+  }
+
+  return clean.charAt(0).toUpperCase();
+};

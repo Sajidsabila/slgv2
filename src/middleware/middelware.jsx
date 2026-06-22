@@ -44,7 +44,7 @@ export const Middleware = ({ allowed }) => {
 
   if (!user) {
     if (location.startsWith("/admin")) return <Navigate to="/login" replace />;
-    if (location.startsWith("/teacher") || location.startsWith("/student"))
+    if (location.startsWith("/teacher") || location.startsWith("/student") || location.startsWith("/guardian"))
       return <Navigate to="/" replace />;
   }
 

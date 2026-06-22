@@ -29,14 +29,14 @@ const LandingPageLayout = ({ title, children }) => {
   return (
     <>
       <div className="flex flex-col min-h-screen w-full">
-        <div className="realtive sticky top-0 left-0 w-full z-[100]">
+        <div className="sticky top-0 left-0 w-full z-[100]">
           <Navbar />
         </div>
 
         <div className="flex flex-col flex-1 pt-16">
           <Header />
 
-          <main className="flex-1 px-4 py-6 bg-slate-100 h-auto bg-slate-300 ">
+          <main className="flex-1 px-4 py-6 h-auto bg-slate-300 ">
             {children}
           </main>
         </div>

@@ -1,23 +1,13 @@
 import LandingPageLayout from "../../layout/landing-page";
 import { useState, useEffect } from "react";
-import { updatePassword } from "../../api/apiMethod";
 import { urlLink } from "../../config/config";
 import { Link } from "react-router-dom";
 import { CloseCircleTwoTone } from "@ant-design/icons";
 import { useStudentProfil } from "../../hooks/useProfileStudent";
 
 const Index = () => {
-  const { profile, program, schedule, fees, refreshProfileData } =
-    useStudentProfil();
-  const [formData, setFormData] = useState({
-    old_password: "",
-    new_password: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const { profile, program, schedule, fees, refreshProfileData } = useStudentProfil();
   const [showPopup, setShowPopup] = useState(false);
-
   useEffect(() => {
     if (!sessionStorage.getItem("hasSeenPopup")) {
       setShowPopup(true);
@@ -26,32 +16,6 @@ const Index = () => {
     }
     return () => (document.body.style.overflow = "auto");
   }, []);
-
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const passwordUpdate = async (e) => {
-    e.preventDefault();
-    if (!formData.old_password || !formData.new_password) {
-      alert("Password lama dan baru harus diisi");
-      return;
-    }
-    setLoading(true);
-    try {
-      await updatePassword(formData);
-      setSuccess("Password updated successfully");
-      setError("");
-    } catch (err) {
-      setError(
-        err.response?.data?.exc_type ||
-          err.response?.data?.exception ||
-          err.message,
-      );
-      setSuccess("");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const closePopup = () => {
     setShowPopup(false);
@@ -105,7 +69,7 @@ const Index = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <h2 className="text-lg font-semibold">Nama Lengkap</h2>
-                  <p className="text-gray-600">{profile.first_name}</p>
+                  <p className="text-gray-600">{profile.first_name} {profile.last_name}</p>
                   <h2 className="mt-4 text-lg font-semibold">NIS</h2>
                   <p className="text-gray-600">{profile.name}</p>
                 </div>
@@ -186,54 +150,6 @@ const Index = () => {
                   <p className="text-gray-600">Belum Ada Event</p>
                 </div>
               </div>
-
-              <hr className="my-8 border-gray-300" />
-
-              <h1 className="font-bold text-xl mb-4">Update Password</h1>
-              <form onSubmit={passwordUpdate} className="space-y-4">
-                {error && (
-                  <p className="bg-red-600 text-white px-3 py-2 rounded-lg">
-                    {error}
-                  </p>
-                )}
-                {success && (
-                  <p className="bg-green-600 text-white px-3 py-2 rounded-lg">
-                    {success}
-                  </p>
-                )}
-                <div>
-                  <label className="block font-medium text-gray-700 mb-2">
-                    Old Password
-                  </label>
-                  <input
-                    type="password"
-                    name="old_password"
-                    placeholder="Input Old Password..."
-                    value={formData.old_password}
-                    onChange={handleChange}
-                    className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-600 outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-medium text-gray-700 mb-2">
-                    New Password
-                  </label>
-                  <input
-                    type="password"
-                    name="new_password"
-                    placeholder="Input New Password..."
-                    value={formData.new_password}
-                    onChange={handleChange}
-                    className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-600 outline-none"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="bg-red-700 hover:bg-red-800 text-white px-5 py-2 rounded-lg shadow transition w-fit"
-                >
-                  {loading ? "Loading..." : "Update Password"}
-                </button>
-              </form>
             </div>
           </div>
         </div>

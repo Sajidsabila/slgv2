@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import LandingPageLayout from "../../../layout/landing-page";
 import { currencyFormat } from "../../../helper/helper";
 import { Button, Modal } from "antd";
-import { method, methodGet } from "../../../api/apiMethod";
+import { apiMethodPost, method, methodGet } from "../../../api/apiMethod";
 import { formatDateIndonesia } from "../../../helper/helper";
 import HeadingSection from "../../../components/headingSection";
 
@@ -12,17 +12,17 @@ const FeesList = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [detail, setDetail] = useState(null);
-
   const itemsPerPage = 9;
 
   useEffect(() => {
     const getFeesFromApi = async () => {
       try {
-        const response = await method("smi.helper.get_data_fees");
-        setFeesList(response.message);
+        // const response = await method("smi.helper.get_data_fees");
+        const response = await methodGet("Fees", [["docstatus", "!=", "2"]]);
+        setFeesList(response.data);
+        console.log(feesList);
       } catch (error) {
         console.error("Error fetching fees:", error);
       }
@@ -67,13 +67,14 @@ const FeesList = () => {
     if (newPage >= 1 && newPage <= totalPages) setCurrentPage(newPage);
   };
 
-  const openModal = (detailData) => {
-    feesList.filter((item) => {
-      if (item.name === detailData) {
-        setDetail(item);
-      }
-    });
-    setIsModalOpen(true);
+  const openModal = async (name) => {
+    try{
+      const resPaymentEntry = await apiMethodPost({name_fees: name});
+      setDetail(resPaymentEntry.message);
+      setIsModalOpen(true);
+    }catch(err){
+      console.log(err);
+    }
   };
   const closeModal = () => {
     setIsModalOpen(false);
@@ -131,24 +132,31 @@ const FeesList = () => {
           </div>
         </div>
 
-        {paginatedData.length > 0 ? (
+            {paginatedData.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {paginatedData.map((item) => (
               <div
                 key={item.name}
-                className="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 hover:shadow-md transition"
+                className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
               >
-                <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-lg font-bold text-gray-800">
-                    SPP{" "}
-                    {item.due_date
-                      ? `${new Date(item.due_date).toLocaleString("id-ID", {
-                          month: "long",
-                        })} ${new Date(item.due_date).getFullYear()}`
-                      : "-"}
-                  </h2>
+                {/* Header */}
+                <div className="p-6 pb-4 flex items-start justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-gray-800">
+                      SPP{" "}
+                      {item.due_date
+                        ? `${new Date(item.due_date).toLocaleString("id-ID", {
+                            month: "long",
+                          })} ${new Date(item.due_date).getFullYear()}`
+                        : "-"}
+                    </h2>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {item.name || "-"}
+                    </p>
+                  </div>
+
                   <span
-                    className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
                       item.status === "Paid"
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-700"
@@ -158,49 +166,71 @@ const FeesList = () => {
                   </span>
                 </div>
 
-                <hr className="my-4 border-red-900 border-2" />
+                <div className="border-t border-2 border-red-800" />
 
-                <div className="flex flex-col py-2 gap-2">
-                  <p className="text-sm text-gray-500">
-                    Nomor Tagihan:{" "}
-                    <span className="font-medium">{item.name || "-"}</span>
-                  </p>
+                {/* Body */}
+                <div className="p-6">
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between gap-4">
+                      <span className="text-gray-500">Nomor Tagihan</span>
+                      <span className="font-medium text-gray-800 text-right">
+                        {item.name || "-"}
+                      </span>
+                    </div>
 
-                  {item.docstatus === 0 ? (
-                    <p className="text-center font-medium w-full mx-auto bg-red-200 py-2 rounded-full text-red-600">
-                      Anda di bulan ini tidak di digenerate oleh
-                    </p>
+                    <div className="flex justify-between gap-4">
+                      <span className="text-gray-500">Nama Siswa</span>
+                      <span className="font-medium text-gray-800 text-right">
+                        {item.student_name || "-"}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between gap-4">
+                      <span className="text-gray-500">Jatuh Tempo</span>
+                      <span className="font-medium text-gray-800 text-right">
+                        {formatDateIndonesia(item.due_date)}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between gap-4">
+                      <span className="text-gray-500">Status Document</span>
+                      <span
+                        className={`font-semibold ${
+                          item.docstatus === 1
+                            ? "text-green-700"
+                            : "text-red-800"
+                        }`}
+                      >
+                        {item.docstatus === 1 ? "Submit" : "Draft"}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between gap-4 border-t pt-3">
+                      <span className="text-gray-500">Grand Total</span>
+                      <span className="font-bold text-lg text-red-700">
+                        {currencyFormat(item.grand_total)}
+                      </span>
+                    </div>
+                  </div>
+                  {/* Button */}
+                  {item.docstatus !== 0 ? (
+                    <button
+                      onClick={() => openModal(item.name)}
+                      className="w-full mt-6 py-3 rounded-xl bg-green-700 text-white font-semibold hover:bg-green-800 transition-all cursor-pointer"
+                    >
+                      Lihat Detail
+                    </button>
                   ) : (
-                    <>
-                      <p className="text-sm text-gray-500">
-                        Fee Structure:{" "}
-                        <span className="font-medium">
-                          {item.fee_structure || "-"}
-                        </span>
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Grand Total:{" "}
-                        <span className="font-medium">
-                          {currencyFormat(item.grand_total)}
-                        </span>
-                      </p>
-                    </>
+                    <div className="w-full mt-6 py-3 rounded-xl bg-red-800 text-white text-center font-semibold">
+                      Status Document Draft
+                    </div>
                   )}
                 </div>
-
-                {item.docstatus !== 0 && (
-                  <button
-                    onClick={() => openModal(item.name)}
-                    className="w-full bg-green-700  py-2 rounded-full text-white text-center font-bold hover:bg-green-800 transition-all my-2 hover:cursor-pointer"
-                  >
-                    Lihat Detail
-                  </button>
-                )}
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center text-gray-500 py-6">
+          <div className="py-10 text-center text-gray-500">
             Tidak ada data ditemukan.
           </div>
         )}
@@ -226,7 +256,7 @@ const FeesList = () => {
                   onClick={() => changePage(page)}
                   className={`px-3 py-2 text-sm rounded-md border transition ${
                     currentPage === page
-                      ? "bg-slate-600 text-white border-slate-600"
+                      ? "bg-red-800 text-white border-white cursor-not-allowed"
                       : "text-slate-700 border-slate-300 hover:bg-slate-200"
                   }`}
                 >
@@ -249,7 +279,6 @@ const FeesList = () => {
           </div>
         )}
       </div>
-
       <Modal
         title="Detail Tagihan"
         open={isModalOpen}

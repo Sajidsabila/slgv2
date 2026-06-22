@@ -10,6 +10,8 @@ import { ExamSpecimentContext, ExamSpecimentProvider } from "./hooks/useGetExamS
 import { SlgProvider } from "./hooks/useGetSlg";
 import { LhbProvider } from "./hooks/useGetLhb";
 import { StudentProfilProvider } from "./hooks/useProfileStudent";
+import ProfilGuardian from "./pages/Guardian/profilGuardian";
+import { GuardianProfilProvider } from "./hooks/useProfilGuardian";
 
 
 
@@ -21,7 +23,9 @@ createRoot(document.getElementById("root")).render(
             <SlgProvider> 
               <LhbProvider>
                  <StudentProfilProvider>
+                 <GuardianProfilProvider>
                   <RouterProvider router={routes} />
+                  </GuardianProfilProvider>
                  </StudentProfilProvider>
               </LhbProvider>
             </SlgProvider>
