@@ -76,7 +76,7 @@ const NavbarLandingPageLayout = ({
 
   return (
     <nav className="bg-white shadow-lg fixed w-full z-[200]">
-      <div className="container mx-auto flex flex-col justify-between items-center py-3">
+      <div className="container mx-auto flex px-4 flex-col justify-between items-center py-3">
 
         {/* MOBILE HEADER */}
         <div className="md:hidden flex justify-between items-center px-2 w-full">
