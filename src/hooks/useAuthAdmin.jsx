@@ -44,10 +44,4 @@ export const AuthProviderAdmin = ({ children }) => {
     </AuthContextAdmin.Provider>
   );
 };
-export const useAuthAdmin = () => {
-  const context = useContext(AuthContextAdmin);
-  if (!context) {
-    throw new Error("useAuth must be used inside AuthProviderAdmin");
-  }
-  return context;
-};
+export const useAuthAdmin = () => useContext(AuthContextAdmin);

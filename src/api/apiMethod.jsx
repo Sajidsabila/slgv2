@@ -27,6 +27,54 @@ export const methodGet = async (doctype, filters = {}, fields = ["*"]) => {
   }
 };
 
+
+export const getResourceWithPagination = async (
+  doctype,
+  filters = [],
+  orFilters = [],
+  fields = ["*"],
+  page = 1,
+  pageSize = 9
+
+) => {
+  try {
+    const start = (page - 1) * pageSize;
+    // Data per halaman
+    const { data: resourceResponse } = await axiosConfig.get(
+      `/api/resource/${doctype}`,
+      {
+        params: {
+          fields: JSON.stringify(fields),
+          filters: JSON.stringify(filters),
+          or_filters: JSON.stringify(orFilters),
+          limit_start: start,
+          limit_page_length: pageSize,
+        },
+      }
+    );
+    const { data: totalResponse } = await axiosConfig.get(
+      `/api/resource/${doctype}`,
+      {
+        params: {
+          fields: JSON.stringify(["name"]),
+          filters: JSON.stringify(filters),
+          limit_page_length: 0,
+        },
+      }
+    );
+    const total = totalResponse.data.length;
+    return {
+      data: resourceResponse.data,
+      total,
+      currentPage: page,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize),
+    };
+  } catch (error) {
+    console.error("Pagination Error:", error.response?.data || error);
+    throw error;
+  }
+};
 export const method = async (url) => {
   try {
     const response = await axiosConfig.get(`/api/method/${url}`);

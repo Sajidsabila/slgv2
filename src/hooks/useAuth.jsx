@@ -45,10 +45,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("terjadi kesalahan");
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
+

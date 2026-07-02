@@ -70,4 +70,8 @@ export const ExamSpecimentProvider = ({ children }) => {
   );
 };
 
-export const useExamSpeciment = () => useContext(ExamSpecimentContext);
+export const useExamSpeciment = () => {
+  const context = useContext(ExamSpecimentContext);
+  if (!context) return null;
+  return context;
+} ;

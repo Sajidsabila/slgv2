@@ -53,6 +53,12 @@ import PageDynamicModulTraining from "../pages/Teacher/ModulTraining/pageDynamic
 import { MiddlewareAdmin } from "../middleware/middlewareAdmin.jsx";
 import ProfilGuardian from "../pages/Guardian/profilGuardian.jsx";
 import UserProfile from "../pages/userProfile.jsx";
+import CourseSchdedule from "../pages/courseSchedule.jsx";
+import { GuardianProfilProvider } from "../hooks/useProfilGuardian.jsx";
+import { CourseScheduleProvider } from "../hooks/useCourseSchedule.jsx";
+import { StudentProfilProvider } from "../hooks/useProfileStudent.jsx";
+import { FeesProvider } from "../hooks/useFees.jsx";
+import { StudentAttandanceProvider } from "../hooks/useGetStudentAttandance.jsx";
 
 const routes = createBrowserRouter([
   {
@@ -88,9 +94,20 @@ const routes = createBrowserRouter([
     path: "/student",
     element: <Middleware allowed={["Student"]} />,
     children: [
+   
       {
         path: "",
-        element: <Index />,
+        element:
+        <StudentProfilProvider>
+          <Index />
+        </StudentProfilProvider>,
+      },
+      {
+        path: "students-report/course-schedule",
+        element: 
+        <CourseScheduleProvider>
+            <CourseSchdedule />
+        </CourseScheduleProvider>,
       },
       {path: "profil-user", element: <UserProfile/>},
       {
@@ -99,7 +116,12 @@ const routes = createBrowserRouter([
       },
       {
         path: "students-report/history-absensi",
-        element: <HistoryAbsensi />,
+        element:
+        <StudentAttandanceProvider>
+            <HistoryAbsensi />
+        </StudentAttandanceProvider> 
+      
+        ,
       },
       {
         path: "students-report/evaluasi-semester",
@@ -107,7 +129,11 @@ const routes = createBrowserRouter([
       },
       {
         path: "students-report/fees",
-        element: <FeesList />,
+        element: 
+        <FeesProvider>
+            <FeesList />
+        </FeesProvider>
+      ,
       },
       {
         path: "students-report",
@@ -159,7 +185,9 @@ const routes = createBrowserRouter([
       {
         path: "",
         element: 
-        <ProfilGuardian />,
+        <GuardianProfilProvider>
+            <ProfilGuardian />
+        </GuardianProfilProvider>
       },
       {
         path: "profil-user",

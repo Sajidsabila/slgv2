@@ -15,6 +15,10 @@ const NavbarStudent = () => {
           label: "Evaluation Semester",
           url: "/student/students-report/evaluasi-semester",
         },
+        {
+          label: "Course Schedule",
+          url: "/student/students-report/course-schedule",
+        },
       ],
     },
     {

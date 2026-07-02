@@ -12,6 +12,7 @@ import { LhbProvider } from "./hooks/useGetLhb";
 import { StudentProfilProvider } from "./hooks/useProfileStudent";
 import ProfilGuardian from "./pages/Guardian/profilGuardian";
 import { GuardianProfilProvider } from "./hooks/useProfilGuardian";
+import { CourseScheduleProvider } from "./hooks/useCourseSchedule";
 
 
 
@@ -22,15 +23,10 @@ createRoot(document.getElementById("root")).render(
           <ExamSpecimentProvider>
             <SlgProvider> 
               <LhbProvider>
-                 <StudentProfilProvider>
-                 <GuardianProfilProvider>
-                  <RouterProvider router={routes} />
-                  </GuardianProfilProvider>
-                 </StudentProfilProvider>
+                    <RouterProvider router={routes} />
               </LhbProvider>
             </SlgProvider>
           </ExamSpecimentProvider>
         </SyllabusProvider>
       </AuthProvider>
-  // </StrictMode>
 );
