@@ -188,9 +188,9 @@ const FeesList = () => {
             </div>
           </>
         ) : (
-          <div className="py-10 text-center text-gray-500">
-            Tidak ada data ditemukan.
-          </div>
+        <div className="w-full text-center py-3 bg-red-800 text-white rounded-lg font-bold">
+          Tidak ada data ditemukan.
+        </div>
         )
         )}
        

@@ -13,12 +13,16 @@ import { StudentProfilProvider } from "./hooks/useProfileStudent";
 import ProfilGuardian from "./pages/Guardian/profilGuardian";
 import { GuardianProfilProvider } from "./hooks/useProfilGuardian";
 import { CourseScheduleProvider } from "./hooks/useCourseSchedule";
+import { FeesProvider } from "./hooks/useFees";
+import { StudentAttandanceProvider } from "./hooks/useGetStudentAttandance";
+import { AuthProviderAdmin } from "./hooks/useAuthAdmin";
 
 
 
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
       <AuthProvider>
+        <AuthProviderAdmin>
         <SyllabusProvider>
           <ExamSpecimentProvider>
             <SlgProvider> 
@@ -28,5 +32,6 @@ createRoot(document.getElementById("root")).render(
             </SlgProvider>
           </ExamSpecimentProvider>
         </SyllabusProvider>
+        </AuthProviderAdmin>
       </AuthProvider>
 );

@@ -29,6 +29,7 @@ export const CourseScheduleProvider = ({ children }) => {
   const [pageSize] = useState(9);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [debounce, setDebounce] = useState("");
 
 // ambil student group 
   useEffect(() => {
@@ -55,8 +56,16 @@ export const CourseScheduleProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebounce(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  useEffect(() => {
     setCurrentPage(1);
-  }, [startDate, endDate]);
+  }, [startDate, endDate, debounce]);
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
@@ -69,11 +78,11 @@ export const CourseScheduleProvider = ({ children }) => {
         const filters = [
           ["student_group", "=", studentGroup], 
         ];
-       const orFilters = searchTerm
+       const orFilters = debounce
         ? [
-            ["room", "like", `%${searchTerm}%`],
-            ["program", "like", `%${searchTerm}%`],
-            ["instructor_name", "like", `%${searchTerm}%`],
+            ["room", "like", `%${debounce}%`],
+            ["program", "like", `%${debounce}%`],
+            ["instructor_name", "like", `%${debounce}%`],
           ]
         : [];
 
@@ -112,10 +121,7 @@ export const CourseScheduleProvider = ({ children }) => {
     };
 
     getCourseSchedule();
-  }, [studentGroup, startDate, endDate, currentPage, pageSize, searchTerm]);
-
-  // filter data
-  
+  }, [studentGroup, startDate, endDate, currentPage, pageSize, debounce]);
 
   return (
     <CourseScheduleContext.Provider

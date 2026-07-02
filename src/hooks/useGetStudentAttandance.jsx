@@ -29,16 +29,24 @@ export const StudentAttandanceProvider = ({ children }) => {
   const [pageSize] = useState(9);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [debounce, setDebounce] = useState("");
 
   useEffect(() => {
     setCurrentPage(1);
-  }, []);
+  },[startDate, endDate, debounce]);
+
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setDebounce(searchTerm);
+  }, 500);
+
+  return () => clearTimeout(timer);
+}, [searchTerm]);
+
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
-
     if (!token) return;
-
     const getAttendance = async () => {
       setLoading(true);
 
@@ -46,12 +54,12 @@ export const StudentAttandanceProvider = ({ children }) => {
         const filters = [];
         const orFilters = [];
 
-        if (searchTerm) {
+        if (debounce) {
           orFilters.push(
-            ["instructorlink_name", "like", `%${searchTerm}%`],
-            ["sg_program", "like", `%${searchTerm}%`],
-            ["lesson", "like", `%${searchTerm}%`],
-            ["video", "like", `%${searchTerm}%`]
+            ["instructorlink_name", "like", `%${debounce}%`],
+            ["sg_program", "like", `%${debounce}%`],
+            ["lesson", "like", `%${debounce}%`],
+            ["video_url", "like", `%${debounce}%`]
           );
         }
 
@@ -87,7 +95,7 @@ export const StudentAttandanceProvider = ({ children }) => {
     };
 
     getAttendance();
-  }, [startDate, endDate, searchTerm, currentPage, pageSize]);
+  }, [startDate, endDate, debounce, currentPage, pageSize]);
 
   return (
     <StudentAttandanceContext.Provider

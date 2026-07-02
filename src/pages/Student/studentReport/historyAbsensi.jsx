@@ -169,7 +169,7 @@ const HistoryAbsensi = () => {
             </div>
           </>
       ) : (
-        <div className="text-center text-gray-500 py-4">
+        <div className="w-full text-center py-3 bg-red-800 text-white rounded-lg font-bold">
           Tidak ada data ditemukan.
         </div>
       ))}

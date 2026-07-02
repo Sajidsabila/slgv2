@@ -2,12 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { urlLink } from "../config/config";
 import { Spin } from "antd";
-import { useAuth } from "../hooks/useAuth";
+import { useAuthAdmin } from "../hooks/useAuthAdmin";
 import axios from "axios";
-import axiosConfig from "../config/axiosConfig";
 
 export const MiddlewareAdmin = ({ allowed }) => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthAdmin();
   const [userRoles, setUserRoles] = useState(undefined);
   const checked = useRef(false);
   const location = useLocation().pathname;
@@ -17,11 +16,13 @@ export const MiddlewareAdmin = ({ allowed }) => {
       if (!user || checked.current) return;
       checked.current = true;
       try {
-        const { data: logged } = await axiosConfig.get(
+        const { data: logged } = await axios.get(
           `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
+          { withCredentials: true },
         );
-        const { data: userData } = await axiosConfig.get(
-          `/api/resource/User/${logged.message}`,
+        const { data: userData } = await axios.get(
+          `${urlLink.url}/api/resource/User/${logged.message}`,
+          { withCredentials: true },
         );
 
         const roles = userData.data.roles.map((r) => r.role);
@@ -54,3 +55,57 @@ export const MiddlewareAdmin = ({ allowed }) => {
 
   return <Outlet />;
 };
+
+// export const MiddlewareStudent = () => {
+//   const token = sessionStorage.getItem("token");
+//   const refreshToken = sessionStorage.getItem("refresh_token");
+//   const [valid, setValid] = useState(null);
+
+//   useEffect(() => {
+//     if (!token || !refreshToken) {
+//       setValid(false);
+//       return;
+//     }
+
+//     axios.post(
+//       `${urlLink.url}/api/method/smi.helper.refresh_access_token`,
+//       { refresh_token: refreshToken },
+//       {
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//       }
+//     )
+//     .then(() => setValid(true))
+//     .catch(() => {
+//       sessionStorage.clear();
+//       setValid(false);
+//     });
+//   }, [token, refreshToken]);
+//   if (valid === null) return null;
+//   if (!valid) return <Navigate to="/" replace />;
+
+//   return <Outlet />;
+// };
+
+// export const MiddlewareTeacher = () => {
+//   const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+//   useEffect(() => {
+//     const credentials = sessionStorage.getItem("credentials");
+//     setIsAuthenticated(!!credentials);
+//   }, []);
+
+//   if (isAuthenticated === null) {
+//     return (
+//       <div className="flex items-center justify-center h-screen">
+//         <Spin size="large" />
+//       </div>
+//     );
+//   }
+
+//   if (!isAuthenticated) return <Navigate to="/login-teacher" replace />;
+
+//   return <Outlet />;
+// };

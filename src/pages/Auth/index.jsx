@@ -1,64 +1,64 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import { urlLink } from "../../config/config";
-import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useAuthAdmin } from "../../hooks/useAuthAdmin";
+import { useNavigate } from "react-router-dom"; 
 
 const Login = () => {
-  const { login, logout } = useAuth();
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const { login } = useAuthAdmin();
+  const navigate = useNavigate(); 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setIsLoading] = useState(false);
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
-  };
+  const headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    if (!formData.email || !formData.password) {
+    if (!email || !password) {
       setIsLoading(false);
       setError("Email dan Password tidak boleh kosong");
       return;
     }
 
     try {
-      const response = await axios.post(
-        `${urlLink.url}/api/method/login`,
-        {
-          usr: formData.email,
-          pwd: formData.password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        },
-      );
+      const response = await fetch(`${urlLink.url}/api/method/login`, {
+        method: "POST",
+        headers,
+        body: new URLSearchParams({ usr: email, pwd: password }),
+        credentials: "include",
+      });
 
-      const loggedUser = await axios.get(
+      const data = await response.json();
+      if (!response.ok) {
+        setIsLoading(false);
+        throw new Error(data.message);
+      }
+
+      const getLoggedUser = await fetch(
         `${urlLink.url}/api/method/frappe.auth.get_logged_user`,
-        { withCredentials: true },
+        {
+          method: "GET",
+          credentials: "include",
+          headers,
+          mode: "cors",
+        }
       );
+      const user = await getLoggedUser.json();
 
-      // 3. Get user detail
-      const userDetail = await axios.get(
-        `${urlLink.url}/api/resource/User/${loggedUser.data.message}`,
-        { withCredentials: true },
+      const userData = await fetch(
+        `${urlLink.url}/api/resource/User/${user.message}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers,
+          mode: "cors",
+        }
       );
-      const dataUser = userDetail.data;
+      const dataUser = await userData.json();
 
       const getUser = {
         full_name: dataUser.data.full_name,
@@ -68,24 +68,22 @@ const Login = () => {
         mobile_no: dataUser.data.mobile_no,
       };
 
-      const roles = dataUser.data.roles ? dataUser.data.roles : [];
+      const roles = Array.isArray(dataUser.data.roles)
+        ? dataUser.data.roles
+        : [];
       const isInstructor = roles.some(
         (roleObj) =>
-          roleObj.role === "Instructor" || roleObj.role === "LMS User",
+          roleObj.role === "Instructor" || roleObj.role === "LMS User"
       );
 
       if (!isInstructor) {
         setIsLoading(false);
-        logout();
-        setFormData({ email: "", password: "" });
-        setError("Login Failed");
-        return;
+        throw new Error("Anda Tidak Mempunyai Akses");
       }
       login(getUser);
-      navigate("/admin");
+      navigate("/admin"); 
     } catch (err) {
-      console.log("ini error", err);
-      setError(err.response.data.message || "Terjadi kesalahan");
+      setError(err.message || "Terjadi kesalahan");
       setIsLoading(false);
     }
   };
@@ -106,12 +104,11 @@ const Login = () => {
             </label>
             <input
               className="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
-              type="text"
+              type="email"
               placeholder="Email"
-              id="email"
-              value={formData.email}
+              value={email}
               autoFocus
-              onChange={handleChange}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -120,11 +117,10 @@ const Login = () => {
             </label>
             <input
               className="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
-              id="password"
               type="password"
               placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <button

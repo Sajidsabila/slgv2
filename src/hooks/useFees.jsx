@@ -28,14 +28,21 @@ export const FeesProvider = ({ children }) => {
     const [pageSize] = useState(9);
     const [total, setTotal] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
+    const [debounce, setDebounce] = useState("");
 
+      useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebounce(searchTerm);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
 
     useEffect(() => {
         setCurrentPage(1);
-    }, []);
+    }, [startDate, endDate, debounce]);
 
     useEffect(() => {
-
         const token = sessionStorage.getItem("token");
         if (!token) return;
 
@@ -43,11 +50,11 @@ export const FeesProvider = ({ children }) => {
             try {
                setLoading(true);
                       const filters = [["docstatus", "!=", "2"]];
-                      const orFilters = searchTerm ?
+                      const orFilters = debounce ?
                         [
-                            ["name", "like", `%${searchTerm}%`],
-                            ["student_name", "like", `%${searchTerm}%`],
-                            ["program", "like", `%${searchTerm}%`],
+                            ["name", "like", `%${debounce}%`],
+                            ["student_name", "like", `%${debounce}%`],
+                            ["program", "like", `%${debounce}%`],
                         ] : [];
               
                       if (startDate && endDate) {
@@ -84,7 +91,7 @@ export const FeesProvider = ({ children }) => {
             }
         }
     getFees();
-    }, [startDate, endDate, currentPage, pageSize, searchTerm]);
+    }, [startDate, endDate, currentPage, pageSize, debounce]);
 
     return ( 
         <FeesContext.Provider

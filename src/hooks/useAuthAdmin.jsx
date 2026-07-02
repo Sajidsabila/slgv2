@@ -29,7 +29,7 @@ export const AuthProviderAdmin = ({ children }) => {
 
   const logout = () => {
     try{
-     const response = axios.get(${urlLink.url}/api/method/logout, {withCredentials: true});
+      const response = axios.get(`${urlLink.url}/api/method/logout`, {withCredentials: true});
    }catch(e){
        console.log(e);
    }finally{

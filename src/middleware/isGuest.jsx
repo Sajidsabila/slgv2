@@ -17,11 +17,3 @@ export const Guest = ({ children }) => {
 
   return children;
 };
-
-// export const GuestOnly = ({ children }) => {
-// const user = sessionStorage.getItem("token");
-//   if (user) {
-//     return <Navigate to="/home" replace />;
-//   }
-//   return children;
-// };
