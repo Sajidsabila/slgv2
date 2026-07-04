@@ -22,15 +22,9 @@ import { AuthProviderAdmin } from "./hooks/useAuthAdmin";
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
       <AuthProvider>
-        <AuthProviderAdmin>
+      <AuthProviderAdmin>
         <SyllabusProvider>
-          <ExamSpecimentProvider>
-            <SlgProvider> 
-              <LhbProvider>
-                    <RouterProvider router={routes} />
-              </LhbProvider>
-            </SlgProvider>
-          </ExamSpecimentProvider>
+            <RouterProvider router={routes} />
         </SyllabusProvider>
         </AuthProviderAdmin>
       </AuthProvider>

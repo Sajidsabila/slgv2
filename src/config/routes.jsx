@@ -9,7 +9,7 @@ import Page404 from "../pages/404.jsx";
 import Dashboard from "../pages/Admin/dashboard.jsx";
 import Profile from "../pages/Admin/profile.jsx";
 import ProgramMateri from "../pages/Admin/programMateri.jsx";
-
+import { ExamSpecimentProvider } from "../hooks/useGetExamSpeciment.jsx";
 import HistoryAbsensi from "../pages/Student/studentReport/historyAbsensi.jsx";
 import EvaluasiSemester from "../pages/Admin/evaluasiSemester.jsx";
 import DetailEvaluasiSemester from "../pages/Admin/detailEvaluasiSemester.jsx";
@@ -31,12 +31,9 @@ import KalenderAkademik from "../pages/Student/learningResources/kalederAkademik
 import ProgramEdukasi from "../pages/Student/learningResources/programEdukasi.jsx";
 import MateriPembelajaran from "../pages/Student/learningResources/materiPembelajaran.jsx";
 import EvaluasiSemesterStudent from "../pages/Student/studentReport/evaluasiSemesterStudent.jsx";
-
 import SetStudentPassword from "../pages/Auth/setStudentPassword.jsx";
-
 import UpdatePassword from "../pages/Auth/updatePassword.jsx";
 import Syllabus from "../pages/Student/learningResources/learningMateri/syllabus.jsx";
-
 import ExamSpeciment from "../pages/Student/learningResources/learningMateri/examSpeciment.jsx";
 import MainAuth from "../pages/Auth/mainAuth.jsx";
 import IndexTeacher from "../pages/Teacher/index.jsx";
@@ -59,6 +56,8 @@ import { CourseScheduleProvider } from "../hooks/useCourseSchedule.jsx";
 import { StudentProfilProvider } from "../hooks/useProfileStudent.jsx";
 import { FeesProvider } from "../hooks/useFees.jsx";
 import { StudentAttandanceProvider } from "../hooks/useGetStudentAttandance.jsx";
+import { LhbProvider } from "../hooks/useGetLhb.jsx";
+import { SlgProvider } from "../hooks/useGetSlg.jsx";
 
 const routes = createBrowserRouter([
   {
@@ -161,7 +160,10 @@ const routes = createBrowserRouter([
       },
       {
         path: "learning-resources/materi-pembelajaran/exam-speciment",
-        element: <ExamSpeciment />,
+        element:
+        <ExamSpecimentProvider>
+              <ExamSpeciment /> 
+        </ExamSpecimentProvider>,
       },
       {
         path: "learning-resources/materi-pembelajaran/exam-speciment/:id",
@@ -232,11 +234,17 @@ const routes = createBrowserRouter([
 
       {
         path: "learning-resources/slg",
-        element: <SlgTeacher />,
+        element: 
+        <SlgProvider>
+          <SlgTeacher />
+        </SlgProvider>,
       },
       {
         path: "learning-resources/lhb",
-        element: <LhbTeacher />,
+        element:
+          <LhbProvider>
+              <LhbTeacher />,
+        </LhbProvider> 
       },
       {
         path: "learning-resources/syllabus",
@@ -244,7 +252,10 @@ const routes = createBrowserRouter([
       },
       {
         path: "learning-resources/exam-speciment",
-        element: <ExamSpecimentForTeacher />,
+        element: 
+        <ExamSpecimentProvider>
+          <ExamSpecimentForTeacher />
+        </ExamSpecimentProvider>,
       },
       {
         path: "learning-resources/syllabus/:id",

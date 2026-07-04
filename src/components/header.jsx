@@ -14,9 +14,9 @@ const Header = () => {
       {/* Desktop view */}
       <div className="w-full md:flex hidden flex-row items-center justify-center  ">
         {images.map((image, index) => (
-          <div className="w-full">
+          <div className="w-full" key={index + 1}>
           <img
-            key={index}
+            key={index + 1}
             src={image}
             alt={`Image ${index + 1}`}
             className="w-full object-cover rounded"
