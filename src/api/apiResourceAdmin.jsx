@@ -4,7 +4,6 @@ import { urlLink } from "../config/config";
 export const apiResourceAdmin = async ({ doctype, filters }) => {
   try {
     let url = `${urlLink.url}/api/resource/${doctype}?fields=["*"]&limit_page_length=None`;
-
     if (filters) {
       url += `&filters=${encodeURIComponent(JSON.stringify(filters))}`;
     }

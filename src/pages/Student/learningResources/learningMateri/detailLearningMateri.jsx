@@ -9,7 +9,7 @@ import {
   generatePreviewGDriveVideo,
 } from "../../../../helper/helper";
 import { data, useParams } from "react-router-dom";
-import { detailData } from "../../../../api/apiMethod";
+import { detailData } from "../../../../api/apiResourceUser";
 import { DatePicker } from "antd";
 import { useMemo } from "react";
 import { useLocation } from "react-router-dom";

@@ -10,7 +10,6 @@ const Header = () => {
 
   return (
     <header className="relative z-0 w-full h-auto text-white flex flex-col items-center justify-center shadow-lg">
-
       {/* Desktop view */}
       <div className="w-full md:flex hidden flex-row items-center justify-center  ">
         {images.map((image, index) => (

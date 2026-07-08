@@ -16,7 +16,6 @@ const FilterComponent = ({
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-
   };
 
   return (

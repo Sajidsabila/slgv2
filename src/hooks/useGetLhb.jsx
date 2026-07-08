@@ -1,23 +1,22 @@
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
-import { getProgramEnrollment } from "../api/apiPublic";
-import { methodGet } from "../api/apiMethod";
+import { useEffect, useState, useMemo } from "react";
+import { getDataResource } from "../api/apiResourceUser";
 
-export const lhbContext = createContext();
 
-export const LhbProvider = ({ children }) => {
+
+export const useLhb = () => {
   const [enroll, setEnroll] = useState([]);
   const [materi, setMateri] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const loadEnroll = async () => {
     if(!sessionStorage.getItem('user')) return
-    const res = await getProgramEnrollment();
+    const res = await getDataResource("Program Enrollment");
     setEnroll(res?.data ?? res);
   };
 
   const loadMateri = async () => {
      if(!sessionStorage.getItem('user')) return
-    const res = await methodGet("Program Materi", { type: "LHB" });
+    const res = await getDataResource("Program Materi", { type: "LHB" });
     setMateri(res?.data ?? []);
   };
 
@@ -42,13 +41,6 @@ export const LhbProvider = ({ children }) => {
     );
   }, [enroll, materi]);
 
-  return (
-    <lhbContext.Provider
-      value={{ loading, enroll, materi, enrollWithMateri }}
-    >
-      {children}
-    </lhbContext.Provider>
-  );
+  return { loading, enroll, materi, enrollWithMateri };
 };
 
-export const useLhb = () => useContext(lhbContext);

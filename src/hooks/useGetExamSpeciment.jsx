@@ -1,18 +1,15 @@
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
-import { getProgramEnrollment } from "../api/apiPublic";
-import { methodGet } from "../api/apiMethod";
+import {useEffect, useState, useMemo } from "react";
+import { getDataResource } from "../api/apiResourceUser";
 
-export const ExamSpecimentContext = createContext();
-
-export const ExamSpecimentProvider = ({ children }) => {
+export const useExamSpeciment = () => {
   const [enroll, setEnroll] = useState([]);
   const [materi, setMateri] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const loadEnroll = async () => {
     try {
-           if(!sessionStorage.getItem('user')) return
-      const res = await getProgramEnrollment();
+      if(!sessionStorage.getItem('user')) return
+      const res = await  getDataResource("Program Enrollment");
       setEnroll(res?.data ?? res); // aman
     } catch (e) {
       console.log(e);
@@ -21,8 +18,8 @@ export const ExamSpecimentProvider = ({ children }) => {
 
   const loadMateri = async () => {
     try {
-           if(!sessionStorage.getItem('user')) return
-      const res = await methodGet("Program Materi", { type: "Exam Specimen" });
+      if(!sessionStorage.getItem('user')) return
+      const res = await getDataResource("Program Materi", { type: "Exam Specimen" });
       setMateri(res?.data ?? []); // aman
     } catch (e) {
       console.log(e);
@@ -56,22 +53,11 @@ export const ExamSpecimentProvider = ({ children }) => {
     );
   }, [enroll, materi]);
 
-  return (
-    <ExamSpecimentContext.Provider
-      value={{
+  return {
         loading,
         enroll,
         materi,
         enrollWithMateri,
-      }}
-    >
-      {children}
-    </ExamSpecimentContext.Provider>
-  );
+      }
 };
 
-export const useExamSpeciment = () => {
-  const context = useContext(ExamSpecimentContext);
-  if (!context) return null;
-  return context;
-} ;

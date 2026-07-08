@@ -1,16 +1,15 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { methodGet } from "../api/apiMethod";
+import { useEffect, useState } from "react";
+import { getDataResource } from "../api/apiResourceUser";
 
-const ProfilGuardianContext = createContext();
 
-export const GuardianProfilProvider = ({ children }) => {
+export const useProfilGuardian = () => {
     const [profil, setProfil] = useState({});
     const [listChildren, setListChildren] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const fetchProfilGuardian = async () => {
         try {
-            const response = await methodGet("Guardian");
+            const response = await getDataResource("Guardian");
             setProfil(response.data[0] || {});
         } catch (e) {
             console.error(e);
@@ -19,7 +18,7 @@ export const GuardianProfilProvider = ({ children }) => {
 
     const fetchlistChildren = async () => {
         try {
-            const response = await methodGet("Student");
+            const response = await getDataResource("Student");
             setListChildren(response.data || []);
         } catch (e) {
             console.error(e);
@@ -50,9 +49,7 @@ export const GuardianProfilProvider = ({ children }) => {
         fetchData();
     }, []); 
 
-    return (
-        <ProfilGuardianContext.Provider
-            value={{
+    return {
                 profil,
                 setProfil,
                 listChildren,
@@ -60,11 +57,5 @@ export const GuardianProfilProvider = ({ children }) => {
                 loading,
                 fetchProfilGuardian,
                 fetchlistChildren,
-            }}
-        >
-            {children}
-        </ProfilGuardianContext.Provider>
-    );
-};
-
-export const useProfilGuardian = () => useContext(ProfilGuardianContext);
+            };
+        };

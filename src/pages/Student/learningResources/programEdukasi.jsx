@@ -1,14 +1,14 @@
 import LandingPageLayout from "../../../layout/landing-page";
 import { useEffect, useState } from "react";
-import { methodGet } from "../../../api/apiMethod";
+
 import { Image } from "antd";
 import { useAuth } from "../../../hooks/useAuth";
 import { urlLink } from "../../../config/config";
 import { googledriveApi } from "../../../api/gooledriveApi";
 import { getDriveFileId, generatePreviewGDriveImage, generatePreviewGDriveVideo } from "../../../helper/helper";
 import { FilePdfTwoTone } from "@ant-design/icons";
-import { getModulTraining } from "../../../api/apiPublic";
 import HeadingSection from "../../../components/headingSection";
+import { getDataResource } from "../../../api/apiResourceUser";
 
 const ProgramEdukasi= () => {
   const { logout } = useAuth();
@@ -18,7 +18,7 @@ const ProgramEdukasi= () => {
   useEffect(() => {
     const getModulFromApi = async () => {
       try {
-        const response = await getModulTraining([["type", "=", "Book Menu"]]);
+        const response = await getDataResource("Program Materi", { type: "Book Menu" });
         setModulTraining(response || []);
       } catch (error) {
         console.error("Error fetching data:", error);

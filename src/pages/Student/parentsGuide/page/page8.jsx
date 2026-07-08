@@ -2,14 +2,14 @@ import Swal from "sweetalert2";
 
 import { Spin } from "antd";
 import { useState, useEffect } from "react";
-import { updateStudent } from "../../../../api/apiPublic";
-import { methodGet } from "../../../../api/apiMethod";
+import { updateStudent, getDataResource } from "../../../../api/apiResourceUser";
 import { Link } from "react-router-dom";
 
 const Page8 = () => {
   const [loading, setLoading] = useState(false);
   const [studentId, setStudentId] = useState(null);
   const [success, setSuccess] = useState(false);
+
   const handleEndSession = () => {
     sessionStorage.setItem("page", 1);
   };
@@ -17,7 +17,7 @@ const Page8 = () => {
   useEffect(() => {
     const getStudentId = async () => {
       try {
-        const response = await methodGet("Student");
+        const response = await getDataResource("Student");
 
         setStudentId(response.data[0].name);
       } catch (error) {

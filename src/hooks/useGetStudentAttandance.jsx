@@ -1,24 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { getResourceWithPagination } from "../api/apiMethod";
+import {  useEffect, useState } from "react";
+import { getResourceWithPagination } from "../api/apiResourceUser";
 
-const StudentAttandanceContext = createContext({
-  studentAttandance: [],
-  setStudentAttandance: () => {},
-  startDate: "",
-  setStartDate: () => {},
-  endDate: "",
-  setEndDate: () => {},
-  searchTerm: "",
-  setSearchTerm: () => {},
-  loading: false,
-  currentPage: 1,
-  setCurrentPage: () => {},
-  pageSize: 9,
-  total: 0,
-  totalPages: 1,
-});
 
-export const StudentAttandanceProvider = ({ children }) => {
+export const useGetStudentAttandance = () => {
   const [studentAttandance, setStudentAttandance] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -97,9 +81,7 @@ useEffect(() => {
     getAttendance();
   }, [startDate, endDate, debounce, currentPage, pageSize]);
 
-  return (
-    <StudentAttandanceContext.Provider
-      value={{
+  return {
         studentAttandance,
         setStudentAttandance,
         startDate,
@@ -114,21 +96,5 @@ useEffect(() => {
         pageSize,
         total,
         totalPages,
-      }}
-    >
-      {children}
-    </StudentAttandanceContext.Provider>
-  );
 };
-
-export const useGetStudentAttandance = () => {
-  const context = useContext(StudentAttandanceContext);
-
-  if (!context) {
-    throw new Error(
-      "useGetStudentAttandance must be used within a StudentAttandanceProvider"
-    );
-  }
-
-  return context;
 };

@@ -5,7 +5,7 @@ import { Modal } from "antd";
 import { useState } from "react";
 import { urlLink } from "../../config/config";
 import { formatDateIndonesia, firstLetterFunction} from "../../helper/helper";
-import { getDoctypeDetail } from "../../api/apiPublic";
+import { getDoctypeDetail } from "../../api/apiResourceUser";
 
 const ProfilGuardian = () => {
   const  {profil, listChildren, loading} = useProfilGuardian();

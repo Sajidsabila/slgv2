@@ -1,9 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { method, methodGet } from "../api/apiMethod";
+import { useEffect, useState } from "react";
+import { getDataResource } from "../api/apiResourceUser";
 
-const StudentProfilContext = createContext();
-
-export const StudentProfilProvider = ({ children }) => {
+export const useStudentProfil = () => {
   const [profile, setProfile] = useState({});
   const [program, setProgram] = useState([]);
   const [schedule, setSchedule] = useState([]);
@@ -14,14 +12,12 @@ export const StudentProfilProvider = ({ children }) => {
     setLoading(true);
        if(!sessionStorage.getItem('user')) return
     try {
-      // Profile
-   
-      const profileRes = await methodGet("Student");
+      const profileRes = await getDataResource("Student");
       setProfile(profileRes.data[0] || {});
 
       // Program
 
-      const programRes = await methodGet(
+      const programRes = await getDataResource(
         "Program Enrollment",
         [["status", "=", "Approved"]],
         ["name", "class_name", "class_grading", "course"],
@@ -36,14 +32,14 @@ export const StudentProfilProvider = ({ children }) => {
       endOfWeek.setDate(today.getDate() + (6 - today.getDay()));
       const start = startOfWeek.toISOString().split("T")[0];
       const end = endOfWeek.toISOString().split("T")[0];
-      const studGroup = await methodGet(
+      const studGroup = await getDataResource(
       "Student Group",
       [["Student Group Student", "student", "=", profileRes.data[0].name]],
       ["name"]
       );
       const getstudenGroupName = JSON.parse(JSON.stringify(studGroup.data))[0] || studGroup.data;
     // lebih ringan fiter dari api
-      const scheduleRes = await methodGet(
+      const scheduleRes = await getDataResource(
         "Course Schedule",
         [
           ["schedule_date", ">=", start],
@@ -55,7 +51,7 @@ export const StudentProfilProvider = ({ children }) => {
       );
       setSchedule(scheduleRes.data || []);
       // Fees
-      const feesRes = await methodGet("Fees", {}, [
+      const feesRes = await getDataResource("Fees", {}, [
         "name",
         "student_name",
         "outstanding_amount",
@@ -78,20 +74,13 @@ export const StudentProfilProvider = ({ children }) => {
     fetchProfileData();
   }, []);
 
-  return (
-    <StudentProfilContext.Provider
-      value={{
+  return {
         profile,
         program,
         schedule,
         fees,
         refreshProfileData: fetchProfileData,
         loading,
-      }}
-    >
-      {children}
-    </StudentProfilContext.Provider>
-  );
+      };   
 };
 
-export const useStudentProfil = () => useContext(StudentProfilContext);

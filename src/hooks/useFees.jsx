@@ -1,24 +1,8 @@
-import { useEffect, createContext, useState, useContext } from "react";
-import { getResourceWithPagination } from "../api/apiMethod";
+import { useEffect, useState} from "react";
+import { getResourceWithPagination } from "../api/apiResourceUser";
 
-const FeesContext = createContext({
-    fees: [],
-    setFees: () => {},
-    startDate: "",
-    endDate: "",
-    setStartDate: () => {},
-    setEndDate: () => {},
-    searchTerm: "",
-    setSearchTerm: () => {},
-    loading: false,
-    currentPage: 1,
-    setCurrentPage: () => {},
-    pageSize: 9,
-    total: 0,
-    totalPages: 1,
-});
 
-export const FeesProvider = ({ children }) => {
+export const useFees= () => {
     const [fees, setFees] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [startDate, setStartDate] = useState("");
@@ -93,9 +77,7 @@ export const FeesProvider = ({ children }) => {
     getFees();
     }, [startDate, endDate, currentPage, pageSize, debounce]);
 
-    return ( 
-        <FeesContext.Provider
-            value={{
+        return {
                 fees,
                 setFees,
                 startDate,
@@ -110,16 +92,5 @@ export const FeesProvider = ({ children }) => {
                 pageSize,
                 total,
                 totalPages,
-            }}
-        >
-            {children}
-        </FeesContext.Provider>
-    )
-}
-
-export const useFees = () =>
-{
-    const context = useContext(FeesContext);
-    if (!context) throw new Error("useFees must be used within a FeesProvider");
-    return context;
-} 
+            };
+            };

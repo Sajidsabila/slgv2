@@ -1,10 +1,8 @@
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
-import { getProgramEnrollment } from "../api/apiPublic";
-import { methodGet } from "../api/apiMethod";
+import { useEffect, useState, useMemo } from "react";
+import { getDataResource } from "../api/apiResourceUser";
 
-export const SyllabusContext = createContext();
 
-export const SyllabusProvider = ({ children }) => {
+export const useSyllabus = () => {
   const [enroll, setEnroll] = useState([]);
   const [materi, setMateri] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +10,7 @@ export const SyllabusProvider = ({ children }) => {
   const loadEnroll = async () => {
     try {
        if(!sessionStorage.getItem('user')) return
-      const res = await getProgramEnrollment();
+      const res = await getDataResource("Program Enrollment");
       setEnroll(res?.data ?? res); // aman untuk berbagai tipe response
     } catch (e) {
       console.log(e);
@@ -21,8 +19,8 @@ export const SyllabusProvider = ({ children }) => {
 
   const loadMateri = async () => {
     try {
-           if(!sessionStorage.getItem('user')) return
-      const res = await methodGet("Program Materi", { type: "Syllabus" });
+      if(!sessionStorage.getItem('user')) return
+      const res = await getDataResource("Program Materi", { type: "Syllabus" });
       setMateri(res?.data ?? []);
     } catch (e) {
       console.log(e);
@@ -51,18 +49,10 @@ export const SyllabusProvider = ({ children }) => {
     );
   }, [enroll, materi]);
 
-  return (
-    <SyllabusContext.Provider
-      value={{
+  return {
         loading,
         enroll,
         materi,
         enrollWithMateri,
-      }}
-    >
-      {children}
-    </SyllabusContext.Provider>
-  );
+      };
 };
-
-export const useSyllabus = () => useContext(SyllabusContext);

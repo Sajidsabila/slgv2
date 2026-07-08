@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react"
 import AdminLayout from "../../layout/admin-layout"
-
-import { apiGetProgramMateriPublic } from "../../api/apiPublic"
-
 import { Link } from "react-router-dom";
 import { apiResourceAdmin } from "../../api/apiResourceAdmin";
 
@@ -14,7 +11,7 @@ const Dashboard = () => {
     useEffect(() => {
         const countProgram = async () => {
             try {
-                const response = await  apiResourceAdmin({doctype: "Program Materi"});
+                const response = await apiResourceAdmin({doctype: "Program Materi"});
                const count = response.length;
                setProgram(count);
         }catch (error) {

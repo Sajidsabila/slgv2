@@ -1,24 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { methodGet, getResourceWithPagination } from "../api/apiMethod";
+import { useEffect, useState } from "react";
+import { getDataResource, getResourceWithPagination } from "../api/apiResourceUser";
 
-const CourseScheduleContext = createContext({
-  courseSchedule: [],
-  studentGroup: null,
-  startDate: "",
-  setStartDate: () => {},
-  endDate: "",
-  setEndDate: () => {},
-  searchTerm: "",
-  setSearchTerm: () => {},
-  loading: false,
-  currentPage: 1,
-  setCurrentPage: () => {},
-  pageSize: 9,
-  total: 0,
-  totalPages: 1,
-});
-
-export const CourseScheduleProvider = ({ children }) => {
+export const useCourseSchedule = () => {
   const [courseSchedule, setCourseSchedule] = useState([]);
   const [studentGroup, setStudentGroup] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,21 +9,20 @@ export const CourseScheduleProvider = ({ children }) => {
   const [endDate, setEndDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(9);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [debounce, setDebounce] = useState("");
+  const pageSize = 9
 
-// ambil student group 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (!token) return;
 
     const getStudentGroup = async () => {
       try {
-        const profile = await methodGet("Student");
+        const profile = await getDataResource("Student");
 
-        const studentGroup = await methodGet(
+        const studentGroup = await getDataResource(
           "Student Group",
           [["Student Group Student", "student", "=", profile.data[0].name]],
           ["name"]
@@ -123,9 +105,7 @@ export const CourseScheduleProvider = ({ children }) => {
     getCourseSchedule();
   }, [studentGroup, startDate, endDate, currentPage, pageSize, debounce]);
 
-  return (
-    <CourseScheduleContext.Provider
-      value={{
+  return {
         courseSchedule,
         studentGroup,
         startDate,
@@ -140,21 +120,5 @@ export const CourseScheduleProvider = ({ children }) => {
         pageSize,
         total,
         totalPages,
-      }}
-    >
-      {children}
-    </CourseScheduleContext.Provider>
-  );
-};
-
-export const useCourseSchedule = () => {
-  const context = useContext(CourseScheduleContext);
-
-  if (!context) {
-    throw new Error(
-      "useCourseSchedule must be used within a CourseScheduleProvider"
-    );
-  }
-
-  return context;
-};
+     };
+    };

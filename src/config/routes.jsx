@@ -9,7 +9,6 @@ import Page404 from "../pages/404.jsx";
 import Dashboard from "../pages/Admin/dashboard.jsx";
 import Profile from "../pages/Admin/profile.jsx";
 import ProgramMateri from "../pages/Admin/programMateri.jsx";
-import { ExamSpecimentProvider } from "../hooks/useGetExamSpeciment.jsx";
 import HistoryAbsensi from "../pages/Student/studentReport/historyAbsensi.jsx";
 import EvaluasiSemester from "../pages/Admin/evaluasiSemester.jsx";
 import DetailEvaluasiSemester from "../pages/Admin/detailEvaluasiSemester.jsx";
@@ -26,7 +25,6 @@ import ProgramMateriSlg from "../pages/Admin/program-materi/slg.jsx";
 import DetailProgramMateri from "../pages/Admin/program-materi/detailProgramMateri.jsx";
 import StudentReport from "../pages/Student/studentReport.jsx";
 import LearningResources from "../pages/Student/learningResources.jsx";
-import ProfileStudentsFrontend from "../pages/Student/profileStudent.jsx";
 import KalenderAkademik from "../pages/Student/learningResources/kalederAkademik.jsx";
 import ProgramEdukasi from "../pages/Student/learningResources/programEdukasi.jsx";
 import MateriPembelajaran from "../pages/Student/learningResources/materiPembelajaran.jsx";
@@ -51,13 +49,7 @@ import { MiddlewareAdmin } from "../middleware/middlewareAdmin.jsx";
 import ProfilGuardian from "../pages/Guardian/profilGuardian.jsx";
 import UserProfile from "../pages/userProfile.jsx";
 import CourseSchdedule from "../pages/courseSchedule.jsx";
-import { GuardianProfilProvider } from "../hooks/useProfilGuardian.jsx";
-import { CourseScheduleProvider } from "../hooks/useCourseSchedule.jsx";
-import { StudentProfilProvider } from "../hooks/useProfileStudent.jsx";
-import { FeesProvider } from "../hooks/useFees.jsx";
-import { StudentAttandanceProvider } from "../hooks/useGetStudentAttandance.jsx";
-import { LhbProvider } from "../hooks/useGetLhb.jsx";
-import { SlgProvider } from "../hooks/useGetSlg.jsx";
+
 
 const routes = createBrowserRouter([
   {
@@ -93,20 +85,15 @@ const routes = createBrowserRouter([
     path: "/student",
     element: <Middleware allowed={["Student"]} />,
     children: [
-   
       {
         path: "",
         element:
-        <StudentProfilProvider>
           <Index />
-        </StudentProfilProvider>,
       },
       {
         path: "students-report/course-schedule",
         element: 
-        <CourseScheduleProvider>
-            <CourseSchdedule />
-        </CourseScheduleProvider>,
+            <CourseSchdedule />,
       },
       {path: "profil-user", element: <UserProfile/>},
       {
@@ -116,11 +103,7 @@ const routes = createBrowserRouter([
       {
         path: "students-report/history-absensi",
         element:
-        <StudentAttandanceProvider>
-            <HistoryAbsensi />
-        </StudentAttandanceProvider> 
-      
-        ,
+            <HistoryAbsensi />,
       },
       {
         path: "students-report/evaluasi-semester",
@@ -129,10 +112,7 @@ const routes = createBrowserRouter([
       {
         path: "students-report/fees",
         element: 
-        <FeesProvider>
-            <FeesList />
-        </FeesProvider>
-      ,
+            <FeesList />,
       },
       {
         path: "students-report",
@@ -161,9 +141,7 @@ const routes = createBrowserRouter([
       {
         path: "learning-resources/materi-pembelajaran/exam-speciment",
         element:
-        <ExamSpecimentProvider>
-              <ExamSpeciment /> 
-        </ExamSpecimentProvider>,
+              <ExamSpeciment />,
       },
       {
         path: "learning-resources/materi-pembelajaran/exam-speciment/:id",
@@ -172,10 +150,6 @@ const routes = createBrowserRouter([
       {
         path: "learning-resources/materi-pembelajaran/syllabus/:id",
         element: <DetailLearningMateri />,
-      },
-      {
-        path: "profile",
-        element: <ProfileStudentsFrontend />,
       },
     ],
   },
@@ -187,9 +161,7 @@ const routes = createBrowserRouter([
       {
         path: "",
         element: 
-        <GuardianProfilProvider>
             <ProfilGuardian />
-        </GuardianProfilProvider>
       },
       {
         path: "profil-user",
@@ -235,16 +207,12 @@ const routes = createBrowserRouter([
       {
         path: "learning-resources/slg",
         element: 
-        <SlgProvider>
-          <SlgTeacher />
-        </SlgProvider>,
+          <SlgTeacher />,
       },
       {
         path: "learning-resources/lhb",
         element:
-          <LhbProvider>
-              <LhbTeacher />,
-        </LhbProvider> 
+              <LhbTeacher />, 
       },
       {
         path: "learning-resources/syllabus",
@@ -253,9 +221,7 @@ const routes = createBrowserRouter([
       {
         path: "learning-resources/exam-speciment",
         element: 
-        <ExamSpecimentProvider>
-          <ExamSpecimentForTeacher />
-        </ExamSpecimentProvider>,
+          <ExamSpecimentForTeacher />,
       },
       {
         path: "learning-resources/syllabus/:id",

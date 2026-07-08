@@ -1,23 +1,22 @@
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
-import { getProgramEnrollment } from "../api/apiPublic";
-import { methodGet } from "../api/apiMethod";
+import {useEffect, useState, useMemo } from "react";
+import { getDataResource } from "../api/apiResourceUser";
 
-export const SlgContext = createContext();
 
-export const SlgProvider = ({ children }) => {
+
+export const useSlg = () => {
   const [enroll, setEnroll] = useState([]);
   const [materi, setMateri] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const loadEnroll = async () => {
      if(!sessionStorage.getItem('user')) return
-    const res = await getProgramEnrollment();
+    const res = await getDataResource("Program Enrollment");
     setEnroll(res?.data ?? res);
   };
 
   const loadMateri = async () => {
      if(!sessionStorage.getItem('user')) return
-    const res = await methodGet("Program Materi", { type: "SLG" });
+    const res = await getDataResource("Program Materi", { type: "SLG" });
     setMateri(res?.data ?? []);
   };
 
@@ -42,13 +41,6 @@ export const SlgProvider = ({ children }) => {
     );
   }, [enroll, materi]);
 
-  return (
-    <SlgContext.Provider
-      value={{ loading, enroll, materi, enrollWithMateri }}
-    >
-      {children}
-    </SlgContext.Provider>
-  );
+  return { loading, enroll, materi, enrollWithMateri };
+  
 };
-
-export const useSlg = () => useContext(SlgContext);

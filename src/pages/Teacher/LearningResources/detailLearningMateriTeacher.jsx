@@ -1,5 +1,5 @@
 import LandingPageLayout from "../../../layout/landing-page";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect} from "react";
 import { urlLink } from "../../../config/config";
 import { Image } from "antd";
 import { googledriveApi } from "../../../api/gooledriveApi";
@@ -8,8 +8,8 @@ import {
   generatePreviewGDriveImage,
   generatePreviewGDriveVideo,
 } from "../../../helper/helper";
-import { data, useParams } from "react-router-dom";
-import { detailData } from "../../../api/apiMethod";
+import { useParams } from "react-router-dom";
+import { detailData } from "../../../api/apiResourceUser";
 import { DatePicker } from "antd";
 import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
