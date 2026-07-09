@@ -1,16 +1,22 @@
 // import { useSlg } from "../../../hooks/useGetSlg";
 import HeadingSection from "../../../components/headingSection";
-import { useLhb } from "../../../hooks/useGetLhb";
+import { useLearningMateri } from "../../../hooks/useLearningMateri";
 import LandingPageLayout from "../../../layout/landing-page"
 import { Link } from "react-router-dom"
+import { Spin } from "antd";
+
 const LhbTeacher = () => {
-  const { loading, enroll, materi, enrollWithMateri } = useLhb();
+  const {loading, enrollWithMateri } = useLearningMateri({type: "LHB"});
     return (
       <LandingPageLayout>
         <div className="px-4 py-6 container mx-auto">
-          <HeadingSection title="LHB" image="/assets/smile_image/icon-1.png" />
-    
-         <div className="list-program-edukasi my-5 flex flex-wrap ">
+        <HeadingSection title="LHB" image="/assets/smile_image/icon-1.png" />
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <Spin />
+          </div>
+        ) : (
+           <div className="list-program-edukasi my-5 flex flex-wrap ">
             {enrollWithMateri.length > 0  ? (
 
            enrollWithMateri.map((item, index) => (
@@ -27,6 +33,8 @@ const LhbTeacher = () => {
             
             )}
          </div>
+        )}
+        
         </div>
       </LandingPageLayout>
     )

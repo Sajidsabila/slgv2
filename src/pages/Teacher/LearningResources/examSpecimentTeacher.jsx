@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom"
-import { useExamSpeciment } from "../../../hooks/useGetExamSpeciment";
 import LandingPageLayout from "../../../layout/landing-page";
 import HeadingSection from "../../../components/headingSection";
+import useFileMateri from "../../../hooks/useFileMateri";
+import { Spin } from "antd";
 
 const ExamSpecimentForTeacher = () => {
-   const { loading, enroll, materi, enrollWithMateri } = useExamSpeciment();
+   const { loading, enrollWithMateri } = useFileMateri();
 
     return (
       <LandingPageLayout>
@@ -12,8 +13,13 @@ const ExamSpecimentForTeacher = () => {
        
           <HeadingSection title="Exam Speciment" image="/assets/smile_image/icon-1.png" />
          
-
-         <div className="list-program-edukasi my-5 flex flex-wrap ">
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <Spin />
+          </div>
+        ) : (
+          <>
+           <div className="list-program-edukasi my-5 flex flex-wrap ">
             {enrollWithMateri.length > 0  ? (
 
            enrollWithMateri.map((item, index) => (
@@ -30,6 +36,9 @@ const ExamSpecimentForTeacher = () => {
             
             )}
          </div>
+          </>
+        )}
+        
         </div>
       </LandingPageLayout>
     )

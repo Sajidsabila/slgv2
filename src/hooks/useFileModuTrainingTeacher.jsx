@@ -58,7 +58,7 @@ const useFileModulTrainingTeacher = (id) => {
 
     const fetchData = async () => {
       try {
-             if(!sessionStorage.getItem('user')) return
+        if(!sessionStorage.getItem('user')) return
         const response = await getProgramMateriById("Modul Training", id);
         setProgramMateri(response);
       } catch (err) {

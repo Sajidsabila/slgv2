@@ -1,10 +1,11 @@
 import HeadingSection from "../../../../components/headingSection";
-import { useSyllabus } from "../../../../hooks/useGetSyllabus";
+import { useLearningMateri } from "../../../../hooks/useLearningMateri";
 import LandingPageLayout from "../../../../layout/landing-page";
 import { Link } from "react-router-dom";
+import { Spin } from "antd";
 
 const Syllabus = () => {
-  const { loading, enroll, materi, enrollWithMateri } = useSyllabus();
+  const { loading, enrollWithMateri } = useLearningMateri({ type: "Syllabus" });
   return (
     <LandingPageLayout>
       <div className="px-4 py-6 container mx-auto">
@@ -12,8 +13,12 @@ const Syllabus = () => {
           title="Syllabus"
           image="/assets/smile_image/icon-4.png"
         />
-
-        <div className="list-program-edukasi my-5 flex flex-wrap ">
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <Spin />
+          </div>
+        ) : (
+          <div className="list-program-edukasi my-5 flex flex-wrap ">
           {enrollWithMateri.length > 0 ? (
             enrollWithMateri.map((item, index) => (
               <Link
@@ -32,6 +37,8 @@ const Syllabus = () => {
             </h1>
           )}
         </div>
+        )}
+       
       </div>
     </LandingPageLayout>
   );
