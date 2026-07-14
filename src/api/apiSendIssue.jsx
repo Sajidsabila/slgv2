@@ -33,7 +33,7 @@ export const postIssue = async (data) => {
       return response.data || []; 
   
     } catch (error) {
-    throw error;
+    return error;
     }
   };
 
@@ -57,6 +57,6 @@ export const postIssue = async (data) => {
 
       return response.data || [];
     } catch (error) {
-     throw error;
+    return error;
     }
   };

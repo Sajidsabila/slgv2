@@ -9,7 +9,7 @@ export const updatePassword = async (data) => {
       data);
     return response.data || [];
   } catch (error) {
-    throw error;
+     return error;
   }
 };
 
@@ -19,7 +19,7 @@ export const method = async (url) => {
     const response = await axiosConfig.get(`/api/method/${url}`);
     return response.data;
   } catch (error) {
-    throw error;
+    return error;
   }
 };
 
@@ -39,7 +39,7 @@ export const authStudent = async (data) => {
     );
     return response.data || [];
   } catch (error) {
-    throw error;
+     return error;
   }
 };
 
@@ -51,7 +51,7 @@ export const apiMethodPost = async (data) =>{
     )
     return response.data || [];
   } catch (error) {
-    throw error;
+    return error;
   }
 }
 

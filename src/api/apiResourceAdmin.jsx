@@ -22,8 +22,8 @@ export const apiResourceAdminDetail = async ({ doctype, id }) => {
       { withCredentials: true }
     );
     return response.data?.data || [];
-  }catch(e){
-    throw e;
+  }catch(error){
+    return error;
   }
 };
 
@@ -33,8 +33,8 @@ export const apiResourceAdminDelete  = async({doctype, id}) => {
             withCredentials: true
         });    
         return response.data?.data || []; 
-    }catch(e){
-        throw e;
+    }catch(error){
+        return error;
     }
 }
 
@@ -44,8 +44,8 @@ export const apiResourceAdminUpdate = async({doctype, id, data}) => {
             withCredentials: true
         });    
         return response.data?.data || []; 
-    }catch(e){
-        throw e;
+    }catch(error){
+        return error;
     }
 }
 
@@ -55,8 +55,8 @@ export const apiResourceAdminPost = async ({doctype, data}) => {
             withCredentials: true
         });    
         return response.data?.data || []; 
-    }catch(e){
-        throw e;
+    }catch(error){
+       return error;
     }
 }
 
@@ -66,7 +66,7 @@ export const apiResourceAdminPut = async ({doctype, id, data}) => {
             withCredentials: true
         });    
         return response.data?.data || []; 
-    }catch(e){
-        throw e;
+    }catch(error){
+       return error
     }
 }

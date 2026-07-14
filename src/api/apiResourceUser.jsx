@@ -32,7 +32,7 @@ export const updateStudent = async (data, id) => {
       data);
     return response.data?.data || [];
   } catch (error) {
-    throw error;
+     return error;
   }
 };
 
@@ -44,7 +44,7 @@ export const getDoctypeDetail = async (doctype, id) => {
       `/api/resource/${doctype}/${id}`);
     return response.data?.data || [];
   } catch (error) {
-    throw error;
+     return error;
   }
 };
 
@@ -62,7 +62,7 @@ export const detailData = async ({ doctype, id }) => {
 
     return response.data;
   } catch (error) {
-    throw error;
+    return error;
   }
 };
 
@@ -109,8 +109,7 @@ export const getResourceWithPagination = async (
       totalPages: Math.ceil(total / pageSize),
     };
   } catch (error) {
-    console.error("Pagination Error:", error.response?.data || error);
-    throw error;
+    return error;
   }
 };
 
@@ -124,6 +123,6 @@ export const getDataResource = async (doctype, filters = {}, fields = ["*"]) => 
 
     return response.data;
   } catch (error) {
-    throw error;
+     return error;
   }
 };

@@ -153,7 +153,7 @@ export const createFolderProgramMateri = async (folderName) => {
     // console.log(response.data);
     return response.data?.data || [];
   } catch (error) {
-    throw error;
+     return error;
   }
 };
 
@@ -165,11 +165,9 @@ export const deleteFileProgramMateri = async (id, fileName) => {
         withCredentials: true,
       },
     );
-
-    // console.log("File berhasil dihapus:", fileName);
     return response.data?.data || [];
   } catch (error) {
-    throw error;
+    return error;
   }
 };
 
