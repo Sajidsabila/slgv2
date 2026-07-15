@@ -51,13 +51,13 @@ const HistoryAbsensi = () => {
         studentAttandance.length > 0 ? (
           <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {studentAttandance.map((e, idx) => (
+          {studentAttandance.map((e, index) => (
             <div
-              key={idx}
-              className="bg-white border border-gray-200 shadow-md rounded-xl p-6 flex flex-col gap-4"
+              key={index}
+              className="bg-white border border-gray-200 shadow-md rounded-xl flex flex-col gap-4"
             >
            
-              <div className="flex justify-between items-start">
+              <div className="px-6 py-4 flex justify-between items-start">
                 <div>
                   <h2 className="text-lg font-bold text-gray-800">
                     {formatDateIndonesia(e.schedule_date) || "-"}
@@ -77,10 +77,10 @@ const HistoryAbsensi = () => {
                 </span>
               </div>
 
-              <hr className="border-red-600 border-1" />
-
-        
-              <div className="text-sm text-gray-700 space-y-2">
+            <div className="border-t border-2 border-red-800" />
+              <div className="px-6 py-1 text-sm text-gray-700 space-y-2">
+                  <p className="flex flex-col gap-1">
+                <span className="font-bold mr-2">Point</span>
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) =>
                     i < e.growth_point ? (
@@ -99,18 +99,28 @@ const HistoryAbsensi = () => {
                       />
                     )
                   )}
-                </div>
+                </div></p>
+                <p className="flex  flex-col">
+                  <span className="font-bold">Nama Siswa</span>
+                  {e.student_name ?? "-"}
+                </p>
 
-                <p>
-                  <span className="font-bold">Program Enrollment: </span>
-                  {`${e.sg_program} -  ${e.instructorlink_name} ` || "-"}
+               <p className="flex flex-col">
+                  <span className="font-bold">Program Enrollment</span>
+                  {e.sg_program ?? "-"}
+                </p>
+
+               <p className="flex flex-col">
+                  <span className="font-bold">Nama Guru </span>
+                  {e.instructorlink_name ?? "-"}
                 </p>
                
-                <p>
-                  <span className="font-bold">Waktu Absensi: </span>
-                  <span className="font-bold">{formatDateIndonesia(e.creation)|| "-"}</span>
+               <p className="flex flex-col">
+                  <span className="font-bold text-underline">Waktu Absensi: </span>
+                
+                  <span>{formatDateIndonesia(e.creation) || "-"}</span>
                 </p>
-                <hr className="border-red-600 border-1" />
+                  <div className="border-t border-2 border-red-800" />
                 <div className="h-40 overflow-y-auto scrollbar space-y-3">
                   {e.video && (
                           <div>

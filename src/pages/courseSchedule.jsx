@@ -58,11 +58,11 @@ const CourseSchdedule = () => {
             <div className="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
               {courseSchedule.map((item, index) => (
                 <div
-                  key={item.name || index}
-                  className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 p-5"
+                  key={index}
+                  className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300"
                 >
                   {/* Header */}
-                  <div className="flex justify-between items-start">
+                  <div className="px-5 py-4 flex justify-between items-start">
                     <div>
                       <h2 className="text-lg font-semibold text-gray-800">
                         {formatDateIndonesia(item.schedule_date)}
@@ -82,7 +82,7 @@ const CourseSchdedule = () => {
                   <div className="border-t-2 border-red-800 my-4" />
 
                   {/* Detail */}
-                  <div className="space-y-2 text-sm">
+                  <div className="px-5 py-2 space-y-2 text-sm">
                     <div>
                       <p className="text-gray-500">Program</p>
                       <p className="font-medium text-gray-800">

@@ -8,8 +8,8 @@ import FilterComponent from "../../../components/filterComponent";
 import { apiMethodPost } from "../../../api/apiMethod";
 import { useFees } from "../../../hooks/useFees";
 import { Spin, Pagination} from "antd";
-
 const FeesList = () => {
+
    const {
     fees,
     startDate,
@@ -24,12 +24,8 @@ const FeesList = () => {
     pageSize,
     total,
   } = useFees();
-  console.log(fees);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [detail, setDetail] = useState(null);
-
- 
-
   const openModal = async (name) => {
     try{
       const resPaymentEntry = await apiMethodPost({name_fees: name});
@@ -78,9 +74,9 @@ const FeesList = () => {
         fees.length > 0 ? (
           <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {fees.map((item) => (
+            {fees.map((item, index) => (
               <div
-                key={item.name}
+                key={index}
                 className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
               >
                 {/* Header */}
