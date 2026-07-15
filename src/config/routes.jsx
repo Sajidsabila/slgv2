@@ -172,6 +172,10 @@ const routes = createBrowserRouter([
         element: <FeesList />,
       },
       {
+        path: "course-schedule",
+        element: <CourseSchdedule />,
+      },
+      {
         path: "history-absensi",
         element: <HistoryAbsensi />,
       },

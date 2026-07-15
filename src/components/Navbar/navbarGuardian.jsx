@@ -14,6 +14,10 @@ const NavbarGuardian = () => {
           label: "Evaluation Semester",
           url: "/guardian/evaluasi-semester",
         },
+        {
+          label: "Course Schedule",
+          url: "/guardian/course-schedule",
+        },
       ],
     },
   ];

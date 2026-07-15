@@ -1,7 +1,5 @@
 import {  useEffect, useState } from "react";
 import { getResourceWithPagination } from "../api/apiResourceUser";
-
-
 export const useGetStudentAttandance = () => {
   const [studentAttandance, setStudentAttandance] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
