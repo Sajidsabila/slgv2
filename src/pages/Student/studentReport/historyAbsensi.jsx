@@ -122,17 +122,17 @@ const HistoryAbsensi = () => {
                 </p>
                   <div className="border-t border-2 border-red-800" />
                 <div className="h-40 overflow-y-auto scrollbar space-y-3">
-                  {e.video && (
+                  {e.video_url && (
                           <div>
                     <p className="font-extrabold">Video</p>
-                    {e.video ? (
+                    {e.video_url ? (
                       <a
-                        href={e.video}
+                        href={e.video_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:underline"
                       >
-                        {e.video}
+                        {e.video_url}
                       </a>
                     ) : (
                       "-"
