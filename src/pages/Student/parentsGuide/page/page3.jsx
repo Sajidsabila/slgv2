@@ -82,7 +82,7 @@ const Page3 = ({ handleClick, muted }) => {
             <p className="text-xl font-extrabold gotham mt-10 text-outline-sm">
               Apa Prioritas Utama Tujuan Anak/Diri Anda Belajar Musik
             </p>
-            <p className="w-auto px-6 bg-red-600 text-base sm:text-lg font-medium py-2 text-white rounded-xl mt-2">
+            <p className="w-auto px-6 py-2 bg-red-600 text-base sm:text-lg font-medium py-2 text-white rounded-xl mt-2">
               ( Pilih salah satu dari pilihan berikut )
             </p>
           </div>

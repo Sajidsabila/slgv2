@@ -41,7 +41,7 @@ const Page8 = () => {
       }));
 
       const data = {
-        reason_for_join: sessionStorage.getItem("selectedOption1") ?? "",
+        reason_for_joining: sessionStorage.getItem("selectedOption1") ?? "",
         reason_for_priority: sessionStorage.getItem("selectedOption2") ?? "",
         reason_for_goals: reasonForGoals,
       };
