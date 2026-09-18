@@ -18,7 +18,7 @@ export const checkStudent = async (data) => {
     // console.log(response.data);
     return response || [];
   } catch (error) {
-    throw error;
+    return error;
   }
 };
 
@@ -113,15 +113,26 @@ export const getResourceWithPagination = async (
   }
 };
 
-export const getDataResource = async (doctype, filters = {}, fields = ["*"]) => {
+export const getDataResource = async (doctype, filters = {}, fields = ["*"], by_order = "desc") => {
   try {
     const filterParam = encodeURIComponent(JSON.stringify(filters));
     const fieldParam = encodeURIComponent(JSON.stringify(fields));
 
     const response = await axiosConfig.get(
-      `/api/resource/${doctype}?fields=${fieldParam}&filters=${filterParam}&limit_page_length=None`);
+      `/api/resource/${doctype}?fields=${fieldParam}&order_by=creation ${by_order}&filters=${filterParam}&limit_page_length=None`);
 
     return response.data;
+  } catch (error) {
+     return error;
+  }
+};
+
+export const postByUser = async (doctype, data) => {
+  try {
+    const response = await axiosConfig.post(
+      `/api/resource/${doctype}`,
+      data);
+    return response.data?.data || [];
   } catch (error) {
      return error;
   }

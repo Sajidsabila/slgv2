@@ -15,8 +15,7 @@ export const getProgramMateriById = async (doctype, id) => {
 
     return response.data?.data || [];
   } catch (error) {
-    console.error("Terjadi kesalahan", error?.response?.data || error.message);
-    return [];
+    return error;
   }
 };
 
@@ -84,11 +83,7 @@ export const removeFileProramMateri = async (doctype, id, fileName) => {
     // console.log(response);
     return response.data?.data || [];
   } catch (error) {
-    console.error(
-      "Terjadi kesalahan saat menghapus file",
-      error?.response?.data || error.message,
-    );
-    return [];
+   return  error;
   }
 };
 export const updateFileToProgramMateri = async (doctype, id, newFile) => {
@@ -186,7 +181,7 @@ export const checkFolderExists = async (folderName) => {
     console.log(response.data);
     return !!response.data?.data;
   } catch (error) {
-    return false; // Jika error, anggap folder tidak ada agar tetap bisa dibuat
+    return error; 
   }
 };
 
@@ -230,8 +225,7 @@ export const uploadFileProgramMateri = async (file, folder = "") => {
 
     return response.data.message || "Upload berhasil!";
   } catch (error) {
-    console.error("Upload error:", error);
-    throw error;
+    return error;
   }
 };
 
@@ -248,8 +242,7 @@ export const getModulTrainingPublic = async (token) => {
     );
     return response.data?.data || [];
   } catch (error) {
-    console.error("Terjadi kesalahan", error?.response?.data || error.message);
-    return [];
+   return error;
   }
 };
 
@@ -266,7 +259,6 @@ export const getDetailModulTrainingPublic = async (id, token) => {
     );
     return response.data?.data || [];
   } catch (error) {
-    console.error("Terjadi kesalahan", error?.response?.data || error.message);
-    return [];
+   return error;
   }
 };
