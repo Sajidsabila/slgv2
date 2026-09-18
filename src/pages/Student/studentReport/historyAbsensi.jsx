@@ -141,7 +141,7 @@ const response = await getDataResource('Comment', { reference_name: id }, ["*"],
                       <div className="px-5 py-4 grid grid-cols-2 gap-x-4 gap-y-3">
                         <div className="col-span-2 flex items-center justify-between bg-red-800 p-2.5 rounded-lg border border-yellow-100">
                           <span className="text-white text-xs font-extrabold uppercase tracking-wider">
-                            Point Growth
+                            Point 
                           </span>
                           <div className="flex items-center gap-1">
                             {[...Array(5)].map((_, i) =>
